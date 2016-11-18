@@ -4,7 +4,7 @@ import { searchInput, searchForm } from '../actions/searchActions';
 
 const mapStateToProps = (state) => {
     return {
-        search: state.search
+        currentSearch: state.search.currentSearch
     };
 };
 
@@ -21,19 +21,20 @@ class Search extends Component {
     }
 
     handleSubmit (e) {
-        const { currentSearch } = this.props.search;
+        const { currentSearch } = this.props;
         e.preventDefault();
         this.props.dispatch(searchForm(currentSearch));
     }
 
     render () {
+        const { currentSearch } = this.props;
         const errorMessage = false;
 
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
                     <div className='mdl-textfield mdl-js-textfield'>
-                        <input type='text' onChange={this.handleChange} className='mdl-textfield__input' id='search-input'/>
+                        <input type='text' value={currentSearch} onChange={this.handleChange} className='mdl-textfield__input' id='search-input'/>
                         <label className='mdl-textfield__label' htmlFor='search-input'>Enter Search Query</label>
                     </div>
                     <button type='submit' className='mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent'>Search</button>

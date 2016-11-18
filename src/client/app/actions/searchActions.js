@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { UPDATE_SEARCH_FIELD, SEARCH_RESULTS } from '../constants';
+import { UPDATE_SEARCH_FIELD, SEARCH_RESULTS, CLEAR_SEARCH_INPUT } from '../constants';
 import { API_URL, API_OFFSET, API_LIMIT, API_RESULT_TYPE } from '../utils/constants';
 import { parseSearchResults } from '../utils/searchUtils';
 
@@ -29,6 +29,10 @@ export const searchForm = (val) => {
             }
 
             const parsedSearchResults = parseSearchResults(data);
+
+            dispatch({
+                type: CLEAR_SEARCH_INPUT
+            });
 
             dispatch({
                 type: SEARCH_RESULTS,
