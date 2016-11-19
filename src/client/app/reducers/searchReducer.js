@@ -1,7 +1,8 @@
 import { UPDATE_SEARCH_FIELD, SEARCH_RESULTS, CLEAR_SEARCH_INPUT } from '../constants';
 
 const initialState = {
-    currentSearch: ''
+    currentSearch: '',
+    searchResults: []
 };
 
 export default function searchReducer (state = initialState, action) {
