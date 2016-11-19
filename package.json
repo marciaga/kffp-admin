@@ -1,7 +1,7 @@
 {
-  "name": "hapi-react",
+  "name": "KFFP-Playlist-v2",
   "version": "0.0.1",
-  "description": "A Hapi backend with a React SPA front-end",
+  "description": "Version 2 of the KFFP playlist app",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -e js,jsx,hbs -w src --ignore src/client --ignore src/components",
@@ -12,7 +12,7 @@
     "test:coverage": "jest --coverage"
   },
   "repository": {
-    "url": "git+https://github.com/marciaga/hapi-react.git",
+    "url": "git+https://github.com/marciaga/playlist-v2.git",
     "type": "git"
   },
   "keywords": [
@@ -23,9 +23,9 @@
   "author": "Arciaga",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/marciaga/hapi-react/issues"
+    "url": "https://github.com/marciaga/playlist-v2/issues"
   },
-  "homepage": "https://github.com/marciaga/hapi-react#readme",
+  "homepage": "https://github.com/marciaga/playlist-v2#readme",
   "dependencies": {
     "axios": "^0.13.1",
     "babel": "^6.5.2",

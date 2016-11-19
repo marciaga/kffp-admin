@@ -17,4 +17,25 @@ describe('search reducer', () => {
             currentSearch: searchQuery
         });
     });
+
+    it('should react to an action with the type CLEAR_SEARCH_INPUT', () => {
+        expect(searchReducer(undefined, {
+            type: 'CLEAR_SEARCH_INPUT'
+        })).toEqual({
+            currentSearch: ''
+        });
+    });
+
+    it('should react to an action with the type SEARCH_RESULTS', () => {
+        const mockSearchResults = [{
+            artist: 'Magazine',
+            track: 'Shot By Both Sides',
+            album: 'Reat Life'
+        }];
+
+        expect(searchReducer(undefined, {
+            type: 'SEARCH_RESULTS',
+            data: mockSearchResults
+        }));
+    })
 });
