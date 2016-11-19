@@ -8,7 +8,8 @@
     "build": "NODE_ENV=production webpack",
     "start": "NODE_ENV=production node index.js",
     "lint": "./node_modules/.bin/eslint ./src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --verbose",
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "url": "git+https://github.com/marciaga/hapi-react.git",
@@ -66,11 +67,14 @@
     "webpack": "^1.13.1"
   },
   "devDependencies": {
+    "babel-jest": "^17.0.2",
     "eslint": "^3.10.2",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "2.2.3",
     "eslint-plugin-react": "^6.7.1",
+    "jest": "^17.0.3",
     "nodemon": "^1.10.0",
+    "react-test-renderer": "^15.4.0",
     "webpack-hot-middleware": "^2.13.2"
   }
 }

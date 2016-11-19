@@ -1,0 +1,26 @@
+exports[`components <Search /> renders correctly 1`] = `
+<div>
+  <form
+    onSubmit={[Function]}>
+    <div
+      className="mdl-textfield mdl-js-textfield">
+      <input
+        className="mdl-textfield__input"
+        id="search-input"
+        onChange={[Function]}
+        type="text"
+        value={undefined} />
+      <label
+        className="mdl-textfield__label"
+        htmlFor="search-input">
+        Enter Search Query
+      </label>
+    </div>
+    <button
+      className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+      type="submit">
+      Search
+    </button>
+  </form>
+</div>
+`;

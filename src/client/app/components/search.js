@@ -8,7 +8,7 @@ const mapStateToProps = (state) => {
     };
 };
 
-class Search extends Component {
+export class Search extends Component {
     constructor (props) {
         super(props);
 
