@@ -3,9 +3,10 @@
 //     reply.file(`./public/${filename}`);
 // };
 
-// const loginHandler = (request, reply) => {
-//     reply.view('login');
-// };
+const loginHandler = (request, reply) => {
+
+    reply({ idToken: createToken(user) }).code(201);
+};
 
 const renderReactApp = (request, reply) => {
     reply.view('app');
@@ -13,8 +14,8 @@ const renderReactApp = (request, reply) => {
 exports.register = function (server, options, next) {
 
     server.route({
-        path: '/login',
-        method: 'GET',
+        path: '/api/users/login',
+        method: 'POST',
         handler: loginHandler,
         config: { auth: false }
     });
