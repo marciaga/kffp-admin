@@ -1,20 +1,24 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Navbar } from './navbar';
 import Search from './search';
 import { SearchResults } from './searchResults';
 
 const mapStateToProps = (state) => {
     return {
-        searchResults: state.search.searchResults
+        searchResults: state.search.searchResults,
+        isAuthenticated: state.login.isAuthenticated,
+        errorMessage: state.login.errorMessage
     };
 };
 
 class App extends Component {
     render() {
-        const { dispatch, searchResults } = this.props;
+        const { dispatch, isAuthenticated, errorMessage, searchResults } = this.props;
 
         return (
             <div>
+                <Navbar isAuthenticated={isAuthenticated} errorMessage={errorMessage} dispatch={dispatch} />
                 <Search dispatch={dispatch} />
                 <SearchResults
                     dispatch={dispatch}

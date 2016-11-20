@@ -47,6 +47,7 @@
             }
         },
         { "plugin": "./modules/api" },
-        { "plugin": "./modules/front-end" }
+        { "plugin": "./modules/front-end" },
+        { "plugin": "./modules/auth" }
     ]
 }
