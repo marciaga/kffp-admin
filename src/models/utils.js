@@ -20,6 +20,7 @@ const verifyCredentials = (request, reply) => {
 
         bcrypt.compare(password, user.password, (err, isValid) => {
             if (isValid) {
+                console.log('peroieorijsdkfsdklsdf')
                 return reply(user);
             }
             return reply(Boom.badRequest('Incorrect username or email!'));
