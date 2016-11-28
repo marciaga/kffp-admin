@@ -59,8 +59,8 @@
                 "options": "./webpack.config.js"
             }
         },
+        { "plugin": "./modules/auth" },
         { "plugin": "./modules/api" },
-        { "plugin": "./modules/front-end" },
-        { "plugin": "./modules/auth" }
+        { "plugin": "./modules/front-end" }
     ]
 }

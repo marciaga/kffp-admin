@@ -9,6 +9,7 @@ const people = {
 };
 
 const validate = (decoded, request, callback) => {
+    console.log('======== decoded', decoded);
     if (!people[decoded.id]) {
         return callback(null, false);
     }

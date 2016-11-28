@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Navbar } from './navbar';
 import Search from './search';
 import { SearchResults } from './searchResults';
+import { verifyLogin } from '../actions/loginActions';
 
 const mapStateToProps = (state) => {
     return {
@@ -13,17 +14,29 @@ const mapStateToProps = (state) => {
 };
 
 class App extends Component {
-    render() {
+    constructor (props) {
+        super(props);
+
+        props.dispatch(verifyLogin(
+            props.isAuthenticated
+        ));
+    }
+
+    render () {
         const { dispatch, isAuthenticated, errorMessage, searchResults } = this.props;
 
         return (
             <div>
                 <Navbar isAuthenticated={isAuthenticated} errorMessage={errorMessage} dispatch={dispatch} />
-                <Search dispatch={dispatch} />
-                <SearchResults
-                    dispatch={dispatch}
-                    searchResults={searchResults}
-                />
+                {isAuthenticated &&
+                    <div>
+                        <Search dispatch={dispatch} />
+                        <SearchResults
+                            dispatch={dispatch}
+                            searchResults={searchResults}
+                        />
+                    </div>
+                }
             </div>
         )
     }

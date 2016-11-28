@@ -1,13 +1,14 @@
 import Joi from 'joi';
 import Boom from 'boom';
-import { hashPassword } from './utils';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const userSchema = Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string().required()
 }).and('email', 'password');
 
-
+/* Route Handlers */
 const loginHandler = (request, reply) => {
     const db = request.server.plugins['hapi-mongodb'].db;
     const password = request.payload.password;
@@ -19,15 +20,12 @@ const loginHandler = (request, reply) => {
 
         bcrypt.compare(password, user.password, (err, isValid) => {
             if (isValid) {
-                return reply(user);
+                const idToken = createToken(user);
+                return reply({ email: user.email, verified: true, idToken});
             }
-            return reply(Boom.badRequest('Incorrect username or email!'));
+            return reply(Boom.create(401, 'Incorrect username or email!'));
         });
     });
-
-    // TODO respond with a JWT
-    reply(request.pre.user).code(201);
-    // reply({ idToken: createToken(user) }).code(201);
 };
 
 // CREATE user method
@@ -62,11 +60,86 @@ const createUser = (request, reply) => {
                 return reply(Boom.internal('Internal MongoDB error', err));
             }
 
-            return reply({yolo: true}).code(201);
-            // TODO create a JWT and return it
-            // reply({ id_token: createToken(user) }).code(201);
+            reply({ id_token: createToken(user) }).code(201);
         })
     })
 };
 
-export { createUser, loginHandler };
+/* Helper functions */
+const hashPassword = (password, callback) => {
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(password, salt, (err, hash) => {
+            return callback(err, hash);
+        });
+    });
+};
+
+const verifyToken = (request, reply) => {
+    const { authorization } = request.headers;
+
+    if (authorization) {
+        const token = authorization.split(' ').pop();
+
+        jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+            if (err) {
+                console.log(err.message);
+                // return error message to client
+                /*
+                err = {
+                    name: 'TokenExpiredError',
+                    message: 'jwt expired',
+                    expiredAt: 1408621000
+                }
+                */
+                return reply('something went wrong with that jwt');
+            }
+
+            return reply({ ...decoded, verified: true }).code(201);
+        });
+    } else {
+        return reply({ verified: false });
+    }
+};
+
+const verifyCredentials = (request, reply) => {
+    const db = request.server.plugins['hapi-mongodb'].db;
+    const password = request.payload.password;
+
+    db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
+        if (err) {
+            return reply(Boom.internal('Internal MongoDB error', err));
+        }
+
+        if (user) {
+            bcrypt.compare(password, user.password, (err, isValid) => {
+                if (isValid) {
+                    return reply(user);
+                }
+                return reply(Boom.create(401, 'Incorrect username or email!'));
+            });
+        } else {
+            return reply(Boom.create(401, 'Incorrect username or email!'));
+        }
+    });
+}
+
+const createToken = (user) => {
+    const { _id, email } = user;
+    const secret = process.env.JWT_SECRET_KEY;
+
+    return jwt.sign(
+        {
+            id: _id,
+            email: email
+        },
+        secret,
+        {
+            algorithm: 'HS256',
+            expiresIn: '7d'
+        }
+    );
+};
+
+const verifyUniqueUser = (request, reply) => reply(request.payload);
+
+export { verifyToken, createUser, loginHandler, verifyCredentials, verifyUniqueUser };

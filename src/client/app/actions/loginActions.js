@@ -3,8 +3,11 @@ import {
     LOGIN_SUCCESS,
     LOGIN_FAILURE,
     LOGOUT_SUCCESS,
-    LOGOUT_FAILURE
+    LOGOUT_REQUEST,
+    LOGOUT_FAILURE,
+    AUTH_VERIFICATION
 } from '../constants';
+import axios from 'axios';
 
 const requestLogin = (creds) => {
     return {
@@ -17,14 +20,10 @@ const requestLogin = (creds) => {
     };
 };
 
-const receiveLogin = (user) => {
+const receiveLogin = (response) => {
     return {
         type: LOGIN_SUCCESS,
-        data: {
-            isFetching: false,
-            isAuthenticated: true,
-            idToken: user.idToken
-        }
+        data: { ...response, isFetching: false, isAuthenticated: true }
     };
 };
 
@@ -39,13 +38,61 @@ const loginError = (message) => {
     };
 };
 
-const loginUser = (creds) => {
-    return {
-        type: LOGIN_SUCCESS
+const verifyLogin = (isAuthenticated) => {
+    if (!isAuthenticated) {
+        return {
+            type: AUTH_VERIFICATION,
+            data: {
+                verified: false
+            }
+        }
     }
-    // call to server to auth
-    // if error, dispatch errorMessage
-    // otherwise, set token in local storage and dispatch receiveLogin
+
+    const url = `/api/users/verify`;
+    const idToken = localStorage.getItem('idToken');
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+
+            dispatch({
+                type: AUTH_VERIFICATION,
+                data
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+};
+
+const loginUser = (creds) => {
+    const { email, password } = creds;
+    const url = '/api/users/authenticate';
+
+    return async (dispatch) => {
+        try {
+            const response = await axios.post(url, {
+                email,
+                password
+            });
+
+            const { data } = response;
+            localStorage.setItem('idToken', data.idToken);
+
+            dispatch(receiveLogin(response));
+        } catch (err) {
+            const error = { ...err };
+            const message = error.response.data.message;
+
+            if (err.statusCode !== 201) {
+                return dispatch(loginError(message));
+            }
+        }
+    }
 };
 
 const receiveLogout = () => {
@@ -68,16 +115,17 @@ const requestLogout = () => {
     }
 };
 
-const logoutUser = (creds) => {
-    // call requestLogout, remove idToken from localStorage, dispatch receiveLogout
+const logoutUser = () => {
+    return dispatch => {
+        dispatch(requestLogout());
 
-    return {
-        type: LOGOUT_SUCCESS
+        try {
+            localStorage.removeItem('idToken')
+            return dispatch(receiveLogout());
+        } catch (err) {
+            console.log(err);
+        }
     }
-    // call to server to auth
-    // if error, dispatch errorMessage
-    // otherwise, set token in local storage and dispatch receiveLogin
 };
 
-
-export { loginUser, loginError, receiveLogin, requestLogin, logoutUser };
+export { verifyLogin, loginUser, loginError, receiveLogin, requestLogin, logoutUser };

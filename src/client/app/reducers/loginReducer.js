@@ -4,7 +4,8 @@ import {
     LOGIN_FAILURE,
     LOGOUT_REQUEST,
     LOGOUT_SUCCESS,
-    LOGOUT_FAILURE
+    LOGOUT_FAILURE,
+    AUTH_VERIFICATION
 } from '../constants';
 
 const initialState = {
@@ -26,6 +27,7 @@ export default function loginReducer (state = initialState, action) {
             return Object.assign({}, state, {
                 isFetching: false,
                 isAuthenticated: true,
+                email: action.data.email,
                 errorMessage: ''
             });
 
@@ -49,6 +51,11 @@ export default function loginReducer (state = initialState, action) {
             });
 
         case LOGOUT_FAILURE:
+
+        case AUTH_VERIFICATION:
+            return Object.assign({}, state, {
+                isAuthenticated: action.data.verified
+            });
 
         default:
             return state;
