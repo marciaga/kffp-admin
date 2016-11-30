@@ -42,10 +42,24 @@
         },
         {
             "plugin": {
+                "register": "hapi-mongodb",
+                "options": {
+                    "url": "mongodb://localhost:27017/playlist-dev",
+                    "settings": {
+                        "db": {
+                            "native_parser": false
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "plugin": {
                 "register": "hapi-webpack-plugin",
                 "options": "./webpack.config.js"
             }
         },
+        { "plugin": "./modules/auth" },
         { "plugin": "./modules/api" },
         { "plugin": "./modules/front-end" }
     ]
