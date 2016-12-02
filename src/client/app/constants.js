@@ -12,3 +12,5 @@ export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
 export const AUTH_VERIFICATION = 'AUTH_VERIFICATION';
+
+export const GET_USERS = 'GET_USERS';

@@ -5,7 +5,8 @@ import jwt from 'jsonwebtoken';
 
 const userSchema = Joi.object().keys({
     email: Joi.string().email().required(),
-    password: Joi.string().required()
+    password: Joi.string().required(),
+    role: Joi.string().required()
 }).and('email', 'password');
 
 /* Route Handlers */
@@ -28,6 +29,21 @@ const loginHandler = (request, reply) => {
     });
 };
 
+// Fetch all users
+const getUsers = (request, reply) => {
+    const db = request.server.plugins['hapi-mongodb'].db;
+
+    db.collection('users').find({}, { password: 0 }, async (err, cursor) => {
+        if (err) {
+            return reply(Boom.internal('Internal MongoDB error', err));
+        }
+
+        const users = await cursor.toArray();
+
+        return reply(users);
+    })
+};
+
 // CREATE user method
 const createUser = (request, reply) => {
     const db = request.server.plugins['hapi-mongodb'].db;
@@ -45,7 +61,7 @@ const createUser = (request, reply) => {
         return reply(err);
     }
 
-    const { email, password } = request.payload;
+    const { email, password, role } = request.payload;
 
     hashPassword(password, (err, hash) => {
         if (err) {
@@ -54,7 +70,8 @@ const createUser = (request, reply) => {
 
         db.collection('users').insert({
             email: email,
-            password: hash
+            password: hash,
+            role: role
         }, (err, user) => {
             if (err) {
                 return reply(Boom.internal('Internal MongoDB error', err));
@@ -124,13 +141,14 @@ const verifyCredentials = (request, reply) => {
 }
 
 const createToken = (user) => {
-    const { _id, email } = user;
+    const { _id, email, role } = user;
     const secret = process.env.JWT_SECRET_KEY;
 
     return jwt.sign(
         {
             id: _id,
-            email: email
+            email: email,
+            scope: role
         },
         secret,
         {
@@ -140,6 +158,17 @@ const createToken = (user) => {
     );
 };
 
-const verifyUniqueUser = (request, reply) => reply(request.payload);
+const verifyUniqueUser = (request, reply) => {
+    const db = request.server.plugins['hapi-mongodb'].db;
+    const { email } = request.payload;
 
-export { verifyToken, createUser, loginHandler, verifyCredentials, verifyUniqueUser };
+    db.collection('users').findOne({ $or: [{ email: email }] }, (err, user) => {
+        if (user && (user.email === email)) {
+            return reply(Boom.create(401, 'Email already taken!'));
+        }
+
+        return reply(req.payload);
+    });
+}
+
+export { getUsers, verifyToken, createUser, loginHandler, verifyCredentials, verifyUniqueUser };

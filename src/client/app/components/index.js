@@ -30,17 +30,19 @@ class App extends Component {
                 <Navbar isAuthenticated={isAuthenticated} errorMessage={errorMessage} dispatch={dispatch} />
                 {isAuthenticated &&
                     <div>
+                        {this.props.children}
                         <Search dispatch={dispatch} />
                         <SearchResults
                             dispatch={dispatch}
                             searchResults={searchResults}
                         />
+
                     </div>
                 }
             </div>
         )
     }
-};
+}
 
 App.propTypes = {
     dispatch: PropTypes.func.isRequired
