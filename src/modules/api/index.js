@@ -4,12 +4,25 @@ import {
     loginHandler,
     verifyCredentials,
     verifyUniqueUser,
-    verifyToken
+    verifyToken,
+    getUsers
 } from '../../models/user';
 
 import Playlist from '../../models/playlist';
 
 exports.register = function (server, options, next) {
+    server.route({
+        path: '/api/users',
+        method: 'GET',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: getUsers
+        }
+    });
+
     server.route({
         path: '/api/users/verify',
         method: 'GET',
@@ -30,6 +43,7 @@ exports.register = function (server, options, next) {
             handler: loginHandler
         }
     });
+
 
     server.route({
         path: '/api/users/create',

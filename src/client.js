@@ -1,15 +1,16 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, browserHistory } from 'react-router';
+import { Router, createRoutes, browserHistory } from 'react-router';
 import match from 'react-router/lib/match';
 import { Provider } from 'react-redux';
-import { routes } from './client/app/routes';
-
+import rawRoutes from './client/app/routes';
 import storeFactory from 'app/configureStore';
+import { syncHistoryWithStore } from 'react-router-redux'
 
 const initialState = window.__INITIAL_STATE__ || {};
-
 const store = storeFactory(initialState);
+const history = syncHistoryWithStore(browserHistory, store);
+const routes = createRoutes(rawRoutes);
 
 browserHistory.listen(location => {
     match({ routes, location }, (error, redirectLocation, routeState) => {
@@ -27,7 +28,7 @@ browserHistory.listen(location => {
 
 render(
     <Provider store={store}>
-        <Router children={routes} history={browserHistory} />
+        <Router history={history} routes={routes} />
     </Provider>,
     document.getElementById('app')
 );

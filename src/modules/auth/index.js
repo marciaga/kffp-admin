@@ -1,17 +1,20 @@
 import hapiJwt from 'hapi-auth-jwt2';
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
-const people = {
-    1: {
-        id: 1,
-        name: 'Jen Jones'
-    }
-};
-
 const validate = (decoded, request, callback) => {
-    console.log('======== decoded', decoded);
-    if (!people[decoded.id]) {
-        return callback(null, false);
+    /*
+    {
+        id: '',
+        email: '',
+        scope: 'admin',
+        iat: 1480563674,
+        exp: 1481168474
+    }
+    */
+    const { scope } = decoded;
+
+    if (scope === 'admin') {
+        return callback(null, true);
     }
 
     return callback(null, true);

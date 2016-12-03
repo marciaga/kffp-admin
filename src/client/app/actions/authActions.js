@@ -8,6 +8,7 @@ import {
     AUTH_VERIFICATION
 } from '../constants';
 import axios from 'axios';
+import { push } from 'react-router-redux';
 
 const requestLogin = (creds) => {
     return {
@@ -121,6 +122,7 @@ const logoutUser = () => {
 
         try {
             localStorage.removeItem('idToken')
+            dispatch(push('/'));
             return dispatch(receiveLogout());
         } catch (err) {
             console.log(err);

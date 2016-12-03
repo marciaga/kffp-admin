@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import { Navbar } from './navbar';
 import Search from './search';
 import { SearchResults } from './searchResults';
-import { verifyLogin } from '../actions/loginActions';
+import { verifyLogin } from '../actions/authActions';
 
 const mapStateToProps = (state) => {
     return {
-        searchResults: state.search.searchResults,
-        isAuthenticated: state.login.isAuthenticated,
-        errorMessage: state.login.errorMessage
+        search: state.search,
+        auth: state.auth
     };
 };
 
@@ -18,18 +17,21 @@ class App extends Component {
         super(props);
 
         props.dispatch(verifyLogin(
-            props.isAuthenticated
+            props.auth.isAuthenticated
         ));
     }
 
     render () {
-        const { dispatch, isAuthenticated, errorMessage, searchResults } = this.props;
+        const { dispatch, search, auth } = this.props;
+        const { searchResults } = search;
+        const { isAuthenticated, errorMessage } = auth;
 
         return (
             <div>
                 <Navbar isAuthenticated={isAuthenticated} errorMessage={errorMessage} dispatch={dispatch} />
                 {isAuthenticated &&
                     <div>
+                        {this.props.children}
                         <Search dispatch={dispatch} />
                         <SearchResults
                             dispatch={dispatch}
@@ -40,7 +42,7 @@ class App extends Component {
             </div>
         )
     }
-};
+}
 
 App.propTypes = {
     dispatch: PropTypes.func.isRequired

@@ -1,12 +1,20 @@
 import React from 'react';
-import { Route } from 'react-router';
+import { Route, browserHistory } from 'react-router';
 import App from './components/index';
+import UserContainer from './components/users';
 
-export const routes = {
-    path: '/',
-    component: App,
-    childRoutes: [
-        { path: 'playlist', component: App },
-        { path: 'playlist/:id', component: App }
-    ]
+const authCheck = () => {
+    const hasToken = localStorage.getItem('idToken') !== null;
+
+    if (!hasToken) {
+        return browserHistory.push('/');
+    }
 };
+
+export default (
+    <Route>
+        <Route component={App} path='/'>
+            <Route component={UserContainer} path="/users" onEnter={authCheck} />
+        </Route>
+    </Route>
+);
