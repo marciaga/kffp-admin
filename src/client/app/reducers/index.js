@@ -1,9 +1,9 @@
 import searchReducer from './searchReducer';
-import loginReducer from './loginReducer';
-import userReducer from './userReducer';
+import authReducer from './authReducer';
+import usersReducer from './usersReducer';
 
 export default {
     search: searchReducer,
-    login: loginReducer,
-    users: userReducer
+    auth: authReducer,
+    users: usersReducer
 };

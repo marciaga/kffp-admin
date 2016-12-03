@@ -2,13 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { UserList } from './list';
-import { getUsers } from '../../actions/userActions';
+import { getUsers } from '../../actions/usersActions';
 
 const mapStateToProps = (state) => {
     return {
-        users: state.users.userList,
-        isAuthenticated: state.login.isAuthenticated,
-        user: state.login.user
+        users: state.users,
+        auth: state.auth
     };
 };
 
@@ -18,21 +17,27 @@ class UserContainer extends Component {
     }
 
     componentWillReceiveProps (nextProps) {
-        if (nextProps.user.scope !== 'admin') {
-            return browserHistory.push('/');
-        }
-        // this exectutes once
-        if (nextProps.users === this.props.users) {
+        if (this.props.auth.user !== nextProps.auth.user) {
+            if (nextProps.auth.user.scope !== 'admin') {
+                return browserHistory.push('/');
+            }
             // dispatch an action to fetch all users
-            this.props.dispatch(getUsers(nextProps.user));
+            this.props.dispatch(getUsers(nextProps.auth.user));
         }
     }
 
     render () {
-        const { users } = this.props;
+        const { users, auth } = this.props;
+        const { isAuthenticated, user } = auth;
+        const { userList } = users;
+        const isAdmin = user && user.scope === 'admin';
 
         return (
-            <UserList users={users}/>
+            <div>
+                {isAuthenticated && isAdmin &&
+                    <UserList users={userList} />
+                }
+            </div>
         );
     }
 };

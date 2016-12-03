@@ -4,7 +4,7 @@ const initialState = {
     userList: []
 };
 
-export default function userReducer (state = initialState, action) {
+export default function usersReducer (state = initialState, action) {
     switch (action.type) {
     case GET_USERS:
         const userList = action.data;

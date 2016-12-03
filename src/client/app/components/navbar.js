@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Login from './login';
 import { Logout } from './logout';
 
-import { loginUser, logoutUser } from '../actions/loginActions';
+import { loginUser, logoutUser } from '../actions/authActions';
 
 const Navbar = ({ dispatch, errorMessage, isAuthenticated }) => {
 

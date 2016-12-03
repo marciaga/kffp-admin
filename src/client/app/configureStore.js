@@ -5,7 +5,8 @@ import {
     combineReducers
 } from 'redux';
 import thunk from 'redux-thunk';
-import { routerReducer } from 'react-router-redux';
+import { browserHistory } from 'react-router';
+import { routerReducer, routerMiddleware } from 'react-router-redux';
 import reducers from './reducers';
 
 const NODE_ENV = process.env.NODE_ENV;
@@ -16,7 +17,7 @@ const storeFactory = (initialState) => {
         ...reducers,
         routing: routerReducer
     });
-    const middleware = [thunk];
+    const middleware = [thunk, routerMiddleware(browserHistory)];
 
     const devToolComposition = compose(
         applyMiddleware(...middleware),

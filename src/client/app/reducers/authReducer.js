@@ -13,7 +13,7 @@ const initialState = {
     isAuthenticated: localStorage.getItem('idToken') !== null
 };
 
-export default function loginReducer (state = initialState, action) {
+export default function authReducer (state = initialState, action) {
 
     switch (action.type) {
 
@@ -48,7 +48,8 @@ export default function loginReducer (state = initialState, action) {
     case LOGOUT_SUCCESS:
         return Object.assign({}, state, {
             isFetching: true,
-            isAuthenticated: false
+            isAuthenticated: false,
+            user: {}
         });
 
     case LOGOUT_FAILURE:
