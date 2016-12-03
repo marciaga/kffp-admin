@@ -1,13 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Navbar } from './navbar';
-import Search from './search';
-import { SearchResults } from './searchResults';
 import { verifyLogin } from '../actions/authActions';
 
 const mapStateToProps = (state) => {
     return {
-        search: state.search,
         auth: state.auth
     };
 };
@@ -22,8 +19,7 @@ class App extends Component {
     }
 
     render () {
-        const { dispatch, search, auth } = this.props;
-        const { searchResults } = search;
+        const { dispatch, auth } = this.props;
         const { isAuthenticated, errorMessage } = auth;
 
         return (
@@ -32,11 +28,6 @@ class App extends Component {
                 {isAuthenticated &&
                     <div>
                         {this.props.children}
-                        <Search dispatch={dispatch} />
-                        <SearchResults
-                            dispatch={dispatch}
-                            searchResults={searchResults}
-                        />
                     </div>
                 }
             </div>
