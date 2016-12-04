@@ -1,11 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Navbar } from './navbar';
+import { Modal } from './modal';
 import { verifyLogin } from '../actions/authActions';
 
 const mapStateToProps = (state) => {
     return {
-        auth: state.auth
+        auth: state.auth,
+        modal: state.modal
     };
 };
 
@@ -19,7 +21,7 @@ class App extends Component {
     }
 
     render () {
-        const { dispatch, auth } = this.props;
+        const { dispatch, auth, modal } = this.props;
         const { isAuthenticated, errorMessage } = auth;
 
         return (
@@ -28,6 +30,7 @@ class App extends Component {
                 {isAuthenticated &&
                     <div>
                         {this.props.children}
+                        <Modal showModal={modal.showModal} />
                     </div>
                 }
             </div>
