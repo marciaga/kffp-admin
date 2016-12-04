@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import { handleModal } from '../../actions/modalActions';
 
 const mapStateToProps = (state) => {
@@ -27,11 +29,9 @@ class Shows extends Component {
             <div>
                 <h1>Shows</h1>
                 <p>Add New Show</p>
-                <button onClick={() => this.handleClick()}
-                    className="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
-                >
-                    <i className="material-icons">add</i>
-                </button>
+                <FloatingActionButton onClick={this.handleClick} secondary={true} style={{}}>
+                    <ContentAdd />
+                </FloatingActionButton>
             </div>
         );
     }

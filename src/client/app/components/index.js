@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Navbar } from './navbar';
 import { Modal } from './modal';
 import { verifyLogin } from '../actions/authActions';
@@ -25,15 +26,17 @@ class App extends Component {
         const { isAuthenticated, errorMessage } = auth;
 
         return (
-            <div>
-                <Navbar isAuthenticated={isAuthenticated} errorMessage={errorMessage} dispatch={dispatch} />
-                {isAuthenticated &&
-                    <div>
-                        {this.props.children}
-                        <Modal showModal={modal.showModal} />
-                    </div>
-                }
-            </div>
+            <MuiThemeProvider>
+                <div>
+                    <Navbar isAuthenticated={isAuthenticated} errorMessage={errorMessage} dispatch={dispatch} />
+                    {isAuthenticated &&
+                        <div>
+                            {this.props.children}
+                            <Modal showModal={modal.showModal} dispatch={dispatch} />
+                        </div>
+                    }
+                </div>
+            </MuiThemeProvider>
         )
     }
 }

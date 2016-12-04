@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import rawRoutes from './client/app/routes';
 import storeFactory from 'app/configureStore';
 import { syncHistoryWithStore } from 'react-router-redux'
-
+import injectTapEventPlugin from 'react-tap-event-plugin';
 const initialState = window.__INITIAL_STATE__ || {};
 const store = storeFactory(initialState);
 const history = syncHistoryWithStore(browserHistory, store);
@@ -25,7 +25,7 @@ browserHistory.listen(location => {
         // return routeState
     });
 });
-
+injectTapEventPlugin();
 render(
     <Provider store={store}>
         <Router history={history} routes={routes} />
