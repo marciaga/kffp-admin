@@ -1,7 +1,8 @@
 import { TOGGLE_MODAL } from '../constants';
 
 const initialState = {
-    showModal: false
+    showModal: false,
+    title: ''
 };
 
 export default function modalReducer (state = initialState, action) {

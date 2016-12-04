@@ -3,12 +3,12 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { handleModal } from '../actions/modalActions';
+import Form from './form';
 
 class Modal extends Component {
     constructor (props) {
         super(props);
 
-        this.actions = [];
         this.handleClose = this.handleClose.bind(this);
     }
 
@@ -19,17 +19,16 @@ class Modal extends Component {
     }
 
     render () {
-        const { showModal } = this.props;
+        const { showModal, title } = this.props;
 
         return (
             <Dialog
-                title="Dialog With Actions"
-                actions={this.actions}
+                title={title}
                 modal={false}
                 open={showModal}
                 onRequestClose={this.handleClose}
             >
-              The actions in this window were passed in as an array of React objects.
+                <Form />
             </Dialog>
         );
     }

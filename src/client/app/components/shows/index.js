@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { handleModal } from '../../actions/modalActions';
+import { setFormData } from '../../actions/formActions';
 
 const mapStateToProps = (state) => {
     return {
         shows: state.shows,
-        modal: state.modal
+        modal: state.modal,
+        form: state.form
     }
 };
 
@@ -18,9 +20,10 @@ class Shows extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick () {
+    handleClick (formType, model) {
         const { showModal } = this.props.modal;
 
+        this.props.dispatch(setFormData(formType, model));
         this.props.dispatch(handleModal(showModal));
     }
 
@@ -29,7 +32,7 @@ class Shows extends Component {
             <div>
                 <h1>Shows</h1>
                 <p>Add New Show</p>
-                <FloatingActionButton onClick={this.handleClick} secondary={true} style={{}}>
+                <FloatingActionButton onClick={() => this.handleClick('new', 'show')} secondary={true} style={{}}>
                     <ContentAdd />
                 </FloatingActionButton>
             </div>
