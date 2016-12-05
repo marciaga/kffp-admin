@@ -1,13 +1,33 @@
 // mapping of data model + form fields
-
 const show = {
     new: {
         fields: {
-            showName: 'Text',
-            users: 'Select',
-            startTime: 'Time',
-            endTime: 'Time',
-            isActive: 'ToggleField'
+            showName: {
+                fieldType: 'Text',
+                name: 'text',
+                hintText: 'Enter the show name',
+                label: 'Show Name'
+            },
+            users: {
+                fieldType: 'AutoCompleteField',
+                name: 'text',
+                label: 'Select a DJ',
+                hintText: 'Type a name'
+            },
+            startTime: {
+                fieldType: 'Time',
+                name: 'timepicker',
+                hintText: 'Select a Start Time'
+            },
+            endTime: {
+                fieldType: 'Time',
+                name: 'timepicker',
+                hintText: 'Select a Start Time'
+            },
+            isActive: {
+                fieldType: 'ToggleField',
+                label: 'Active Show?'
+            }
         }
     }
 };

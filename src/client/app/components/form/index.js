@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import cuid from 'cuid';
 import FormFields from './fields';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const mapStateToProps = (state) => {
     return {
@@ -17,14 +18,18 @@ class Form extends Component {
         this.renderFormFields = this.renderFormFields.bind(this);
     }
 
-    renderField (fieldName) {
-        const FormField = FormFields[fieldName];
+    renderField (fieldData) {
+        const { fieldType, hintText, label, name } = fieldData;
+        const FormField = FormFields[fieldType];
 
         if (FormField) {
             return (
                 <FormField
                     key={cuid()}
-                    label={fieldName}
+                    label={label}
+                    hintText={hintText}
+                    name={name}
+                    id={cuid()}
                 />
             );
         } else {
@@ -44,11 +49,20 @@ class Form extends Component {
 
     render () {
         const { form } = this.props;
+        const { model, type } = form;
+        const formTitle = `${type} ${model} form`;
 
         return (
-            <form>
-                { this.renderFormFields(form) }
-            </form>
+            <div>
+                <h1>{formTitle}</h1>
+                <form>
+                    { this.renderFormFields(form) }
+                    <RaisedButton
+                        label="submit"
+                        primary={true}
+                    />
+                </form>
+            </div>
         );
     }
 };

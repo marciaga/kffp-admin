@@ -19,11 +19,10 @@ class Modal extends Component {
     }
 
     render () {
-        const { showModal, title } = this.props;
+        const { showModal } = this.props;
 
         return (
             <Dialog
-                title={title}
                 modal={false}
                 open={showModal}
                 onRequestClose={this.handleClose}
