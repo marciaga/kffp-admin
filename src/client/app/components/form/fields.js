@@ -5,6 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Toggle from 'material-ui/Toggle';
 import TimePicker from 'material-ui/TimePicker';
 import AutoComplete from 'material-ui/AutoComplete';
+import cuid from 'cuid';
 
 
 const Text = ({ value, id, hintText, label }) => {
@@ -65,9 +66,10 @@ const Time = ({ hintText, value }) => {
 const Select = ({ label, value, items }) => {
     const renderItems = (list) => {
         if (list) {
+
             return list.map(item => {
                 return (
-                    <MenuItem value={item.value} primaryText={item.label} />
+                    <MenuItem key={cuid()} value={item.value} primaryText={item.label} />
                 );
             });
         }

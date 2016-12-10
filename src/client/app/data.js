@@ -1,3 +1,4 @@
+import { daysOfWeek } from './utils/constants';
 // mapping of data model + form fields
 const shows = {
     new: {
@@ -13,6 +14,18 @@ const shows = {
                 name: 'text',
                 label: 'Select a DJ',
                 hintText: 'Type a name'
+            },
+            dayofWeek: {
+                fieldType: 'Select',
+                label: 'Day of the Week',
+                name: 'select',
+                hintText: 'Select a Day of the Week',
+                items: daysOfWeek.map(d => {
+                    return {
+                        label: d,
+                        value: d
+                    }
+                })
             },
             startTime: {
                 fieldType: 'Time',
@@ -37,6 +50,9 @@ const shows = {
             },
             users: {
                 label: 'DJ(s)'
+            },
+            dayofWeek: {
+                label: 'Day of the Week'
             },
             startTime: {
                 label: 'Start Time'

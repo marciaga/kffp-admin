@@ -20,7 +20,7 @@ class Form extends Component {
     }
 
     renderField (fieldData) {
-        const { fieldType, hintText, label, name } = fieldData;
+        const { fieldType, hintText, label, name, items } = fieldData;
         const FormField = FormFields[fieldType];
 
         if (FormField) {
@@ -31,6 +31,7 @@ class Form extends Component {
                     hintText={hintText}
                     name={name}
                     id={cuid()}
+                    items={items}
                 />
             );
         } else {

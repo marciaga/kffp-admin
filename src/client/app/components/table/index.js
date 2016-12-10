@@ -44,6 +44,7 @@ class MainTable extends Component {
             {
                 showName: 'Bizarre Times',
                 users: 'Mark',
+                dayofWeek: 'Wednesday',
                 startTime: '06:00',
                 endTime: '08:00',
                 isActive: true
