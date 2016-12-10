@@ -6,7 +6,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 const mapStateToProps = (state) => {
     return {
-        form: state.form
+        form: state.form,
+        model: state.model
     }
 };
 
@@ -39,24 +40,21 @@ class Form extends Component {
         }
     }
 
-    renderFormFields (form) {
-        const { fields } = form;
-
+    renderFormFields (fields) {
         return Object.keys(fields).map(field => {
             return this.renderField(fields[field]);
         });
     }
 
     render () {
-        const { form } = this.props;
-        const { model, type } = form;
-        const formTitle = `${type} ${model} form`;
+        const { fields, modelName, formType, data } = this.props.form;
+        const formTitle = `${formType} ${modelName} form`;
 
         return (
             <div>
                 <h1>{formTitle}</h1>
                 <form>
-                    { this.renderFormFields(form) }
+                    { this.renderFormFields(fields, data) }
                     <RaisedButton
                         label="submit"
                         primary={true}

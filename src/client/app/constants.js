@@ -18,3 +18,4 @@ export const GET_USERS = 'GET_USERS';
 export const TOGGLE_MODAL = 'TOGGLE_MODAL';
 // Form
 export const SET_FORM_FIELDS = 'SET_FORM_FIELDS';
+export const SET_MODEL = 'SET_MODEL';

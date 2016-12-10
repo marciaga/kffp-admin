@@ -1,5 +1,5 @@
 // mapping of data model + form fields
-const show = {
+const shows = {
     new: {
         fields: {
             showName: {
@@ -29,6 +29,28 @@ const show = {
                 label: 'Active Show?'
             }
         }
+    },
+    show: {
+        fields: {
+            showName: {
+                label: 'Show Name'
+            },
+            users: {
+                label: 'DJ(s)'
+            },
+            startTime: {
+                label: 'Start Time'
+            },
+            endTime: {
+                label: 'End Time'
+            },
+            isActive: {
+                label: 'Active'
+            }
+        }
+    },
+    edit: {
+
     }
 };
 
@@ -48,7 +70,7 @@ const playlist = {
 };
 
 export default {
-    show,
+    shows,
     user,
     playlist
 };

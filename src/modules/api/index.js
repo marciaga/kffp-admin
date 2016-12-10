@@ -8,6 +8,8 @@ import {
     getUsers
 } from '../../models/user';
 
+import { getShows } from '../../models/shows';
+
 import Playlist from '../../models/playlist';
 
 exports.register = function (server, options, next) {
@@ -54,6 +56,30 @@ exports.register = function (server, options, next) {
                 { method: verifyUniqueUser }
             ],
             handler: createUser
+        }
+    });
+    // get all shows
+    server.route({
+        path: '/api/shows',
+        method: 'GET',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: getShows
+        }
+    });
+    // create a show
+    server.route({
+        path: '/api/shows',
+        method: 'POST',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: () => console.log('')
         }
     });
 

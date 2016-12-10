@@ -1,17 +1,20 @@
-import { SET_FORM_FIELDS } from '../constants';
+import { SET_MODEL } from '../constants';
 
 const initialstate = {};
 
 export default function modelReducer (state = initialstate, action) {
     switch (action.type) {
 
-    case SET_FORM_FIELDS:
-        const { fields, modelName, formType } = action.data;
+    case SET_MODEL:
+        const { model } = action.data;
+        const { fields, data, name, type } = model;
+
         return {
             ...state,
             fields,
-            modelName,
-            formType
+            data,
+            name,
+            type
         };
 
     default:
