@@ -20,5 +20,16 @@ const debounce = (func, wait, immediate) => {
         }
 	};
 };
+// we're making the assumption that the user is in Pacific Time
+const hoursToDateObj = (hours) => {
+    if (typeof hours === 'undefined') {
+        return new Date();
+    }
 
-export { debounce };
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(0);
+
+    return date;
+};
+export { debounce, hoursToDateObj };

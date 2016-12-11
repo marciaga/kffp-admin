@@ -8,7 +8,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import cuid from 'cuid';
 import { updateFormField } from '../../actions/formActions';
 import { FORM_FIELD_DEBOUNCE_TIME } from '../../utils/constants';
-import { debounce } from '../../utils/helperFunctions';
+import { debounce, hoursToDateObj } from '../../utils/helperFunctions';
 
 class Text extends Component {
     constructor (props) {
@@ -79,18 +79,25 @@ const ToggleField = ({ dispatch, fieldName, label, value }) => {
     );
 };
 
-const Time = ({ hintText, value }) => {
+const Time = ({ dispatch, fieldName, hintText, value }) => {
+    const handleTimePickerChange = (e, date) => {
+        const selectedHours = date.getHours();
+
+        dispatch(updateFormField(fieldName, selectedHours));
+    }
+
+    value = hoursToDateObj(value);
     return (
         <TimePicker
             format="ampm"
             hintText={hintText}
-            value={{}}
-            onChange={() => console.log('time picker')}
+            value={value}
+            onChange={handleTimePickerChange}
         />
     );
 };
 
-const Select = ({ label, value, items }) => {
+const Select = ({ dispatch, fieldName, label, value, items }) => {
     const renderItems = (list) => {
         if (list) {
 
@@ -102,11 +109,15 @@ const Select = ({ label, value, items }) => {
         }
     };
 
+    const selectChangeHandler = (event, index, value) => {
+        dispatch(updateFormField(fieldName, value));
+    };
+
     return (
         <SelectField
             floatingLabelText={label}
             value={value}
-            onChange={() => console.log('y')}
+            onChange={selectChangeHandler}
         >
             { renderItems(items) }
         </SelectField>
