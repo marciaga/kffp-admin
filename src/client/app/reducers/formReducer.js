@@ -1,8 +1,8 @@
-import { SET_FORM_FIELDS } from '../constants';
+import { SET_FORM_FIELDS, UPDATE_FORM_FIELD } from '../constants';
 
 const initialstate = {};
 
-export default function modelReducer (state = initialstate, action) {
+export default function formReducer (state = initialstate, action) {
     switch (action.type) {
 
     case SET_FORM_FIELDS:
@@ -14,20 +14,21 @@ export default function modelReducer (state = initialstate, action) {
             formType
         };
 
+    case UPDATE_FORM_FIELD:
+        const { fieldName, value } = action.data;
+
+        return {
+            ...state,
+            fields: {
+                ...state.fields,
+                [fieldName]: {
+                    ...state.fields[fieldName],
+                    value
+                }
+            }
+        }
+
     default:
         return state;
     }
 }
-
-/*
-model: {
-    name: 'Shows',
-    fields: {
-        new: {},
-        show: {},
-        edit: {}
-    },
-    type: 'new',
-    data: {}
-}
-*/

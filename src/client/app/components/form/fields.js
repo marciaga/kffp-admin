@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -6,20 +6,42 @@ import Toggle from 'material-ui/Toggle';
 import TimePicker from 'material-ui/TimePicker';
 import AutoComplete from 'material-ui/AutoComplete';
 import cuid from 'cuid';
+import { updateFormField } from '../../actions/formActions';
+import { FORM_FIELD_DEBOUNCE_TIME } from '../../utils/constants';
+import { debounce } from '../../utils/helperFunctions';
 
+class Text extends Component {
+    constructor (props) {
+        super(props);
 
-const Text = ({ value, id, hintText, label }) => {
-    return (
-        <TextField
-            id={id}
-            name={name}
-            floatingLabelText={label}
-            value={value}
-            hintText={hintText}
-            type="text"
-        />
-    );
-};
+        this.debounceTextField = debounce(this.debounceTextField, FORM_FIELD_DEBOUNCE_TIME);
+    }
+
+    handleTextFieldChange (e) {
+        const textFieldName = this.props.fieldName;
+        this.debounceTextField(e.target.value, textFieldName);
+    }
+
+    debounceTextField (value, fieldName) {
+        this.props.dispatch(updateFormField(fieldName, value));
+    }
+
+    render () {
+        const { id, name, label, value, hintText, fieldName } = this.props;
+
+        return (
+            <TextField
+                id={id}
+                name={name}
+                floatingLabelText={label}
+                value={value}
+                hintText={hintText}
+                type="text"
+                onChange={this.handleTextFieldChange.bind(this)}
+            />
+        )
+    }
+}
 
 const Password = ({ id, value, hintText, label }) => {
     return (
@@ -33,19 +55,24 @@ const Password = ({ id, value, hintText, label }) => {
     );
 };
 
-const ToggleField = ({ label, value }) => {
+const ToggleField = ({ dispatch, fieldName, label, value }) => {
     const styles = {
         block: {
             maxWidth: 250
         }
+    };
+    const handleToggle = () => {
+        const toggledValue = !value;
+
+        dispatch(updateFormField(fieldName, toggledValue ));
     };
 
     return (
         <div style={styles.block}>
             <Toggle
               label={label}
-              defaultToggled={false}
-              onToggle={() => console.log('toggled')}
+              defaultToggled={value}
+              onToggle={handleToggle}
               style={{}}
             />
         </div>

@@ -19,8 +19,10 @@ class Form extends Component {
         this.renderFormFields = this.renderFormFields.bind(this);
     }
 
-    renderField (fieldData) {
-        const { fieldType, hintText, label, name, items } = fieldData;
+    renderField (fieldData, fieldName) {
+        const { dispatch } = this.props;
+
+        const { fieldType, hintText, label, name, items, value } = fieldData;
         const FormField = FormFields[fieldType];
 
         if (FormField) {
@@ -31,7 +33,10 @@ class Form extends Component {
                     hintText={hintText}
                     name={name}
                     id={cuid()}
+                    value={value}
+                    fieldName={fieldName}
                     items={items}
+                    dispatch={dispatch}
                 />
             );
         } else {
@@ -43,7 +48,7 @@ class Form extends Component {
 
     renderFormFields (fields) {
         return Object.keys(fields).map(field => {
-            return this.renderField(fields[field]);
+            return this.renderField(fields[field], field);
         });
     }
 

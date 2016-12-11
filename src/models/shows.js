@@ -2,7 +2,7 @@ import Joi from 'joi';
 import Boom from 'boom';
 
 const showSchema = Joi.object().keys({
-    showName: Joi.string().string().required(),
+    showName: Joi.string().required(),
     users: Joi.array().items(Joi.string()).required(),
     daysOfWeek: Joi.string().required(),
     startTime: Joi.string().required(),

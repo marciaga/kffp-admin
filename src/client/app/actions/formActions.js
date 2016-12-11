@@ -1,5 +1,15 @@
-import { SET_FORM_FIELDS } from '../constants';
+import { SET_FORM_FIELDS, UPDATE_FORM_FIELD } from '../constants';
 import Models from '../data';
+
+const updateFormField = (fieldName, value) => {
+    return {
+        type: UPDATE_FORM_FIELD,
+        data: {
+            fieldName,
+            value
+        }
+    }
+};
 
 const setFormData = (formType, modelName) => {
     const fields = Models[modelName][formType]['fields'];
@@ -23,4 +33,4 @@ const receiveFormData = (data) => {
     }
 };
 
-export { setFormData };
+export { setFormData, updateFormField };
