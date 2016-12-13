@@ -22,20 +22,20 @@ class Form extends Component {
     renderField (fieldData, fieldName) {
         const { dispatch } = this.props;
 
-        const { fieldType, hintText, label, name, items, value } = fieldData;
+        const { fieldType, hintText, label, name, items, value, searchResults } = fieldData;
         const FormField = FormFields[fieldType];
 
         if (FormField) {
             return (
                 <FormField
-                    key={cuid()}
                     label={label}
                     hintText={hintText}
                     name={name}
-                    id={cuid()}
+                    id={`${name}_field`}
                     value={value}
                     fieldName={fieldName}
                     items={items}
+                    searchResults={searchResults}
                     dispatch={dispatch}
                 />
             );
@@ -47,8 +47,12 @@ class Form extends Component {
     }
 
     renderFormFields (fields) {
-        return Object.keys(fields).map(field => {
-            return this.renderField(fields[field], field);
+        return Object.keys(fields).map((field, i) => {
+            return (
+                <div key={i}>
+                    {this.renderField(fields[field], field)}
+                </div>
+            )
         });
     }
 

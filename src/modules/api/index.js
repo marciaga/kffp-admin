@@ -5,8 +5,9 @@ import {
     verifyCredentials,
     verifyUniqueUser,
     verifyToken,
-    getUsers
+    getUsers,
 } from '../../models/user';
+import { userSearchHandler } from '../../models/search';
 
 import { getShows } from '../../models/shows';
 
@@ -80,6 +81,19 @@ exports.register = function (server, options, next) {
                 scope: ['admin']
             },
             handler: () => console.log('')
+        }
+    });
+
+    // users search endpoint
+    server.route({
+        path: '/api/search/users',
+        method: 'GET',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: userSearchHandler
         }
     });
 

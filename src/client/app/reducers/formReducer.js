@@ -1,4 +1,4 @@
-import { SET_FORM_FIELDS, UPDATE_FORM_FIELD } from '../constants';
+import { SET_FORM_FIELDS, UPDATE_FORM_FIELD, SET_USER_AUTOCOMPLETE } from '../constants';
 
 const initialstate = {};
 
@@ -24,6 +24,20 @@ export default function formReducer (state = initialstate, action) {
                 [fieldName]: {
                     ...state.fields[fieldName],
                     value
+                }
+            }
+        }
+
+    case SET_USER_AUTOCOMPLETE:
+        const { autocompleteResults } = action.data;
+
+        return {
+            ...state,
+            fields: {
+                ...state.fields,
+                users: {
+                    ...state.fields.users,
+                    searchResults: autocompleteResults
                 }
             }
         }

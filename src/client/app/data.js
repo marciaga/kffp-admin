@@ -11,7 +11,7 @@ const shows = {
             },
             users: {
                 fieldType: 'AutoCompleteField',
-                name: 'text',
+                name: 'autocomplete_field',
                 label: 'Select a DJ',
                 hintText: 'Type a name'
             },

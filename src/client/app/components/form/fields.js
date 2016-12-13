@@ -5,8 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Toggle from 'material-ui/Toggle';
 import TimePicker from 'material-ui/TimePicker';
 import AutoComplete from 'material-ui/AutoComplete';
-import cuid from 'cuid';
-import { updateFormField } from '../../actions/formActions';
+import { updateFormField, getUserAutoComplete } from '../../actions/formActions';
 import { FORM_FIELD_DEBOUNCE_TIME } from '../../utils/constants';
 import { debounce, hoursToDateObj } from '../../utils/helperFunctions';
 
@@ -14,16 +13,12 @@ class Text extends Component {
     constructor (props) {
         super(props);
 
-        this.debounceTextField = debounce(this.debounceTextField, FORM_FIELD_DEBOUNCE_TIME);
+        this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
     }
 
     handleTextFieldChange (e) {
         const textFieldName = this.props.fieldName;
-        this.debounceTextField(e.target.value, textFieldName);
-    }
-
-    debounceTextField (value, fieldName) {
-        this.props.dispatch(updateFormField(fieldName, value));
+        this.props.dispatch(updateFormField(textFieldName, e.target.value));
     }
 
     render () {
@@ -34,10 +29,9 @@ class Text extends Component {
                 id={id}
                 name={name}
                 floatingLabelText={label}
-                value={value}
+                value={value || ''}
                 hintText={hintText}
-                type="text"
-                onChange={this.handleTextFieldChange.bind(this)}
+                onChange={this.handleTextFieldChange}
             />
         )
     }
@@ -100,10 +94,9 @@ const Time = ({ dispatch, fieldName, hintText, value }) => {
 const Select = ({ dispatch, fieldName, label, value, items }) => {
     const renderItems = (list) => {
         if (list) {
-
-            return list.map(item => {
+            return list.map(item, i => {
                 return (
-                    <MenuItem key={cuid()} value={item.value} primaryText={item.label} />
+                    <MenuItem key={i} value={item.value} primaryText={item.label} />
                 );
             });
         }
@@ -124,15 +117,62 @@ const Select = ({ dispatch, fieldName, label, value, items }) => {
     );
 };
 
-const AutoCompleteField = ({ hintText, label }) => {
-    return (
-        <AutoComplete
-            hintText={hintText}
-            dataSource={[]}
-            onUpdateInput={() => console.log('autocomplete')}
-            floatingLabelText={label}
-        />
-    );
-};
+class AutoCompleteField extends Component {
+    constructor (props) {
+        super(props);
+
+        this.debounceInputField = debounce(this.debounceInputField, FORM_FIELD_DEBOUNCE_TIME);
+        this.handleSelection = this.handleSelection.bind(this);
+        this.handleInputUpdate = this.handleInputUpdate.bind(this);
+        this.renderAutocompleteItems = this.renderAutocompleteItems.bind(this);
+    }
+
+    debounceInputField (value) {
+        this.props.dispatch(getUserAutoComplete(value));
+    }
+
+    handleInputUpdate (text) {
+        this.debounceInputField(text);
+
+    }
+
+    handleSelection (selected, index) {
+
+    }
+
+    renderAutocompleteItems (results) {
+        if (!results) {
+            return [];
+        }
+
+        return results.map(r => {
+            return {
+                text: r.email,
+                value: (
+                  <MenuItem
+                    primaryText={r.email}
+                    secondaryText="&#9786;"
+                  />
+                )
+            }
+        });
+    }
+
+    render () {
+        const { hintText, label, searchResults } = this.props;
+        const dataSource = this.renderAutocompleteItems(searchResults);
+
+        return (
+            <AutoComplete
+                hintText={hintText}
+                dataSource={dataSource}
+                filter={AutoComplete.caseInsensitiveFilter}
+                onNewRequest={() => console.log('on new request')}
+                onUpdateInput={this.handleInputUpdate}
+                floatingLabelText={label}
+            />
+        )
+    }
+}
 
 export default { Text, Password, ToggleField, Time, Select, AutoCompleteField };

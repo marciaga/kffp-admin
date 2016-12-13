@@ -19,5 +19,7 @@ export const TOGGLE_MODAL = 'TOGGLE_MODAL';
 // Form
 export const SET_FORM_FIELDS = 'SET_FORM_FIELDS';
 export const UPDATE_FORM_FIELD = 'UPDATE_FORM_FIELD';
+export const SET_USER_AUTOCOMPLETE = 'SET_USER_AUTOCOMPLETE';
+
 // Model
 export const SET_MODEL = 'SET_MODEL';
