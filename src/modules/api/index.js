@@ -5,7 +5,7 @@ import {
     verifyCredentials,
     verifyUniqueUser,
     verifyToken,
-    getUsers,
+    getUsers
 } from '../../models/user';
 import { userSearchHandler } from '../../models/search';
 

@@ -94,7 +94,7 @@ const Time = ({ dispatch, fieldName, hintText, value }) => {
 const Select = ({ dispatch, fieldName, label, value, items }) => {
     const renderItems = (list) => {
         if (list) {
-            return list.map(item, i => {
+            return list.map((item, i) => {
                 return (
                     <MenuItem key={i} value={item.value} primaryText={item.label} />
                 );

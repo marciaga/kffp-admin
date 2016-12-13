@@ -1,24 +1,24 @@
 const debounce = (func, wait, immediate) => {
-	let timeout;
+    let timeout;
 
-	return function () {
+    return function () {
         const args = arguments;
-		const later = () => {
-			timeout = null;
+        const later = () => {
+            timeout = null;
 
-			if (!immediate) {
+            if (!immediate) {
                 func.apply(this, args);
             }
-		};
-		const callNow = immediate && !timeout;
+        };
+        const callNow = immediate && !timeout;
 
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
 
-		if (callNow) {
+        if (callNow) {
             func.apply(this, args);
         }
-	};
+    };
 };
 // we're making the assumption that the user is in Pacific Time
 const hoursToDateObj = (hours) => {
