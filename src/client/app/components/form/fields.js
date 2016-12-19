@@ -39,6 +39,12 @@ class Text extends Component {
     }
 }
 
+const Hidden = ({ value }) => {
+    return (
+        <input type="hidden" value={value} />
+    )
+};
+
 const Password = ({ id, value, hintText, label }) => {
     return (
         <TextField
@@ -208,4 +214,12 @@ class AutoCompleteField extends Component {
     }
 }
 
-export default { Text, Password, ToggleField, Time, Select, AutoCompleteField };
+export default {
+    Text,
+    Password,
+    ToggleField,
+    Time,
+    Select,
+    AutoCompleteField,
+    Hidden
+};

@@ -4,7 +4,7 @@ export const TableConfig = {
     stripedRows: false,
     showRowHover: true,
     selectable: true,
-    multiSelectable: true,
+    multiSelectable: false,
     enableSelectAll: true,
     deselectOnClickaway: true,
     showCheckboxes: true

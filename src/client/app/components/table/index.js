@@ -19,6 +19,7 @@ class MainTable extends Component {
         this.renderTableHeader = this.renderTableHeader.bind(this);
         this.renderTableBody = this.renderTableBody.bind(this);
         this.renderTableRowCell = this.renderTableRowCell.bind(this);
+        this.handleRowSelection = this.handleRowSelection.bind(this);
     }
 
     renderTableHeader () {
@@ -44,7 +45,10 @@ class MainTable extends Component {
 
         return tableData.map((item, index) => {
             return (
-                <TableRow key={index} selected={item.selected}>
+                <TableRow
+                    key={index}
+                    selected={item.selected}
+                >
                     {this.renderTableRowCell(item)}
                 </TableRow>
             )
@@ -65,6 +69,16 @@ class MainTable extends Component {
         });
     }
 
+    handleRowSelection (selectedRows) {
+        const rowIndex = selectedRows.length ? selectedRows[0] : false;
+
+        if (rowIndex >= 0) {
+            const rowData = this.props.model.data[rowIndex];
+            console.log(rowData)
+            // dispatch action to open for with rowData
+        }
+    }
+
     render () {
 
         const { model, tableConfig } = this.props;
@@ -77,6 +91,7 @@ class MainTable extends Component {
             fixedFooter={tableConfig.fixedFooter}
             selectable={tableConfig.selectable}
             multiSelectable={tableConfig.multiSelectable}
+            onRowSelection={this.handleRowSelection}
             >
                 <TableHeader
                     displaySelectAll={tableConfig.displaySelectAll}
