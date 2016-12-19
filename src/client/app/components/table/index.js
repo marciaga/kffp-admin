@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import cuid from 'cuid';
 import { Table, TableHeader, TableHeaderColumn, TableBody, TableRow, TableRowColumn } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
@@ -25,13 +24,13 @@ class MainTable extends Component {
     renderTableHeader () {
         const { fields } = this.props.model;
 
-        return Object.keys(fields).map(f => {
+        return Object.keys(fields).map((f, i) => {
             const { label } = fields[f];
 
             return (
                 <TableHeaderColumn
                     tooltip={label}
-                    key={cuid()}
+                    key={i}
                 >
                     {label}
                 </TableHeaderColumn>
@@ -40,20 +39,8 @@ class MainTable extends Component {
     }
 
     renderTableBody () {
-        const tableData = [
-            {
-                showName: 'Bizarre Times',
-                users: 'Mark',
-                dayOfWeek: 'Wednesday',
-                startTime: '06:00',
-                endTime: '08:00',
-                isActive: true
-            }
-        ];
-        // don't count 'selected' as a key
-
         const { model } = this.props;
-        // const tableData = model.data;
+        const tableData = model.data;
 
         return tableData.map((item, index) => {
             return (
@@ -65,13 +52,16 @@ class MainTable extends Component {
     }
 
     renderTableRowCell (item) {
-        return Object.keys(item).map(r => {
-            const value = item[r];
-            return (
-                <TableRowColumn key={cuid()}>
-                    <span>{value}</span>
-                </TableRowColumn>
-            )
+        return Object.keys(item).map((r, i) => {
+            if (r !== '_id') { // don't display the id
+                const value = item[r];
+
+                return (
+                    <TableRowColumn key={i}>
+                        <span>{value}</span>
+                    </TableRowColumn>
+                )
+            }
         });
     }
 

@@ -68,7 +68,6 @@ class Form extends Component {
     renderErrors (errors) {
         if (errors.length) {
             return errors.map((err, i) => {
-                console.log(err);
                 return (
                     <p key={i}>{err}</p>
                 )

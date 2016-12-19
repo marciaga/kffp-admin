@@ -35,8 +35,6 @@ class Shows extends Component {
             if (nextProps.auth.user.scope !== 'admin') {
                 return browserHistory.push('/');
             }
-            console.log('fetch shows')
-            // dispatch an action to fetch all shows
             this.props.dispatch(setModel(nextProps.auth.user, 'shows', 'show'));
         }
     }
