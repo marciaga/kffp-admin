@@ -1,24 +1,31 @@
 import React, { PropTypes } from 'react';
+import AppBar from 'material-ui/AppBar';
 import Login from './login';
 import { Logout } from './logout';
 
 import { loginUser, logoutUser } from '../actions/authActions';
 
+const renderLoginElement = (errorMessage, isAuthenticated, dispatch)  => {
+    if (!isAuthenticated) {
+        return (
+            <Login
+                errorMessage={errorMessage}
+                onLoginClick={ credentials => dispatch(loginUser(credentials)) }
+            />
+        );
+    }
+    return (
+        <Logout onLogoutClick={ () => dispatch(logoutUser()) } />
+    );
+};
+
 const Navbar = ({ dispatch, errorMessage, isAuthenticated }) => {
 
     return (
-        <nav>
-            {!isAuthenticated &&
-                <Login
-                    errorMessage={errorMessage}
-                    onLoginClick={ credentials => dispatch(loginUser(credentials)) }
-                />
-            }
-
-            {isAuthenticated &&
-                <Logout onLogoutClick={ () => dispatch(logoutUser()) } />
-            }
-        </nav>
+        <AppBar
+            title="KFFP"
+            iconElementRight={renderLoginElement(errorMessage, isAuthenticated, dispatch)}
+        />
     );
 };
 

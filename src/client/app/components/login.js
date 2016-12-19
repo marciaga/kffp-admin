@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class Login extends Component {
     constructor (props) {
@@ -24,7 +25,7 @@ class Login extends Component {
             <div>
                 <input type='text' ref='email' placeholder='Email' />
                 <input type='password' ref='password' placeholder='Password' />
-                <button onClick={(e) => this.handleClick(e)}>Login</button>
+                <RaisedButton onClick={(e) => this.handleClick(e)} label="Login" />
 
                 {errorMessage &&
                     <p>{errorMessage}</p>

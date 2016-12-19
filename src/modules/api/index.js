@@ -9,10 +9,11 @@ import {
 } from '../../models/user';
 import { userSearchHandler } from '../../models/search';
 
-import { getShows } from '../../models/shows';
+import { getShows, upsertShow } from '../../models/shows';
 
 import Playlist from '../../models/playlist';
 
+// TODO separate these routes into respective files
 exports.register = function (server, options, next) {
     server.route({
         path: '/api/users',
@@ -80,7 +81,7 @@ exports.register = function (server, options, next) {
                 strategy: 'jwt',
                 scope: ['admin']
             },
-            handler: () => console.log('')
+            handler: upsertShow
         }
     });
 
@@ -97,6 +98,7 @@ exports.register = function (server, options, next) {
         }
     });
 
+// refactor this
     server.route({
         method: 'POST',
         path: '/api/v1/playlist/{id}',

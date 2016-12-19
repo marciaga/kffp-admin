@@ -20,6 +20,8 @@ export const TOGGLE_MODAL = 'TOGGLE_MODAL';
 export const SET_FORM_FIELDS = 'SET_FORM_FIELDS';
 export const UPDATE_FORM_FIELD = 'UPDATE_FORM_FIELD';
 export const SET_USER_AUTOCOMPLETE = 'SET_USER_AUTOCOMPLETE';
+export const FORM_SUCCESS = 'FORM_SUCCESS';
+export const SUBMIT_ERROR = 'SUBMIT_ERROR';
 
 // Model
 export const SET_MODEL = 'SET_MODEL';

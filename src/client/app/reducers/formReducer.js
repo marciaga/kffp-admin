@@ -1,6 +1,14 @@
-import { SET_FORM_FIELDS, UPDATE_FORM_FIELD, SET_USER_AUTOCOMPLETE } from '../constants';
+import {
+    FORM_SUCCESS,
+    SUBMIT_ERROR,
+    SET_FORM_FIELDS,
+    UPDATE_FORM_FIELD,
+    SET_USER_AUTOCOMPLETE
+} from '../constants';
 
-const initialstate = {};
+const initialstate = {
+    errors: []
+};
 
 export default function formReducer (state = initialstate, action) {
     switch (action.type) {
@@ -40,6 +48,18 @@ export default function formReducer (state = initialstate, action) {
                     searchResults: autocompleteResults
                 }
             }
+        }
+
+    case FORM_SUCCESS:
+        return {
+            ...state,
+            errors: [],
+        }
+
+    case SUBMIT_ERROR:
+        return {
+            ...state,
+            errors: [...state.errors, action.data.message]
         }
 
     default:

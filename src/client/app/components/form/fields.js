@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Album from 'material-ui/svg-icons/av/album';
+import { List, ListItem } from 'material-ui/List';
 import Toggle from 'material-ui/Toggle';
 import TimePicker from 'material-ui/TimePicker';
 import AutoComplete from 'material-ui/AutoComplete';
-import { updateFormField, getUserAutoComplete } from '../../actions/formActions';
+import { updateFormField, getUserAutoComplete, addUsersToShow } from '../../actions/formActions';
 import { FORM_FIELD_DEBOUNCE_TIME } from '../../utils/constants';
 import { debounce, hoursToDateObj } from '../../utils/helperFunctions';
 
@@ -124,6 +126,7 @@ class AutoCompleteField extends Component {
         this.debounceInputField = debounce(this.debounceInputField, FORM_FIELD_DEBOUNCE_TIME);
         this.handleSelection = this.handleSelection.bind(this);
         this.handleInputUpdate = this.handleInputUpdate.bind(this);
+        this.renderListItems = this.renderListItems.bind(this);
         this.renderAutocompleteItems = this.renderAutocompleteItems.bind(this);
     }
 
@@ -136,8 +139,10 @@ class AutoCompleteField extends Component {
 
     }
 
-    handleSelection (selected, index) {
-
+    handleSelection (selected) {
+        if (selected) {
+            this.props.dispatch(addUsersToShow(selected.text));
+        }
     }
 
     renderAutocompleteItems (results) {
@@ -146,31 +151,59 @@ class AutoCompleteField extends Component {
         }
 
         return results.map(r => {
+            const itemText = `${r.displayName} | ${r.email}`;
+
             return {
-                text: r.email,
+                text: r.displayName,
                 value: (
                   <MenuItem
-                    primaryText={r.email}
-                    secondaryText="&#9786;"
+                    primaryText={itemText}
                   />
                 )
             }
         });
     }
 
+    renderListItems (items) {
+        if (!items) {
+            return [];
+        }
+
+        return items.map((item, i) => {
+            return (
+                <ListItem
+                    key={i}
+                    primaryText={item}
+                    leftIcon={<Album />}
+                />
+            )
+        });
+    }
+
     render () {
-        const { hintText, label, searchResults } = this.props;
+        const { hintText, label, searchResults, value } = this.props;
         const dataSource = this.renderAutocompleteItems(searchResults);
 
         return (
-            <AutoComplete
-                hintText={hintText}
-                dataSource={dataSource}
-                filter={AutoComplete.caseInsensitiveFilter}
-                onNewRequest={() => console.log('on new request')}
-                onUpdateInput={this.handleInputUpdate}
-                floatingLabelText={label}
-            />
+            <div>
+                <div>
+                    <AutoComplete
+                        hintText={hintText}
+                        dataSource={dataSource}
+                        filter={AutoComplete.noFilter}
+                        onNewRequest={this.handleSelection}
+                        onUpdateInput={this.handleInputUpdate}
+                        floatingLabelText={label}
+                        fullWidth={true}
+                    />
+                </div>
+                <div>
+                    <p style={{marginBottom:0}}>DJ(s) Assigned to This Show:</p>
+                    <List>
+                        {this.renderListItems(value)}
+                    </List>
+                </div>
+            </div>
         )
     }
 }

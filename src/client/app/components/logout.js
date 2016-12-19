@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const Logout = ({ onLogoutClick }) => {
     return (
-        <button onClick={() => onLogoutClick()}>Logout</button>
+        <RaisedButton onClick={() => onLogoutClick()} label="Logout" />
     );
 };
 

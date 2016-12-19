@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import MainTable from '../table';
 import ContentAdd from 'material-ui/svg-icons/content/add';

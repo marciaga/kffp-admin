@@ -15,7 +15,7 @@ const shows = {
                 label: 'Select a DJ',
                 hintText: 'Type a name'
             },
-            dayofWeek: {
+            dayOfWeek: {
                 fieldType: 'Select',
                 label: 'Day of the Week',
                 name: 'select',
@@ -39,7 +39,8 @@ const shows = {
             },
             isActive: {
                 fieldType: 'ToggleField',
-                label: 'Active Show?'
+                label: 'Active Show?',
+                value: true // default toggled
             }
         }
     },
@@ -51,7 +52,7 @@ const shows = {
             users: {
                 label: 'DJ(s)'
             },
-            dayofWeek: {
+            dayOfWeek: {
                 label: 'Day of the Week'
             },
             startTime: {
