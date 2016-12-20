@@ -5,3 +5,8 @@ export const API_RESULT_TYPE = 'track';
 export const FORM_FIELD_DEBOUNCE_TIME = 300;
 
 export const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+export const formTypesToHttpVerbs = {
+    new: 'post',
+    edit: 'put'
+}

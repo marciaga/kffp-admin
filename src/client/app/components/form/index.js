@@ -61,8 +61,9 @@ class Form extends Component {
 
     submitHandler (e) {
         e.preventDefault();
+        const { formType } = this.props.form
         // TODO perform validation
-        this.props.dispatch(prepareFormSubmit());
+        this.props.dispatch(prepareFormSubmit(formType));
     }
 
     renderErrors (errors) {

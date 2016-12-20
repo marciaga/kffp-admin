@@ -25,6 +25,7 @@ class Modal extends Component {
             <Dialog
                 modal={false}
                 open={showModal}
+                autoScrollBodyContent={true}
                 onRequestClose={this.handleClose}
             >
                 <Form />

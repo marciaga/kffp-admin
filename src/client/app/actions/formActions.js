@@ -7,6 +7,7 @@ import {
     SUBMIT_ERROR,
     TOGGLE_MODAL
 } from '../constants';
+import { formTypesToHttpVerbs } from '../utils/constants';
 import Models from '../data';
 
 const updateFormField = (fieldName, value) => {
@@ -103,11 +104,12 @@ const addUsersToShow = (data) => {
     }
 };
 
-const prepareFormSubmit = () => {
+const prepareFormSubmit = (type) => {
     const idToken = localStorage.getItem('idToken');
+    const method = formTypesToHttpVerbs[type];
+    const formUrl = '/api/shows'; // generate the last segment dynamically
 
     return async (dispatch, getState) => {
-        const formUrl = '/api/shows';
         const { form } = getState();
         const { fields } = form;
         const formData = Object.keys(fields).reduce((memo, f) => {
@@ -116,7 +118,7 @@ const prepareFormSubmit = () => {
         }, {});
 
         try {
-            const { data } = await axios.post(formUrl, formData, {
+            const { data } = await axios[method](formUrl, formData, {
                 headers: {
                     Authorization: `Bearer ${idToken}`
                 }
