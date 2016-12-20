@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, TableHeader, TableHeaderColumn, TableBody, TableRow, TableRowColumn } from 'material-ui/Table';
+import {
+    Table,
+    TableHeader,
+    TableHeaderColumn,
+    TableBody,
+    TableRow,
+    TableRowColumn
+} from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
 import { TableConfig } from './TableConfig';
+import { setUpdateFormData } from '../../actions/formActions';
+import { showOrHideModal } from '../../actions/modalActions';
 
 const mapStateToProps = (state) => {
     return {
@@ -70,17 +79,15 @@ class MainTable extends Component {
     }
 
     handleRowSelection (selectedRows) {
-        const rowIndex = selectedRows.length ? selectedRows[0] : false;
-
-        if (rowIndex >= 0) {
+        if (selectedRows.length) {
+            const rowIndex = selectedRows[0];
             const rowData = this.props.model.data[rowIndex];
-            console.log(rowData)
-            // dispatch action to open for with rowData
+            this.props.dispatch(setUpdateFormData('edit', 'shows', rowData));
+            this.props.dispatch(showOrHideModal(true));
         }
     }
 
     render () {
-
         const { model, tableConfig } = this.props;
         const colSpan = model.fields ? Object.keys(model.fields).length : 0;
 

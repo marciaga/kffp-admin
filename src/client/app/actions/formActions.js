@@ -19,6 +19,24 @@ const updateFormField = (fieldName, value) => {
     }
 };
 
+const setUpdateFormData = (formType, modelName, data) => {
+    const fields = Models[modelName][formType]['fields'];
+
+    const newFields = Object.keys(fields).reduce((memo, v) => {
+        memo[v] = fields[v];
+        memo[v].value = data[v];
+        return memo;
+    }, {});
+
+    const formMetadata = {
+        fields: newFields,
+        modelName,
+        formType
+    };
+
+    return receiveFormData(formMetadata);
+};
+
 const setFormData = (formType, modelName) => {
     const fields = Models[modelName][formType]['fields'];
     const formMetadata = {
@@ -138,4 +156,11 @@ const formSubmitError = (message) => {
     };
 };
 
-export { prepareFormSubmit, setFormData, updateFormField, getUserAutoComplete, addUsersToShow };
+export {
+    prepareFormSubmit,
+    setFormData,
+    updateFormField,
+    getUserAutoComplete,
+    addUsersToShow,
+    setUpdateFormData
+};

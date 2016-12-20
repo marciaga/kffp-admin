@@ -15,4 +15,4 @@ const showOrHideModal = (val) => {
     }
 };
 
-export { handleModal };
+export { handleModal, showOrHideModal };

@@ -68,7 +68,7 @@ const shows = {
     },
     edit: {
         fields: {
-            id: {
+            _id: {
                 fieldType: 'Hidden'
             },
             showName: {
