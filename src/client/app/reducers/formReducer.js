@@ -53,7 +53,7 @@ export default function formReducer (state = initialstate, action) {
     case FORM_SUCCESS:
         return {
             ...state,
-            errors: [],
+            errors: []
         }
 
     case SUBMIT_ERROR:

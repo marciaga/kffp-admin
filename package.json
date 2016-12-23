@@ -1,5 +1,5 @@
 {
-  "name": "Freeform Web Application",
+  "name": "FreeformWebApplication",
   "version": "0.0.1",
   "description": "The admin, playlist manager, and API for Freeform Portland ",
   "main": "index.js",
