@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import cuid from 'cuid';
 import FormFields from './fields';
 import RaisedButton from 'material-ui/RaisedButton';
-import { prepareFormSubmit } from '../../actions/formActions';
+import { prepareFormSubmit, deleteForm } from '../../actions/formActions';
 
 const mapStateToProps = (state) => {
     return {
@@ -20,6 +20,7 @@ class Form extends Component {
         this.renderFormFields = this.renderFormFields.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
         this.renderErrors = this.renderErrors.bind(this);
+        this.deleteHandler = this.deleteHandler.bind(this);
     }
 
     renderField (fieldData, fieldName) {
@@ -66,6 +67,14 @@ class Form extends Component {
         this.props.dispatch(prepareFormSubmit(formType));
     }
 
+    deleteHandler (id) {
+        if (!window.confirm('Are you sure you want to delete this show?')) {
+            return;
+        }
+
+        this.props.dispatch(deleteForm(id));
+    }
+
     renderErrors (errors) {
         if (errors.length) {
             return errors.map((err, i) => {
@@ -88,6 +97,13 @@ class Form extends Component {
                 </div>
                 <form onSubmit={this.submitHandler}>
                     {this.renderFormFields(fields, data)}
+                    <RaisedButton
+                        label="delete"
+                        type="button"
+                        secondary={true}
+                        disabled={formType === 'new'}
+                        onClick={() => this.deleteHandler(fields._id.value)}
+                    />
                     <RaisedButton
                         label="submit"
                         primary={true}

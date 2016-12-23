@@ -5,7 +5,8 @@ import {
     SET_USER_AUTOCOMPLETE,
     FORM_SUCCESS,
     SUBMIT_ERROR,
-    TOGGLE_MODAL
+    TOGGLE_MODAL,
+    DELETE_MODEL
 } from '../constants';
 import { updateModelData } from './modelActions';
 import { formTypesToHttpVerbs } from '../utils/constants';
@@ -164,11 +165,46 @@ const formSubmitError = (message) => {
     };
 };
 
+const deleteForm = (id) => {
+    const url = `/api/shows?id=${id}`;
+    const idToken = localStorage.getItem('idToken');
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.delete(url, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+
+            dispatch({
+                type: DELETE_MODEL,
+                data: {
+                    id
+                }
+            });
+
+
+
+        } catch (err) {
+            console.log(err);
+        }
+
+        dispatch({
+            type: TOGGLE_MODAL,
+            data: {
+                showModal: false
+            }
+        });
+    }
+};
+
 export {
     prepareFormSubmit,
     setFormData,
     updateFormField,
     getUserAutoComplete,
     addUsersToShow,
-    setUpdateFormData
+    setUpdateFormData,
+    deleteForm
 };

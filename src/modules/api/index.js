@@ -9,7 +9,12 @@ import {
 } from '../../models/user';
 import { userSearchHandler } from '../../models/search';
 
-import { getShows, updateShow, upsertShow } from '../../models/shows';
+import {
+    getShows,
+    updateShow,
+    upsertShow,
+    removeShow
+} from '../../models/shows';
 
 import Playlist from '../../models/playlist';
 
@@ -94,6 +99,18 @@ exports.register = function (server, options, next) {
                 scope: ['admin']
             },
             handler: updateShow
+        }
+    });
+    // Delete a show
+    server.route({
+        path: '/api/shows',
+        method: 'DELETE',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: removeShow
         }
     });
     // users search endpoint

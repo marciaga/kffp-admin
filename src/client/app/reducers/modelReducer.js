@@ -1,4 +1,4 @@
-import { SET_MODEL, UPDATE_MODEL } from '../constants';
+import { SET_MODEL, UPDATE_MODEL, DELETE_MODEL } from '../constants';
 
 const initialstate = {};
 
@@ -30,6 +30,20 @@ export default function modelReducer (state = initialstate, action) {
         return {
             ...state,
             data: newModelData
+        };
+
+    case DELETE_MODEL:
+        const { id } = action.data;
+        const idx = state.data.map(m => m._id).indexOf(id);
+        const filteredModelData = state.data.filter((m, i) => {
+            if (i !== idx) {
+                return m;
+            }
+        });
+
+        return {
+            ...state,
+            data: filteredModelData
         };
 
     default:

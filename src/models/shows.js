@@ -58,7 +58,7 @@ const updateShow = (request, reply) => {
             return reply({ success: true });
         }
 
-        return reply({ success: false, message: 'Update was not successful' });   
+        return reply({ success: false, message: 'Update was not successful' });
     });
 };
 
@@ -115,4 +115,26 @@ const upsertShow = (request, reply) => {
     );
 };
 
-export { getShows, upsertShow, updateShow };
+const removeShow = (request, reply) => {
+    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { id } = request.query;
+    const showId = new ObjectID(id);
+
+    db.collection('shows').remove({ _id: showId }, { justOne: true }, (err, result) => {
+        if (err) {
+            return reply(Boom.internal('Internal MongoDB error', err));
+        }
+        // result, e.g. { ok: 1, n: 0 }
+        const response = result.toJSON();
+        const { ok, n } = response;
+
+        if (ok && n) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    });
+
+};
+
+export { getShows, upsertShow, updateShow, removeShow };
