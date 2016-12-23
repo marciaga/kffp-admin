@@ -7,6 +7,7 @@ import {
     SUBMIT_ERROR,
     TOGGLE_MODAL
 } from '../constants';
+import { updateModelData } from './modelActions';
 import { formTypesToHttpVerbs } from '../utils/constants';
 import Models from '../data';
 
@@ -127,6 +128,11 @@ const prepareFormSubmit = (type) => {
             if (data.code === 401) {
                 console.log(data.message)
                 return dispatch(formSubmitError(data.message));
+            }
+
+            // dispatch action to update model.data
+            if (method === 'put') {
+                dispatch(updateModelData(formData));
             }
 
             dispatch(receiveFormResult(data));

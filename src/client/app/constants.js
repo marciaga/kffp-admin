@@ -25,3 +25,4 @@ export const SUBMIT_ERROR = 'SUBMIT_ERROR';
 
 // Model
 export const SET_MODEL = 'SET_MODEL';
+export const UPDATE_MODEL = 'UPDATE_MODEL';

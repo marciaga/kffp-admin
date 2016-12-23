@@ -1,4 +1,4 @@
-import { SET_MODEL } from '../constants';
+import { SET_MODEL, UPDATE_MODEL } from '../constants';
 
 const initialstate = {};
 
@@ -15,6 +15,21 @@ export default function modelReducer (state = initialstate, action) {
             data,
             name,
             type
+        };
+
+    case UPDATE_MODEL:
+        const updatedModel = action.data;
+        const modelIndex = state.data.map(m => m._id).indexOf(updatedModel._id);
+        const newModelData = state.data.map((m, i) => {
+            if (i === modelIndex) {
+                return updatedModel;
+            }
+            return m;
+        });
+
+        return {
+            ...state,
+            data: newModelData
         };
 
     default:

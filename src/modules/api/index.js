@@ -9,7 +9,7 @@ import {
 } from '../../models/user';
 import { userSearchHandler } from '../../models/search';
 
-import { getShows, upsertShow } from '../../models/shows';
+import { getShows, updateShow, upsertShow } from '../../models/shows';
 
 import Playlist from '../../models/playlist';
 
@@ -84,7 +84,18 @@ exports.register = function (server, options, next) {
             handler: upsertShow
         }
     });
-
+    // update a show
+    server.route({
+        path: '/api/shows',
+        method: 'PUT',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: updateShow
+        }
+    });
     // users search endpoint
     server.route({
         path: '/api/search/users',

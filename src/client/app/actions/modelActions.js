@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Models from '../data';
-import { SET_MODEL } from '../constants';
+import { SET_MODEL, UPDATE_MODEL } from '../constants';
 
 const setModel = (user, modelName, type) => {
     const model = Models[modelName][type];
@@ -41,5 +41,11 @@ const receiveModelData = (model) => {
     }
 };
 
+const updateModelData = (data) => {
+    return {
+        type: UPDATE_MODEL,
+        data
+    }
+};
 
-export { setModel };
+export { setModel, updateModelData };
