@@ -1,7 +1,7 @@
 {
-  "name": "KFFP-Playlist-v2",
+  "name": "Freeform Web Application",
   "version": "0.0.1",
-  "description": "Version 2 of the KFFP playlist app",
+  "description": "The admin, playlist manager, and API for Freeform Portland ",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -e js,jsx,hbs -w src --ignore src/client --ignore src/components",
@@ -20,7 +20,7 @@
     "react",
     "redux"
   ],
-  "author": "Arciaga",
+  "author": "Arciaga, other folks tbd",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/marciaga/playlist-v2/issues"
