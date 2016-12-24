@@ -1,119 +1,15 @@
 import Boom from 'boom';
-import {
-    createUser,
-    loginHandler,
-    verifyCredentials,
-    verifyUniqueUser,
-    verifyToken,
-    getUsers
-} from '../../models/user';
 import { userSearchHandler } from '../../models/search';
-
-import {
-    getShows,
-    updateShow,
-    upsertShow,
-    removeShow
-} from '../../models/shows';
-
 import Playlist from '../../models/playlist';
+import showRoutes from './routes/shows';
+import userRoutes from './routes/users';
 
-// TODO separate these routes into respective files
 exports.register = function (server, options, next) {
-    server.route({
-        path: '/api/users',
-        method: 'GET',
-        config: {
-            auth: {
-                strategy: 'jwt',
-                scope: ['admin']
-            },
-            handler: getUsers
-        }
-    });
+    // register routes
+    showRoutes.map(r => server.route(r));
+    userRoutes.map(r => server.route(r));
 
-    server.route({
-        path: '/api/users/verify',
-        method: 'GET',
-        config: {
-            auth: false,
-            handler: verifyToken
-        }
-    });
-
-    server.route({
-        path: '/api/users/authenticate',
-        method: 'POST',
-        config: {
-            auth: false,
-            pre: [
-                { method: verifyCredentials, assign: 'user' }
-            ],
-            handler: loginHandler
-        }
-    });
-
-
-    server.route({
-        path: '/api/users/create',
-        method: 'POST',
-        config: {
-            auth: false, // change to 'jwt'
-            pre: [
-                { method: verifyUniqueUser }
-            ],
-            handler: createUser
-        }
-    });
-    // get all shows
-    server.route({
-        path: '/api/shows',
-        method: 'GET',
-        config: {
-            auth: {
-                strategy: 'jwt',
-                scope: ['admin']
-            },
-            handler: getShows
-        }
-    });
-    // create a show
-    server.route({
-        path: '/api/shows',
-        method: 'POST',
-        config: {
-            auth: {
-                strategy: 'jwt',
-                scope: ['admin']
-            },
-            handler: upsertShow
-        }
-    });
-    // update a show
-    server.route({
-        path: '/api/shows',
-        method: 'PUT',
-        config: {
-            auth: {
-                strategy: 'jwt',
-                scope: ['admin']
-            },
-            handler: updateShow
-        }
-    });
-    // Delete a show
-    server.route({
-        path: '/api/shows',
-        method: 'DELETE',
-        config: {
-            auth: {
-                strategy: 'jwt',
-                scope: ['admin']
-            },
-            handler: removeShow
-        }
-    });
-    // users search endpoint
+    // users search endpoint for autocomplete
     server.route({
         path: '/api/search/users',
         method: 'GET',
@@ -126,7 +22,7 @@ exports.register = function (server, options, next) {
         }
     });
 
-// refactor this
+    // refactor this
     server.route({
         method: 'POST',
         path: '/api/v1/playlist/{id}',
