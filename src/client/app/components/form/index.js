@@ -62,17 +62,18 @@ class Form extends Component {
 
     submitHandler (e) {
         e.preventDefault();
-        const { formType } = this.props.form
+        const { formType, modelName } = this.props.form
         // TODO perform validation
-        this.props.dispatch(prepareFormSubmit(formType));
+        this.props.dispatch(prepareFormSubmit(formType, modelName));
     }
 
     deleteHandler (id) {
         if (!window.confirm('Are you sure you want to delete this show?')) {
             return;
         }
+        const { modelName } = this.props.form;
 
-        this.props.dispatch(deleteForm(id));
+        this.props.dispatch(deleteForm(id, modelName));
     }
 
     renderErrors (errors) {

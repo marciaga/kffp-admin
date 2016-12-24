@@ -32,4 +32,17 @@ const hoursToDateObj = (hours) => {
 
     return date;
 };
-export { debounce, hoursToDateObj };
+
+// sorts objects by object keys ; data is an object
+const sortObjectsByKey = (data) => {
+    if (!data) {
+        return;
+    }
+
+	return Object.keys(data).sort().reduce((memo, key) => {
+      memo[key] = data[key];
+      return memo;
+    }, {});
+};
+
+export { debounce, hoursToDateObj, sortObjectsByKey };

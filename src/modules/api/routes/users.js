@@ -4,7 +4,9 @@ import {
     verifyCredentials,
     verifyUniqueUser,
     verifyToken,
-    getUsers
+    getUsers,
+    updateUser,
+    deleteUser
 } from '../../../models/user';
 
 const userRoutes = [
@@ -19,19 +21,42 @@ const userRoutes = [
             handler: getUsers
         }
     },
-
     {
         path: '/api/users',
         method: 'POST',
         config: {
-            auth: false, // change to 'jwt'
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
             pre: [
                 { method: verifyUniqueUser }
             ],
             handler: createUser
         }
     },
-
+    {
+        path: '/api/users',
+        method: 'PUT',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: updateUser
+        }
+    },
+    {
+        path: '/api/users',
+        method: 'DELETE',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: deleteUser
+        }
+    },
     {
         path: '/api/users/verify',
         method: 'GET',
@@ -40,7 +65,6 @@ const userRoutes = [
             handler: verifyToken
         }
     },
-
     {
         path: '/api/users/authenticate',
         method: 'POST',

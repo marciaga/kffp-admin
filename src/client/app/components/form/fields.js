@@ -25,6 +25,7 @@ class Text extends Component {
 
     render () {
         const { id, name, label, value, hintText, fieldName } = this.props;
+        const fieldType = fieldName === 'password' ? 'password' : 'text';
 
         return (
             <TextField
@@ -34,6 +35,7 @@ class Text extends Component {
                 value={value || ''}
                 hintText={hintText}
                 onChange={this.handleTextFieldChange}
+                type={fieldType}
             />
         )
     }
@@ -43,18 +45,6 @@ const Hidden = ({ value }) => {
     return (
         <input type="hidden" value={value} />
     )
-};
-
-const Password = ({ id, value, hintText, label }) => {
-    return (
-        <TextField
-            id={id}
-            value={value}
-            hintText={hintText}
-            floatingLabelText={label}
-            type="password"
-        />
-    );
 };
 
 const ToggleField = ({ dispatch, fieldName, label, value }) => {
@@ -216,7 +206,6 @@ class AutoCompleteField extends Component {
 
 export default {
     Text,
-    Password,
     ToggleField,
     Time,
     Select,

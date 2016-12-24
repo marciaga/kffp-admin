@@ -9,7 +9,7 @@ import {
     DELETE_MODEL
 } from '../constants';
 import { updateModelData } from './modelActions';
-import { formTypesToHttpVerbs } from '../utils/constants';
+import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
 import Models from '../data';
 
 const updateFormField = (fieldName, value) => {
@@ -62,7 +62,7 @@ const receiveFormData = (data) => {
 };
 
 const getUserAutoComplete = (text) => {
-    const url = `/api/search/users?text=${text}`;
+    const url = `${API_ENDPOINT}/search/users?text=${text}`;
     const idToken = localStorage.getItem('idToken');
 
     return async (dispatch) => {
@@ -106,10 +106,10 @@ const addUsersToShow = (data) => {
     }
 };
 
-const prepareFormSubmit = (type) => {
+const prepareFormSubmit = (type, modelName) => {
     const idToken = localStorage.getItem('idToken');
     const method = formTypesToHttpVerbs[type];
-    const formUrl = '/api/shows'; // generate the last segment dynamically
+    const formUrl = `${API_ENDPOINT}/${modelName}`;
 
     return async (dispatch, getState) => {
         const { form } = getState();
@@ -165,8 +165,8 @@ const formSubmitError = (message) => {
     };
 };
 
-const deleteForm = (id) => {
-    const url = `/api/shows?id=${id}`;
+const deleteForm = (id, modelName) => {
+    const url = `${API_ENDPOINT}/${modelName}?id=${id}`;
     const idToken = localStorage.getItem('idToken');
 
     return async (dispatch) => {

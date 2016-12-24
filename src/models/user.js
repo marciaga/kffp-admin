@@ -12,7 +12,7 @@ const userSchema = Joi.object().keys({
 
 /* Route Handlers */
 const loginHandler = (request, reply) => {
-    const db = request.server.plugins['hapi-mongodb'].db;
+    const { db } = request.server.plugins['hapi-mongodb'];
     const password = request.payload.password;
 
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
@@ -32,7 +32,7 @@ const loginHandler = (request, reply) => {
 
 // Fetch all users
 const getUsers = (request, reply) => {
-    const db = request.server.plugins['hapi-mongodb'].db;
+    const { db } = request.server.plugins['hapi-mongodb'];
 
     db.collection('users').find({}, { password: 0 }, async (err, cursor) => {
         if (err) {
@@ -47,7 +47,7 @@ const getUsers = (request, reply) => {
 
 // CREATE user method
 const createUser = (request, reply) => {
-    const db = request.server.plugins['hapi-mongodb'].db;
+    const { db } = request.server.plugins['hapi-mongodb'];
 
     try {
         Joi.validate(request.payload, userSchema, (err, value) => {
@@ -62,7 +62,7 @@ const createUser = (request, reply) => {
         return reply(err);
     }
 
-    const { email, password, role } = request.payload;
+    const { email, password, role, displayName } = request.payload;
 
     hashPassword(password, (err, hash) => {
         if (err) {
@@ -70,6 +70,7 @@ const createUser = (request, reply) => {
         }
 
         db.collection('users').insert({
+            displayName: displayName,
             email: email,
             password: hash,
             role: role
@@ -123,7 +124,7 @@ const verifyToken = (request, reply) => {
 };
 
 const verifyCredentials = (request, reply) => {
-    const db = request.server.plugins['hapi-mongodb'].db;
+    const { db } = request.server.plugins['hapi-mongodb'];
     const password = request.payload.password;
 
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
@@ -163,7 +164,7 @@ const createToken = (user) => {
 };
 
 const verifyUniqueUser = (request, reply) => {
-    const db = request.server.plugins['hapi-mongodb'].db;
+    const { db } = request.server.plugins['hapi-mongodb'];
     const { email } = request.payload;
 
     db.collection('users').findOne({ $or: [{ email: email }] }, (err, user) => {
@@ -171,8 +172,25 @@ const verifyUniqueUser = (request, reply) => {
             return reply(Boom.create(401, 'Email already taken!'));
         }
 
-        return reply(req.payload);
+        return reply(request.payload);
     });
 }
 
-export { getUsers, verifyToken, createUser, loginHandler, verifyCredentials, verifyUniqueUser };
+const updateUser = (request, reply) => {
+    const { db } = request.server.plugins['hapi-mongodb'];
+};
+
+const deleteUser = (request, reply) => {
+    const { db } = request.server.plugins['hapi-mongodb'];
+};
+
+export {
+    getUsers,
+    verifyToken,
+    createUser,
+    updateUser,
+    deleteUser,
+    loginHandler,
+    verifyCredentials,
+    verifyUniqueUser
+};

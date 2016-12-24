@@ -1,4 +1,4 @@
-import { daysOfWeek } from './utils/constants';
+import { daysOfWeek, userRoles } from './utils/constants';
 // mapping of data model + form fields
 const shows = {
     new: {
@@ -114,12 +114,58 @@ const shows = {
     }
 };
 
-const user = {
-    fields: {
-        firstName: 'Text',
-        lastName: 'Text',
-        email: 'Text',
-        password: 'Password'
+const users = {
+    new: {
+        fields: {
+            displayName: {
+                fieldType: 'Text',
+                name: 'text',
+                hintText: 'Enter name as it should be displayed',
+                label: 'DJ Name'
+            },
+            email: {
+                fieldType: 'Text',
+                name: 'email_field',
+                hintText: 'Enter Email Address',
+                label: 'Email'
+            },
+            password: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Choose a password',
+                label: 'Password'
+            },
+            role: {
+                fieldType: 'Select',
+                label: 'User Role',
+                name: 'select',
+                hintText: 'Select a User Role',
+                items: userRoles.map(r => {
+                    return {
+                        label: r,
+                        value: r
+                    }
+                })
+            }
+        }
+    },
+    show: {
+        fields: {
+            displayName: {
+                label: 'Display Name'
+            },
+            email: {
+                label: 'Email'
+            },
+            role: {
+                label: 'Role'
+            }
+        }
+    },
+    edit: {
+        fields: {
+
+        }
     }
 };
 
@@ -131,6 +177,6 @@ const playlist = {
 
 export default {
     shows,
-    user,
+    users,
     playlist
 };
