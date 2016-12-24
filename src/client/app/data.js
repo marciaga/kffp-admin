@@ -164,7 +164,33 @@ const users = {
     },
     edit: {
         fields: {
-
+            _id: {
+                fieldType: 'Hidden'
+            },
+            displayName: {
+                fieldType: 'Text',
+                name: 'text',
+                hintText: 'Enter name as it should be displayed',
+                label: 'DJ Name'
+            },
+            email: {
+                fieldType: 'Text',
+                name: 'email_field',
+                hintText: 'Enter Email Address',
+                label: 'Email'
+            },
+            role: {
+                fieldType: 'Select',
+                label: 'User Role',
+                name: 'select',
+                hintText: 'Select a User Role',
+                items: userRoles.map(r => {
+                    return {
+                        label: r,
+                        value: r
+                    }
+                })
+            }
         }
     }
 };

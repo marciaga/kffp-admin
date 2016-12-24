@@ -4,11 +4,12 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const userSchema = Joi.object().keys({
+    _id: Joi.string(),
     email: Joi.string().email().required(),
-    password: Joi.string().required(),
+    password: Joi.string(),
     displayName: Joi.string().required(),
     role: Joi.string().required()
-}).and('email', 'password');
+});
 
 /* Route Handlers */
 const loginHandler = (request, reply) => {
@@ -177,11 +178,64 @@ const verifyUniqueUser = (request, reply) => {
 }
 
 const updateUser = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const user = request.payload;
+
+    try {
+        Joi.validate(user, userSchema, (err, value) => {
+            // if value === null, object is valid
+            if (err) {
+                console.log(err);
+                throw Boom.badRequest(err);
+            }
+
+            return true;
+        });
+    } catch (err) {
+        return reply(err);
+    }
+
+    const userId = new ObjectID(user._id);
+    const { _id, ...fieldsToUpdate } = user;
+
+    db.collection('users').update({ _id: userId },
+        fieldsToUpdate,
+        (err, result) => {
+            if (err) {
+                return reply(Boom.internal('Internal MongoDB error', err));
+            }
+            // response, e.g. { ok: 1, nModified: 1, n: 1 }
+            const response = result.toJSON();
+            const { ok, nModified } = response;
+
+            if (ok && nModified) {
+                return reply({ success: true });
+            }
+
+            return reply({ success: false, message: 'Update was not successful' });
+        }
+    );
 };
 
 const deleteUser = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { id } = request.query;
+    const userId = new ObjectID(id);
+
+    db.collection('users').remove({ _id: userId }, { justOne: true }, (err, result) => {
+        if (err) {
+            return reply(Boom.internal('Internal MongoDB error', err));
+        }
+        // result, e.g. { ok: 1, n: 0 }
+        const response = result.toJSON();
+        const { ok, n } = response;
+
+        if (ok && n) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    });
 };
 
 export {
