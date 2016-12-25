@@ -15,10 +15,6 @@ const mapStateToProps = (state) => {
 class App extends Component {
     constructor (props) {
         super(props);
-
-        props.dispatch(verifyLogin(
-            props.auth.isAuthenticated
-        ));
     }
 
     render () {

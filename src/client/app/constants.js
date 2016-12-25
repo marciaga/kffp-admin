@@ -27,3 +27,6 @@ export const SUBMIT_ERROR = 'SUBMIT_ERROR';
 export const SET_MODEL = 'SET_MODEL';
 export const UPDATE_MODEL = 'UPDATE_MODEL';
 export const DELETE_MODEL = 'DELETE_MODEL';
+
+// middleware
+export const LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
