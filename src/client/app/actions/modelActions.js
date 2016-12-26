@@ -10,7 +10,7 @@ const setModel = (user, modelName, type) => {
     }
 
     const url = `/api/${modelName}`;
-    const idToken = localStorage.getItem('idToken');
+    const idToken = window.localStorage ? localStorage.getItem('idToken') : null;
 
     return async (dispatch) => {
         try {
