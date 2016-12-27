@@ -30,3 +30,5 @@ export const DELETE_MODEL = 'DELETE_MODEL';
 
 // middleware
 export const LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
+
+export const SHOW_SELECT = 'SHOW_SELECT';

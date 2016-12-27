@@ -1,3 +1,4 @@
+import Joi from 'joi';
 import {
     getShows,
     updateShow,
@@ -11,6 +12,11 @@ const showRoutes = [
         path: '/api/shows',
         method: 'GET',
         config: {
+            validate: {
+                query: {
+                    isActive: Joi.boolean()
+                }
+            },
             auth: {
                 strategy: 'jwt',
                 scope: ['admin']

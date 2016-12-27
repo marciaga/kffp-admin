@@ -24,7 +24,11 @@ class App extends Component {
         return (
             <MuiThemeProvider>
                 <div>
-                    <Navbar isAuthenticated={isAuthenticated} errorMessage={errorMessage} dispatch={dispatch} />
+                    <Navbar
+                        isAuthenticated={isAuthenticated}
+                        errorMessage={errorMessage}
+                        dispatch={dispatch}
+                    />
                     {isAuthenticated &&
                         <div>
                             {this.props.children}

@@ -5,6 +5,7 @@ import playlistReducer from './playlistReducer';
 import modalReducer from './modalReducer';
 import modelReducer from './modelReducer';
 import formReducer from './formReducer';
+import showReducer from './showReducer';
 
 export default {
     search: searchReducer,
@@ -13,5 +14,6 @@ export default {
     playlist: playlistReducer,
     modal: modalReducer,
     model: modelReducer,
-    form: formReducer
+    form: formReducer,
+    show: showReducer
 };

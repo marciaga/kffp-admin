@@ -33,6 +33,8 @@ const hoursToDateObj = (hours) => {
     return date;
 };
 
+const getTokenFromLocalStorage = () => window.localStorage ? localStorage.getItem('idToken') : null;
+
 // sorts objects by object keys ; data is an object
 const sortObjectsByKey = (data) => {
     if (!data) {
@@ -45,4 +47,4 @@ const sortObjectsByKey = (data) => {
     }, {});
 };
 
-export { debounce, hoursToDateObj, sortObjectsByKey };
+export { debounce, hoursToDateObj, sortObjectsByKey, getTokenFromLocalStorage };

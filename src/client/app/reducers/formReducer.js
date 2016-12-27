@@ -6,11 +6,11 @@ import {
     SET_USER_AUTOCOMPLETE
 } from '../constants';
 
-const initialstate = {
+const initialState = {
     errors: []
 };
 
-export default function formReducer (state = initialstate, action) {
+export default function formReducer (state = initialState, action) {
     switch (action.type) {
 
     case SET_FORM_FIELDS:

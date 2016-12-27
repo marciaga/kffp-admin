@@ -13,8 +13,10 @@ const showSchema = Joi.object().keys({
 
 
 const getShows = (request, reply) => {
-    const db = request.server.plugins['hapi-mongodb'].db;
-    db.collection('shows').find({}, async (err, cursor) => {
+    const { db } = request.server.plugins['hapi-mongodb'];
+    const params = request.query || {};
+
+    db.collection('shows').find(params, async (err, cursor) => {
         if (err) {
             return reply(Boom.internal('Internal MongoDB error', err));
         }
