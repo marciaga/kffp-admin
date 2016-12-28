@@ -25,8 +25,16 @@ class Form extends Component {
 
     renderField (fieldData, fieldName) {
         const { dispatch } = this.props;
-
-        const { fieldType, hintText, label, name, items, value, searchResults } = fieldData;
+        const {
+            fieldType,
+            hintText,
+            label,
+            name,
+            items,
+            value,
+            searchResults,
+            disabled
+        } = fieldData;
         const FormField = FormFields[fieldType];
 
         if (FormField) {
@@ -41,6 +49,7 @@ class Form extends Component {
                     items={items}
                     searchResults={searchResults}
                     dispatch={dispatch}
+                    disabled={disabled}
                 />
             );
         } else {

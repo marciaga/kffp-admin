@@ -8,7 +8,8 @@ const showSchema = Joi.object().keys({
     dayOfWeek: Joi.string().required(),
     startTime: Joi.number().integer().required(),
     endTime: Joi.number().integer().required(),
-    isActive: Joi.boolean().required()
+    isActive: Joi.boolean().required(),
+    slug: Joi.string().required()
 });
 
 

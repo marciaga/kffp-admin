@@ -1,13 +1,14 @@
 import React from 'react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import { navigateToPlaylists } from '../../actions/showActions';
 
 const ShowSelect = ({ dispatch, shows }) => {
     const renderItems = (list) => {
         if (list) {
             return list.map((item, i) => {
                 return (
-                    <MenuItem key={i} value={item._id} primaryText={item.showName} />
+                    <MenuItem key={i} value={item.slug} primaryText={item.showName} />
                 );
             });
         }
@@ -15,7 +16,7 @@ const ShowSelect = ({ dispatch, shows }) => {
 
     const selectChangeHandler = (event, index, value) => {
         // dispatch an action that navigates to the playlist page for that show id
-        // dispatch(updateFormField(fieldName, value));
+        dispatch(navigateToPlaylists(value));
     };
 
     return (

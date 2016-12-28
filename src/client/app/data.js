@@ -41,6 +41,11 @@ const shows = {
                 fieldType: 'ToggleField',
                 label: 'Active Show?',
                 value: true // default toggled
+            },
+            slug: {
+                fieldType: 'Text',
+                label: 'Slug',
+                hintText: 'Enter the show slug'
             }
         }
     },
@@ -63,6 +68,9 @@ const shows = {
             },
             isActive: {
                 label: 'Active'
+            },
+            slug: {
+                label: 'Slug'
             }
         }
     },
@@ -109,6 +117,11 @@ const shows = {
                 fieldType: 'ToggleField',
                 label: 'Active Show?',
                 value: true // default toggled
+            },
+            slug: {
+                fieldType: 'Text',
+                label: 'Slug',
+                disabled: true
             }
         }
     }

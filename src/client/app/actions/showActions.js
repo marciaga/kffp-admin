@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { push } from 'react-router-redux';
 import { SHOW_SELECT } from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 
@@ -15,10 +16,10 @@ const getActiveShows = () => {
             });
 
             const result = data.map(s => {
-                const { _id, showName } = s;
+                const { slug, showName } = s;
 
                 return {
-                    _id,
+                    slug,
                     showName
                 };
             });
@@ -32,6 +33,16 @@ const getActiveShows = () => {
     }
 };
 
+const navigateToPlaylists = (slug) => {
+    return dispatch => {
+        const locationObject = {
+            pathname: `/playlists/${slug}`
+        };
+
+        dispatch(push(locationObject));
+    }
+};
+
 const receiveActiveShows = (data) => {
     return {
         type: SHOW_SELECT,
@@ -39,4 +50,4 @@ const receiveActiveShows = (data) => {
     }
 };
 
-export { getActiveShows };
+export { getActiveShows, navigateToPlaylists };
