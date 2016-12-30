@@ -1,12 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Search from '../search';
-import { SearchResults } from '../search/searchResults';
+import { getShowPlaylists } from '../../actions/playlistActions';
 
 const mapStateToProps = (state) => {
     return {
         auth: state.auth,
-        search: state.search
+        routing: state.routing
     };
 };
 
@@ -15,18 +14,21 @@ class Playlist extends Component {
         super(props);
     }
 
-    render () {
-        const { dispatch, search, auth } = this.props;
-        const { searchResults } = search;
+    componentWillReceiveProps(nextProps) {
+        const { auth, routing } = nextProps;
+        const { user } = auth;
+        const { locationBeforeTransitions } = routing;
+        const { pathname } = locationBeforeTransitions;
 
+        if (this.props.auth.user !== user && pathname) {
+            this.props.dispatch(getShowPlaylists(pathname));
+        }
+    }
+
+    render () {
         return (
             <div>
-                <h1>playlist component</h1>
-                <Search dispatch={dispatch} />
-                <SearchResults
-                    dispatch={dispatch}
-                    searchResults={searchResults}
-                />
+                <h1></h1>
             </div>
         );
     }

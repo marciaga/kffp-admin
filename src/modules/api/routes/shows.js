@@ -6,7 +6,6 @@ import {
     removeShow
 } from '../../../models/shows';
 
-// get all shows
 const showRoutes = [
     {
         path: '/api/shows',

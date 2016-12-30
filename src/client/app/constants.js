@@ -32,3 +32,5 @@ export const DELETE_MODEL = 'DELETE_MODEL';
 export const LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
 
 export const SHOW_SELECT = 'SHOW_SELECT';
+export const GET_SHOW_PLAYLISTS = 'GET_SHOW_PLAYLISTS';
+export const GET_SHOW = 'GET_SHOW';

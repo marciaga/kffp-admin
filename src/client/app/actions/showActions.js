@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { push } from 'react-router-redux';
-import { SHOW_SELECT } from '../constants';
+import { SHOW_SELECT, GET_SHOW } from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 
 const getActiveShows = () => {
@@ -50,4 +50,15 @@ const receiveActiveShows = (data) => {
     }
 };
 
-export { getActiveShows, navigateToPlaylists };
+const getShow = (show) => {
+    return dispatch => dispatch(receiveShow(show));
+};
+
+const receiveShow = (data) => {
+    return {
+        type: GET_SHOW,
+        data
+    }
+};
+
+export { getActiveShows, getShow, navigateToPlaylists };

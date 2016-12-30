@@ -12,7 +12,6 @@ const showSchema = Joi.object().keys({
     slug: Joi.string().required()
 });
 
-
 const getShows = (request, reply) => {
     const { db } = request.server.plugins['hapi-mongodb'];
     const params = request.query || {};

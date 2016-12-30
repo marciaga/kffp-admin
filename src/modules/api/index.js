@@ -3,11 +3,13 @@ import { userSearchHandler } from '../../models/search';
 import Playlist from '../../models/playlist';
 import showRoutes from './routes/shows';
 import userRoutes from './routes/users';
+import playlistRoutes from './routes/playlists';
 
 exports.register = function (server, options, next) {
     // register routes
     showRoutes.map(r => server.route(r));
     userRoutes.map(r => server.route(r));
+    playlistRoutes.map(r => server.route(r));
 
     // users search endpoint for autocomplete
     server.route({
