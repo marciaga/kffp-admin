@@ -3,6 +3,16 @@ const renderReactApp = (request, reply) => {
 };
 
 exports.register = function (server, options, next) {
+    server.route({
+        path: '/css/{params*}',
+        method: 'GET',
+        handler: {
+            directory: {
+                path: 'public'
+            }
+        },
+        config: { auth: false }
+    });
 
     server.route({
         method: 'GET',

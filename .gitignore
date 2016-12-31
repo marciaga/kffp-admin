@@ -2,3 +2,5 @@
 node_modules
 *.log
 coverage
+public/*
+!public/.gitkeep
