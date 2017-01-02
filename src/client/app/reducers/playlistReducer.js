@@ -1,6 +1,7 @@
 import {
     GET_SHOW_PLAYLISTS,
-    ADD_PLAYLIST
+    ADD_PLAYLIST,
+    ADD_TRACK
 } from '../constants';
 
 const initialState = {
@@ -20,6 +21,17 @@ export default function playlistReducer (state = initialState, action) {
         return {
             ...state,
             currentPlaylist: action.data
+        }
+
+    case ADD_TRACK:
+        return {
+            ...state,
+            currentPlaylist: {
+                ...state.currentPlaylist,
+                songs: [
+                    action.data, ...state.currentPlaylist.songs
+                ]
+            }
         }
 
     default:

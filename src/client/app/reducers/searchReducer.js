@@ -1,4 +1,9 @@
-import { UPDATE_SEARCH_FIELD, SEARCH_RESULTS, CLEAR_SEARCH_INPUT } from '../constants';
+import {
+    UPDATE_SEARCH_FIELD,
+    SEARCH_RESULTS,
+    CLEAR_SEARCH_INPUT,
+    CLEAR_SEARCH_RESULTS
+} from '../constants';
 
 const initialState = {
     currentSearch: '',
@@ -25,6 +30,12 @@ export default function searchReducer (state = initialState, action) {
         return {
             ...state,
             currentSearch: ''
+        }
+
+    case CLEAR_SEARCH_RESULTS:
+        return {
+            ...state,
+            searchResults: []
         }
 
     default:

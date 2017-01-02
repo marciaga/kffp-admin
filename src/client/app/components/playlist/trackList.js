@@ -54,7 +54,6 @@ class TrackList extends Component {
 
     render () {
         const { cards } = this.state;
-        console.log(cards)
 
         return (
             <div style={style}>

@@ -19,7 +19,7 @@ class PlaylistForm extends Component {
     }
 
     render () {
-        const { playlist, search } = this.props;
+        const { playlist, search, dispatch } = this.props;
         const { currentPlaylist } = playlist;
         const { searchResults } = search;
 
@@ -28,7 +28,13 @@ class PlaylistForm extends Component {
                 <div className="playlist-wrapper">
                     <h2>{currentPlaylist.dateSlug}</h2>
                     <Search />
-                    <SearchResults searchResults={searchResults}/>
+                    {!!searchResults.length &&
+                        <SearchResults
+                            searchResults={searchResults}
+                            playlistId={currentPlaylist._id}
+                            dispatch={dispatch}
+                        />
+                    }
                     <TrackList />
                 </div>
             );

@@ -2,6 +2,7 @@
 export const UPDATE_SEARCH_FIELD = 'UPDATE_SEARCH_FIELD';
 export const SEARCH_RESULTS = 'SEARCH_RESULTS';
 export const CLEAR_SEARCH_INPUT = 'CLEAR_SEARCH_INPUT';
+export const CLEAR_SEARCH_RESULTS = 'CLEAR_SEARCH_RESULTS';
 // Login
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -38,6 +39,7 @@ export const SHOW_SELECT = 'SHOW_SELECT';
 export const GET_SHOW_PLAYLISTS = 'GET_SHOW_PLAYLISTS';
 export const ADD_PLAYLIST = 'ADD_PLAYLIST';
 export const CURRENT_PLAYLIST = 'CURRENT_PLAYLIST';
+export const ADD_TRACK = 'ADD_TRACK';
 
 // Show
 export const GET_SHOW = 'GET_SHOW';

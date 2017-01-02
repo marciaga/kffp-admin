@@ -1,7 +1,12 @@
 import React from 'react';
 import { GridList, GridTile } from 'material-ui/GridList';
+import { addTrack } from '../../actions/playlistActions';
 
-const SearchResults = ({ searchResults }) => {
+const SearchResults = ({ searchResults, playlistId, dispatch }) => {
+
+    const handleClick = (track, playlistId) => {
+        dispatch(addTrack(track, playlistId));
+    };
 
     return (
         <div className="search-results">
@@ -21,12 +26,11 @@ const SearchResults = ({ searchResults }) => {
                             title={track}
                             subtitle={<span>by <b>{artist}</b></span>}
                             className="search-results__grid-tile"
-                            onClick={() => console.log(tile)}
+                            onClick={() => handleClick(tile, playlistId)}
                         >
-                        <img src={image.url} />
+                            <img src={image.url} />
                         </GridTile>
                     )
-
                 })}
             </GridList>
         </div>

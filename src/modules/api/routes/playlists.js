@@ -1,4 +1,8 @@
-import { getPlaylistsByShow, createPlaylist } from '../../../models/playlist';
+import {
+    getPlaylistsByShow,
+    createPlaylist,
+    addTrack
+} from '../../../models/playlist';
 
 const playlistRoutes = [
     {
@@ -24,6 +28,17 @@ const playlistRoutes = [
                 scope: ['admin', 'dj']
             },
             handler: createPlaylist
+        }
+    },
+    {
+        path: '/api/playlist/{playlistId}',
+        method: 'PUT',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin', 'dj']
+            },
+            handler: addTrack
         }
     }
 ];

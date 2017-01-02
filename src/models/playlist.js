@@ -117,4 +117,32 @@ const createPlaylist = async (request, reply) => {
     }
 };
 
-export { getPlaylistsByShow, createPlaylist };
+const addTrack = async (request, reply) => {
+    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+
+    try {
+        const track = request.payload;
+        const { playlistId } = request.params;
+        const id = new ObjectID(playlistId);
+
+
+        const result = await db.collection('playlists').update(
+            { _id: id },
+            { $push: { songs: track } }
+        );
+
+        const response = result.toJSON();
+        const { ok, nModified } = response;
+
+        if (ok && nModified) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    } catch (err) {
+        console.log(err)
+        return reply(err);
+    }
+};
+
+export { getPlaylistsByShow, createPlaylist, addTrack };
