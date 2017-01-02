@@ -8,7 +8,11 @@ const ShowSelect = ({ dispatch, shows }) => {
         if (list) {
             return list.map((item, i) => {
                 return (
-                    <MenuItem key={i} value={item.slug} primaryText={item.showName} />
+                    <MenuItem
+                        key={i}
+                        value={item.slug}
+                        primaryText={item.showName}
+                    />
                 );
             });
         }

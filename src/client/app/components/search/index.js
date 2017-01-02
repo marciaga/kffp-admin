@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux';
+import TextField from 'material-ui/TextField';
 import { searchInput, searchForm } from '../../actions/searchActions';
 
 const mapStateToProps = (state) => {
     return {
-        currentSearch: state.search.currentSearch
+        search: state.search
     };
 };
 
@@ -21,23 +22,27 @@ export class Search extends Component {
     }
 
     handleSubmit (e) {
-        const { currentSearch } = this.props;
+        const { currentSearch } = this.props.search;
+
         e.preventDefault();
         this.props.dispatch(searchForm(currentSearch));
     }
 
     render () {
-        const { currentSearch } = this.props;
+        const { currentSearch } = this.props.search;
         const errorMessage = false;
 
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
-                    <div className='mdl-textfield mdl-js-textfield'>
-                        <input type='text' value={currentSearch} onChange={this.handleChange} className='mdl-textfield__input' id='search-input'/>
-                        <label className='mdl-textfield__label' htmlFor='search-input'>Enter Search Query</label>
+                    <div>
+                        <TextField
+                            onChange={this.handleChange}
+                            value={currentSearch}
+                            floatingLabelText={'Enter a search query'}
+                            hintText={'Enter a search query'}
+                        />
                     </div>
-                    <button type='submit' className='mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent'>Search</button>
                 </form>
 
                 {errorMessage &&

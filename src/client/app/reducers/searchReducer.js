@@ -9,19 +9,23 @@ export default function searchReducer (state = initialState, action) {
     switch(action.type) {
 
     case UPDATE_SEARCH_FIELD:
-        return Object.assign({}, state, {
-            currentSearch: action.currentSearch
-        });
+        const { currentSearch } = action.data;
 
+        return {
+            ...state,
+            currentSearch
+        }
     case SEARCH_RESULTS:
-        return Object.assign({}, state, {
+        return {
+            ...state,
             searchResults: action.data
-        });
+        }
 
     case CLEAR_SEARCH_INPUT:
-        return Object.assign({}, state, {
+        return {
+            ...state,
             currentSearch: ''
-        });
+        }
 
     default:
         return state;

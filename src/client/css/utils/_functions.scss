@@ -1,0 +1,13 @@
+// Uses $fonts map from _variables, e.g. font(size, large)
+@function font($font-key, $font-variant:null) {
+    @if not map-has-key($fonts, $font-key) {
+        @warn "Key `#{$font-key}` not found in $fonts map.";
+
+    } @else {
+        @if ($font-variant != null) {
+            @return map-get(map-get($fonts, $font-key), $font-variant);
+        } @else {
+            @return map-get($fonts, $font-key);
+        }
+    }
+}

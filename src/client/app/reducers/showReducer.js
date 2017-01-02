@@ -1,7 +1,7 @@
 import { GET_SHOW, SHOW_SELECT } from '../constants';
 
 const initialState = {
-    show: {},
+    currentShow: {},
     shows: []
 };
 
@@ -11,7 +11,7 @@ export default function showReducer (state = initialState, action) {
     case GET_SHOW:
         return {
             ...state,
-            show: action.data
+            currentShow: action.data
         }
 
     case SHOW_SELECT:

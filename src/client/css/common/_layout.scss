@@ -1,4 +1,52 @@
-html, body {
+*,
+*:after,
+*:before {
     margin: 0;
-    font-family: 'Roboto', sans-serif;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+@include normalize()
+
+html, body {
+    font-family: font(family, sans);
+    font-size: font(size, base);
+}
+
+// override Normalize rule
+span[type="button"] {
+    appearance: none;
+}
+
+.row {
+    align-content: flex-start;
+    align-items: stretch;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+$breakpoints: (
+    sm: 700px,
+    md: 1020px,
+    lg: 1170px
+);
+
+$grid-columns: 12;
+
+.col {
+    box-sizing: border-box;
+    flex-basis: 100%;
+    flex-grow: 0;
+}
+
+@each $label, $breakpoint in $breakpoints {
+    @media (min-width: $breakpoint) {
+        @for $i from 1 to $grid-columns + 1 {
+            .col.col-#{$label}-#{$i} {
+                flex-basis: ($i / $grid-columns) * 100%;
+            }
+        }
+    }
 }

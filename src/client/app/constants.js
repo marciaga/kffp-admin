@@ -31,6 +31,13 @@ export const DELETE_MODEL = 'DELETE_MODEL';
 // middleware
 export const LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
 
+// Main page
 export const SHOW_SELECT = 'SHOW_SELECT';
+
+// Playlist
 export const GET_SHOW_PLAYLISTS = 'GET_SHOW_PLAYLISTS';
+export const ADD_PLAYLIST = 'ADD_PLAYLIST';
+export const CURRENT_PLAYLIST = 'CURRENT_PLAYLIST';
+
+// Show
 export const GET_SHOW = 'GET_SHOW';

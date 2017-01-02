@@ -1,0 +1,10 @@
+.search-results {
+    &__grid-wrapper {
+        height: 350px;
+        overflow-y: scroll;
+    }
+
+    &__grid-tile {
+        max-width: 300px;
+    }
+}

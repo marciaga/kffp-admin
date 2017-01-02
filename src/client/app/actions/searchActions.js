@@ -6,7 +6,9 @@ import { parseSearchResults } from '../utils/searchUtils';
 export const searchInput = (val) => {
     return {
         type: UPDATE_SEARCH_FIELD,
-        currentSearch: val
+        data:  {
+            currentSearch: val
+        }
     }
 };
 
