@@ -45,7 +45,7 @@ class Playlist extends Component {
         const { currentShow } = show;
 
         return (
-            <div>
+            <div className="playlist-main">
                 <div className="row">
                     <div className="col col-md-12 col-sm-12">
                         <ShowHeader currentShow={currentShow} />

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Search from '../search';
 import { SearchResults } from '../search/searchResults';
+import TrackList from './trackList';
 
 const mapStateToProps = (state) => {
     return {
@@ -24,10 +25,11 @@ class PlaylistForm extends Component {
 
         if (currentPlaylist) {
             return (
-                <div>
+                <div className="playlist-wrapper">
                     <h2>{currentPlaylist.dateSlug}</h2>
                     <Search />
                     <SearchResults searchResults={searchResults}/>
+                    <TrackList />
                 </div>
             );
         }

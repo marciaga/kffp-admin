@@ -33,7 +33,7 @@ export class Search extends Component {
         const errorMessage = false;
 
         return (
-            <div>
+            <div className="search-form">
                 <form onSubmit={this.handleSubmit}>
                     <div>
                         <TextField
