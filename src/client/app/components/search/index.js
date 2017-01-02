@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux';
-import { searchInput, searchForm } from '../actions/searchActions';
+import { searchInput, searchForm } from '../../actions/searchActions';
 
 const mapStateToProps = (state) => {
     return {

@@ -3,7 +3,8 @@ import searchReducer from '../../src/client/app/reducers/searchReducer';
 describe('search reducer', () => {
     it('should return the intial state', () => {
         expect(searchReducer(undefined, {})).toEqual({
-            currentSearch: ''
+            currentSearch: '',
+            searchResults: []
         });
     });
 
@@ -14,7 +15,8 @@ describe('search reducer', () => {
             type: 'UPDATE_SEARCH_FIELD',
             currentSearch: searchQuery
         })).toEqual({
-            currentSearch: searchQuery
+            currentSearch: searchQuery,
+            searchResults: []
         });
     });
 
@@ -22,7 +24,8 @@ describe('search reducer', () => {
         expect(searchReducer(undefined, {
             type: 'CLEAR_SEARCH_INPUT'
         })).toEqual({
-            currentSearch: ''
+            currentSearch: '',
+            searchResults: []
         });
     });
 

@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 const userSchema = Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
+    displayName: Joi.string().required(),
     role: Joi.string().required()
 }).and('email', 'password');
 
@@ -99,7 +100,6 @@ const verifyToken = (request, reply) => {
 
         jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
             if (err) {
-                console.log(err.message);
                 // return error message to client
                 /*
                 err = {
@@ -108,7 +108,11 @@ const verifyToken = (request, reply) => {
                     expiredAt: 1408621000
                 }
                 */
-                return reply('something went wrong with that jwt');
+                const error = {
+                    ...err,
+                    code: 401
+                };
+                return reply(error);
             }
 
             return reply({ ...decoded, verified: true }).code(201);

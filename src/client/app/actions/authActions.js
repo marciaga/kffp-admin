@@ -60,6 +60,10 @@ const verifyLogin = (isAuthenticated) => {
                 }
             });
 
+            if (data.code === 401) {
+                return dispatch(loginError(data.message));
+            }
+
             dispatch({
                 type: AUTH_VERIFICATION,
                 data

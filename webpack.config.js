@@ -6,7 +6,7 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const hotMiddlewareScript = 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true';
 
 module.exports = {
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'source-map',
     entry: {
         'app': ['babel-polyfill', './src/client', hotMiddlewareScript]
     },

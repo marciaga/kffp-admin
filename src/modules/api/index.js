@@ -7,9 +7,18 @@ import {
     verifyToken,
     getUsers
 } from '../../models/user';
+import { userSearchHandler } from '../../models/search';
+
+import {
+    getShows,
+    updateShow,
+    upsertShow,
+    removeShow
+} from '../../models/shows';
 
 import Playlist from '../../models/playlist';
 
+// TODO separate these routes into respective files
 exports.register = function (server, options, next) {
     server.route({
         path: '/api/users',
@@ -56,7 +65,68 @@ exports.register = function (server, options, next) {
             handler: createUser
         }
     });
+    // get all shows
+    server.route({
+        path: '/api/shows',
+        method: 'GET',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: getShows
+        }
+    });
+    // create a show
+    server.route({
+        path: '/api/shows',
+        method: 'POST',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: upsertShow
+        }
+    });
+    // update a show
+    server.route({
+        path: '/api/shows',
+        method: 'PUT',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: updateShow
+        }
+    });
+    // Delete a show
+    server.route({
+        path: '/api/shows',
+        method: 'DELETE',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: removeShow
+        }
+    });
+    // users search endpoint
+    server.route({
+        path: '/api/search/users',
+        method: 'GET',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: userSearchHandler
+        }
+    });
 
+// refactor this
     server.route({
         method: 'POST',
         path: '/api/v1/playlist/{id}',
