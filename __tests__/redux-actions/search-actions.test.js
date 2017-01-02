@@ -9,7 +9,7 @@ describe('actions', () => {
         it('should pass the search string as data', () => {
             const search = 'Sonic Youth Dirty Boots';
 
-            expect(searchInput(search).currentSearch).toEqual(search);
+            expect(searchInput(search).data.currentSearch).toEqual(search);
         });
     });
 });

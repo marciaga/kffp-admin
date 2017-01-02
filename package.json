@@ -10,7 +10,7 @@
     "watch:css": "node-sass src/client/css -o public -w & postcss -c ./postcss.json -w",
     "start": "NODE_ENV=production node index.js",
     "lint": "./node_modules/.bin/eslint ./src",
-    "test": "jest --verbose",
+    "test": "jest",
     "test:coverage": "jest --coverage",
     "build:sass": "node-sass src/client/css -o public",
     "build:postcss": "postcss -c ./postcss.json"
@@ -95,5 +95,8 @@
     "react-test-renderer": "^15.4.0",
     "redux-mock-store": "^1.2.1",
     "webpack-hot-middleware": "^2.13.2"
+  },
+  "jest": {
+    "verbose": true
   }
 }

@@ -13,7 +13,9 @@ describe('search reducer', () => {
 
         expect(searchReducer(undefined, {
             type: 'UPDATE_SEARCH_FIELD',
-            currentSearch: searchQuery
+            data: {
+                currentSearch: searchQuery
+            }
         })).toEqual({
             currentSearch: searchQuery,
             searchResults: []
