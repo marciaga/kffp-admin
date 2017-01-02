@@ -60,6 +60,6 @@ model: {
         edit: {}
     },
     type: 'new',
-    data: {}
+    data: []
 }
 */

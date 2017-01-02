@@ -1,45 +1,57 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import { UserList } from './list';
-import { getUsers } from '../../actions/usersActions';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import MainTable from '../table';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import { handleModal } from '../../actions/modalActions';
+import { setModel } from '../../actions/modelActions';
+import { setFormData } from '../../actions/formActions';
 
 const mapStateToProps = (state) => {
     return {
-        users: state.users,
+        modal: state.modal,
+        model: state.model,
         auth: state.auth
-    };
+    }
 };
 
-class UserContainer extends Component {
+class Users extends Component {
     constructor (props) {
         super(props);
+
+        this.handleClick = this.handleClick.bind(this);
     }
 
-    componentWillReceiveProps (nextProps) {
+    handleClick (formType, modelName) {
+        const { showModal } = this.props.modal;
+
+        this.props.dispatch(setFormData(formType, modelName));
+        this.props.dispatch(handleModal(showModal));
+    }
+
+    componentWillReceiveProps(nextProps) {
         if (this.props.auth.user !== nextProps.auth.user) {
             if (nextProps.auth.user.scope !== 'admin') {
                 return browserHistory.push('/');
             }
-            // dispatch an action to fetch all users
-            this.props.dispatch(getUsers(nextProps.auth.user));
+            this.props.dispatch(setModel(nextProps.auth.user, 'users', 'show'));
         }
     }
 
     render () {
-        const { users, auth } = this.props;
-        const { isAuthenticated, user } = auth;
-        const { userList } = users;
-        const isAdmin = user && user.scope === 'admin';
+        const { model } = this.props;
 
         return (
             <div>
-                {isAuthenticated && isAdmin &&
-                    <UserList users={userList} />
-                }
+                <p>Add New User</p>
+                <FloatingActionButton onClick={() => this.handleClick('new', 'users')} secondary={true} style={{}}>
+                    <ContentAdd />
+                </FloatingActionButton>
+                <MainTable model={model} />
             </div>
         );
     }
-};
+}
 
-export default connect(mapStateToProps)(UserContainer);
+export default connect(mapStateToProps)(Users);
