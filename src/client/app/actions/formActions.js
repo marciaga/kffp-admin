@@ -48,6 +48,7 @@ const setFormData = (formType, modelName) => {
         formType
     };
 
+    // TODO see if we can live without this
     if (formType === 'new') {
 
         return receiveFormData(formMetadata);

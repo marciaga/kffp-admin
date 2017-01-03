@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Search from '../search';
 import { SearchResults } from '../search/searchResults';
-import TrackList from './trackList';
+import SongList from './songList';
 
 const mapStateToProps = (state) => {
     return {
@@ -35,7 +35,12 @@ class PlaylistForm extends Component {
                             dispatch={dispatch}
                         />
                     }
-                    <TrackList />
+                    {!searchResults.length &&
+                        <SongList
+                            currentPlaylist={currentPlaylist}
+                            dispatch={dispatch}
+                        />
+                    }
                 </div>
             );
         }

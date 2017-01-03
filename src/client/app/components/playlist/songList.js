@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import update from 'react/lib/update';
-import TrackForm from './TrackForm';
+import SongForm from './songForm';
 
 const style = {
     width: 400
 };
 
-class TrackList extends Component {
+class SongList extends Component {
     constructor (props) {
         super(props);
         this.moveCard = this.moveCard.bind(this);
@@ -59,7 +59,7 @@ class TrackList extends Component {
             <div style={style}>
                 {cards.map((card, i) => {
                     return (
-                        <TrackForm
+                        <SongForm
                             key={card.id}
                             index={i}
                             id={card.id}
@@ -72,4 +72,4 @@ class TrackList extends Component {
         );
     }
 }
-export default DragDropContext(HTML5Backend)(TrackList);
+export default DragDropContext(HTML5Backend)(SongList);

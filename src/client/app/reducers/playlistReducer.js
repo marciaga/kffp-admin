@@ -1,7 +1,8 @@
 import {
     GET_SHOW_PLAYLISTS,
     ADD_PLAYLIST,
-    ADD_TRACK
+    ADD_TRACK,
+    REORDER_SONGS
 } from '../constants';
 
 const initialState = {
@@ -34,6 +35,9 @@ export default function playlistReducer (state = initialState, action) {
             }
         }
 
+    case REORDER_SONGS:
+        
+        return state;
     default:
         return state;
     }

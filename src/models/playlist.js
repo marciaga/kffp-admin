@@ -3,7 +3,7 @@ import Boom from 'boom';
 import moment from 'moment';
 
 const songSchema = {
-    id: Joi.number(),
+    id: Joi.string(),
     title: Joi.string().required(),
     artist: Joi.string().required(),
     album: Joi.string(),
@@ -125,6 +125,7 @@ const addTrack = async (request, reply) => {
         const { playlistId } = request.params;
         const id = new ObjectID(playlistId);
 
+        track.id = new ObjectID();
 
         const result = await db.collection('playlists').update(
             { _id: id },

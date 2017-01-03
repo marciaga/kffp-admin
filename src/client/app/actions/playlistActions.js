@@ -6,7 +6,8 @@ import {
     GET_SHOW_PLAYLISTS,
     ADD_PLAYLIST,
     ADD_TRACK,
-    CLEAR_SEARCH_RESULTS
+    CLEAR_SEARCH_RESULTS,
+    REORDER_SONGS
 } from '../constants';
 
 const getShowPlaylists = (pathname) => {
@@ -79,6 +80,12 @@ const addTrack = (track, playlistId) => {
     }
 };
 
+const reorderSongs = () => {
+    return {
+        type: REORDER_SONGS
+    }
+};
+
 const receiveTrack = (data) => {
     return {
         type: ADD_TRACK,
@@ -100,4 +107,10 @@ const receivePlaylists = (data) => {
     }
 };
 
-export { getShowPlaylists, addNewPlaylist, receivePlaylist, addTrack };
+export {
+    getShowPlaylists,
+    addNewPlaylist,
+    receivePlaylist,
+    addTrack,
+    reorderSongs
+};

@@ -40,6 +40,7 @@ export const GET_SHOW_PLAYLISTS = 'GET_SHOW_PLAYLISTS';
 export const ADD_PLAYLIST = 'ADD_PLAYLIST';
 export const CURRENT_PLAYLIST = 'CURRENT_PLAYLIST';
 export const ADD_TRACK = 'ADD_TRACK';
+export const REORDER_SONGS = 'REORDER_SONGS';
 
 // Show
 export const GET_SHOW = 'GET_SHOW';

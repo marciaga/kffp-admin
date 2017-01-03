@@ -84,7 +84,7 @@ const collectDropTarget = (connect, monitor) => {
     };
 };
 
-class TrackForm extends Component {
+class SongForm extends Component {
 
     render () {
         const { text, isDragging, connectDragSource, connectDropTarget } = this.props;
@@ -98,5 +98,5 @@ class TrackForm extends Component {
     }
 }
 
-TrackForm = DropTarget('card', cardTarget, collectDropTarget)(TrackForm);
-export default DragSource('card', cardSource, collectDragSource)(TrackForm);
+SongForm = DropTarget('card', cardTarget, collectDropTarget)(SongForm);
+export default DragSource('card', cardSource, collectDragSource)(SongForm);
