@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import update from 'react/lib/update';
-import SongForm from './songForm';
+import SongFormWrapper from './songFormWrapper';
 
 const style = {
     width: 400
@@ -11,60 +11,51 @@ const style = {
 class SongList extends Component {
     constructor (props) {
         super(props);
-        this.moveCard = this.moveCard.bind(this);
+        const { currentPlaylist } = props;
+        const { songs } = currentPlaylist;
+
+        this.moveSong = this.moveSong.bind(this);
+
         this.state = {
-            cards: [{
-                id: 1,
-                text: 'Write a cool JS library'
-            }, {
-                id: 2,
-                text: 'Make it generic enough'
-            }, {
-                id: 3,
-                text: 'Write README'
-            }, {
-                id: 4,
-                text: 'Create some examples'
-            }, {
-                id: 5,
-                text: 'Spam in Twitter and IRC to promote it (note that this element is taller than the others)'
-            }, {
-                id: 6,
-                text: '???'
-            }, {
-                id: 7,
-                text: 'PROFIT'
-            }]
+            songs
         };
     }
 
-    moveCard (dragIndex, hoverIndex) {
-        const { cards } = this.state;
-        const dragCard = cards[dragIndex];
+    moveSong (dragIndex, hoverIndex) {
+        const { songs } = this.state;
+        const dragSong = songs[dragIndex];
 
         this.setState(update(this.state, {
-            cards: {
+            songs: {
                 $splice: [
                     [dragIndex, 1],
-                    [hoverIndex, 0, dragCard]
+                    [hoverIndex, 0, dragSong]
                 ]
             }
         }));
     }
 
     render () {
-        const { cards } = this.state;
+        const { songs } = this.state;
 
         return (
             <div style={style}>
-                {cards.map((card, i) => {
+                {songs.map((song, i) => {
+                    const {
+                        album,
+                        artist,
+                        track,
+                        releaseDate,
+                        id,
+                        images
+                    } = song;
+
                     return (
-                        <SongForm
-                            key={card.id}
+                        <SongFormWrapper
                             index={i}
-                            id={card.id}
-                            text={card.text}
-                            moveCard={this.moveCard}
+                            key={id}
+                            moveSong={this.moveSong}
+                            {...song}
                         />
                     );
                 })}
