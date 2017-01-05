@@ -12,7 +12,8 @@ const mapStateToProps = (state) => {
     return {
         modal: state.modal,
         model: state.model,
-        auth: state.auth
+        auth: state.auth,
+        routing: state.routing
     }
 };
 
@@ -31,11 +32,15 @@ class Shows extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.auth.user !== nextProps.auth.user) {
-            if (nextProps.auth.user.scope !== 'admin') {
+        const { auth, routing } = nextProps;
+        const { user } = auth;
+        const { locationBeforeTransitions } = routing;
+
+        if (this.props.auth.user !== user) {
+            if (user.scope !== 'admin') {
                 return browserHistory.push('/');
             }
-            this.props.dispatch(setModel(nextProps.auth.user, 'shows', 'show'));
+            this.props.dispatch(setModel(user, 'shows', 'show'));
         }
     }
 

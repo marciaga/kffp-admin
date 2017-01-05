@@ -39,9 +39,9 @@ const sortObjectsByKey = (data) => {
         return;
     }
 
-	return Object.keys(data).sort().reduce((memo, key) => {
-      memo[key] = data[key];
-      return memo;
+    return Object.keys(data).sort().reduce((memo, key) => {
+        memo[key] = data[key];
+        return memo;
     }, {});
 };
 
