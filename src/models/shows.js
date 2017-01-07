@@ -47,7 +47,8 @@ const updateShow = (request, reply) => {
     }
 
     const showId = new ObjectID(show._id);
-    const { ...fieldsToUpdate } = show;
+    // non-destructively assigns all properties to variable without _id
+    const { _id, ...fieldsToUpdate } = show;
 
     db.collection('shows').update({ _id: showId }, fieldsToUpdate, (error, result) => {
         if (error) {

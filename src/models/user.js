@@ -196,7 +196,7 @@ const updateUser = (request, reply) => {
     }
 
     const userId = new ObjectID(user._id);
-    const { ...fieldsToUpdate } = user;
+    const { _id, ...fieldsToUpdate } = user;
 
     db.collection('users').update({ _id: userId },
         fieldsToUpdate,

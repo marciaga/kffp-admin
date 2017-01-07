@@ -40,7 +40,8 @@
         "no-case-declarations": 0,
         "global-require": ["warn"],
         "func-names": ["warn", "as-needed"],
-        "import/no-extraneous-dependencies": 0
+        "import/no-extraneous-dependencies": 0,
+        "no-unused-vars": ["error", { "varsIgnorePattern": "^_" }]
     },
     "settings": {
         "import/ignore": ["js"]
