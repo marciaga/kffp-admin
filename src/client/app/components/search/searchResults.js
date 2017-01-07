@@ -3,9 +3,8 @@ import { GridList, GridTile } from 'material-ui/GridList';
 import { addTrack } from '../../actions/playlistActions';
 
 const SearchResults = ({ searchResults, playlistId, dispatch }) => {
-
-    const handleClick = (track, playlistId) => {
-        dispatch(addTrack(track, playlistId));
+    const handleClick = (track, pId) => {
+        dispatch(addTrack(track, pId));
     };
 
     return (
@@ -28,13 +27,13 @@ const SearchResults = ({ searchResults, playlistId, dispatch }) => {
                             className="search-results__grid-tile"
                             onClick={() => handleClick(tile, playlistId)}
                         >
-                            <img src={image.url} />
+                            <img src={image.url} alt={album} />
                         </GridTile>
-                    )
+                    );
                 })}
             </GridList>
         </div>
     );
 };
 
-export { SearchResults };
+export default SearchResults;

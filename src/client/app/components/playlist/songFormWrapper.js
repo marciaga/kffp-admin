@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import { DragSource, DropTarget } from 'react-dnd';
-import { SongCard } from './SongCard';
+import SongCard from './songCard';
 
 const style = {
     padding: '0.5rem 1rem',
@@ -11,8 +11,7 @@ const style = {
 };
 
 const songSource = {
-    beginDrag(props) {
-
+    beginDrag (props) {
         return {
             id: props.id,
             index: props.index
@@ -71,21 +70,16 @@ const type = {
     SONG: 'song'
 };
 
-const collectDragSource = (connect, monitor) => {
-    return {
-        connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging()
-    };
-};
+const collectDragSource = (connect, monitor) => ({
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
+});
 
-const collectDropTarget = (connect, monitor) => {
-    return {
-        connectDropTarget: connect.dropTarget()
-    };
-};
+const collectDropTarget = connect => ({
+    connectDropTarget: connect.dropTarget()
+});
 
 class SongFormWrapper extends Component {
-
     render () {
         const {
             isDragging,

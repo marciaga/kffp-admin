@@ -8,18 +8,14 @@ import {
     TableRow,
     TableRowColumn
 } from 'material-ui/Table';
-import TextField from 'material-ui/TextField';
-import Toggle from 'material-ui/Toggle';
-import { TableConfig } from './TableConfig';
+import TableConfig from './tableConfig';
 import { setUpdateFormData } from '../../actions/formActions';
 import { showOrHideModal } from '../../actions/modalActions';
 
-const mapStateToProps = (state) => {
-    return {
-        tableConfig: TableConfig,
-        model: state.model
-    }
-};
+const mapStateToProps = state => ({
+    tableConfig: TableConfig,
+    model: state.model
+});
 
 class MainTable extends Component {
     constructor (props) {
@@ -29,6 +25,17 @@ class MainTable extends Component {
         this.renderTableBody = this.renderTableBody.bind(this);
         this.renderTableRowCell = this.renderTableRowCell.bind(this);
         this.handleRowSelection = this.handleRowSelection.bind(this);
+    }
+
+    handleRowSelection (selectedRows) {
+        if (selectedRows.length) {
+            const modelName = this.props.model.name;
+            const rowIndex = selectedRows[0];
+            const rowData = this.props.model.data[rowIndex];
+
+            this.props.dispatch(setUpdateFormData('edit', modelName, rowData));
+            this.props.dispatch(showOrHideModal(true));
+        }
     }
 
     renderTableHeader () {
@@ -44,7 +51,7 @@ class MainTable extends Component {
                 >
                     {label}
                 </TableHeaderColumn>
-            )
+            );
         });
     }
 
@@ -52,16 +59,14 @@ class MainTable extends Component {
         const { model } = this.props;
         const tableData = model.data;
 
-        return tableData.map((item, index) => {
-            return (
-                <TableRow
-                    key={index}
-                    selected={item.selected}
-                >
-                    {this.renderTableRowCell(item)}
-                </TableRow>
-            )
-        });
+        return tableData.map((item, index) => (
+            <TableRow
+                key={index}
+                selected={item.selected}
+            >
+                {this.renderTableRowCell(item)}
+            </TableRow>
+        ));
     }
 
     renderTableRowCell (item) {
@@ -73,20 +78,9 @@ class MainTable extends Component {
                     <TableRowColumn key={i}>
                         <span>{value}</span>
                     </TableRowColumn>
-                )
+                );
             }
         });
-    }
-
-    handleRowSelection (selectedRows) {
-        if (selectedRows.length) {
-            const modelName = this.props.model.name;
-            const rowIndex = selectedRows[0];
-            const rowData = this.props.model.data[rowIndex];
-
-            this.props.dispatch(setUpdateFormData('edit', modelName, rowData));
-            this.props.dispatch(showOrHideModal(true));
-        }
     }
 
     render () {
@@ -106,9 +100,9 @@ class MainTable extends Component {
                     displaySelectAll={tableConfig.displaySelectAll}
                     adjustForCheckbox={tableConfig.adjustForCheckbox}
                     enableSelectAll={tableConfig.enableSelectAll}
-                    >
+                >
                     <TableRow>
-                        <TableHeaderColumn colSpan={colSpan} style={{textAlign: 'center'}}>
+                        <TableHeaderColumn colSpan={colSpan} style={{ textAlign: 'center' }}>
                             <h1 className="">{model.name}</h1>
                         </TableHeaderColumn>
                     </TableRow>

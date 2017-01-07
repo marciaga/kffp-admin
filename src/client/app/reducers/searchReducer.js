@@ -11,7 +11,7 @@ const initialState = {
 };
 
 export default function searchReducer (state = initialState, action) {
-    switch(action.type) {
+    switch (action.type) {
 
     case UPDATE_SEARCH_FIELD:
         const { currentSearch } = action.data;
@@ -19,24 +19,25 @@ export default function searchReducer (state = initialState, action) {
         return {
             ...state,
             currentSearch
-        }
+        };
+
     case SEARCH_RESULTS:
         return {
             ...state,
             searchResults: action.data
-        }
+        };
 
     case CLEAR_SEARCH_INPUT:
         return {
             ...state,
             currentSearch: ''
-        }
+        };
 
     case CLEAR_SEARCH_RESULTS:
         return {
             ...state,
             searchResults: []
-        }
+        };
 
     default:
         return state;

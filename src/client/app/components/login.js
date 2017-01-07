@@ -8,12 +8,12 @@ class Login extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick (e) {
+    handleClick () {
         const { email, password } = this.refs;
         const credentials = {
             email: email.value.trim(),
             password: password.value.trim()
-        }
+        };
 
         this.props.onLoginClick(credentials);
     }
@@ -23,9 +23,9 @@ class Login extends Component {
 
         return (
             <div>
-                <input type='text' ref='email' placeholder='Email' />
-                <input type='password' ref='password' placeholder='Password' />
-                <RaisedButton onClick={(e) => this.handleClick(e)} label="Login" />
+                <input type="text" ref="email" placeholder="Email" />
+                <input type="password" ref="password" placeholder="Password" />
+                <RaisedButton onClick={e => this.handleClick(e)} label="Login" />
 
                 {errorMessage &&
                     <p>{errorMessage}</p>
@@ -33,7 +33,7 @@ class Login extends Component {
             </div>
         );
     }
-};
+}
 
 Login.propTypes = {
     onLoginClick: PropTypes.func.isRequired,

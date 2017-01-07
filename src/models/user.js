@@ -11,6 +11,24 @@ const userSchema = Joi.object().keys({
     role: Joi.string().required()
 });
 
+const createToken = (user) => {
+    const { _id, email, role } = user;
+    const secret = process.env.JWT_SECRET_KEY;
+
+    return jwt.sign(
+        {
+            id: _id,
+            email,
+            scope: role
+        },
+        secret,
+        {
+            algorithm: 'HS256',
+            expiresIn: '7d'
+        }
+    );
+};
+
 /* Route Handlers */
 const loginHandler = (request, reply) => {
     const { db } = request.server.plugins['hapi-mongodb'];
@@ -21,11 +39,12 @@ const loginHandler = (request, reply) => {
             return reply(Boom.internal('Internal MongoDB error', err));
         }
 
-        bcrypt.compare(password, user.password, (err, isValid) => {
+        bcrypt.compare(password, user.password, (error, isValid) => {
             if (isValid) {
                 const idToken = createToken(user);
-                return reply({ email: user.email, verified: true, idToken});
+                return reply({ email: user.email, verified: true, idToken });
             }
+
             return reply(Boom.create(401, 'Incorrect username or email!'));
         });
     });
@@ -43,7 +62,13 @@ const getUsers = (request, reply) => {
         const users = await cursor.toArray();
 
         return reply(users);
-    })
+    });
+};
+
+const hashPassword = (password, callback) => {
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(password, salt, (error, hash) => callback(error, hash));
+    });
 };
 
 // CREATE user method
@@ -52,44 +77,36 @@ const createUser = (request, reply) => {
 
     try {
         Joi.validate(request.payload, userSchema, (err, value) => {
-            // if value === null, object is valid
             if (err) {
                 throw Boom.badRequest(err);
             }
-
-            return true;
+            // if value === null, object is valid
+            if (value === null) {
+                return true;
+            }
         });
-    } catch (err) {
-        return reply(err);
+    } catch (e) {
+        return reply(e);
     }
 
     const { email, password, role, displayName } = request.payload;
 
-    hashPassword(password, (err, hash) => {
-        if (err) {
-            return reply(Boom.badRequest(err));
+    hashPassword(password, (error, hash) => {
+        if (error) {
+            return reply(Boom.badRequest(error));
         }
 
         db.collection('users').insert({
-            displayName: displayName,
-            email: email,
+            displayName,
+            email,
             password: hash,
-            role: role
-        }, (err, user) => {
-            if (err) {
-                return reply(Boom.internal('Internal MongoDB error', err));
+            role
+        }, (mongoErr, user) => {
+            if (mongoErr) {
+                return reply(Boom.internal('Internal MongoDB error', mongoErr));
             }
 
             reply({ id_token: createToken(user) }).code(201);
-        })
-    })
-};
-
-/* Helper functions */
-const hashPassword = (password, callback) => {
-    bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(password, salt, (err, hash) => {
-            return callback(err, hash);
         });
     });
 };
@@ -134,7 +151,7 @@ const verifyCredentials = (request, reply) => {
         }
 
         if (user) {
-            bcrypt.compare(password, user.password, (err, isValid) => {
+            bcrypt.compare(password, user.password, (error, isValid) => {
                 if (isValid) {
                     return reply(user);
                 }
@@ -144,38 +161,20 @@ const verifyCredentials = (request, reply) => {
             return reply(Boom.create(401, 'Incorrect username or email!'));
         }
     });
-}
-
-const createToken = (user) => {
-    const { _id, email, role } = user;
-    const secret = process.env.JWT_SECRET_KEY;
-
-    return jwt.sign(
-        {
-            id: _id,
-            email: email,
-            scope: role
-        },
-        secret,
-        {
-            algorithm: 'HS256',
-            expiresIn: '7d'
-        }
-    );
 };
 
 const verifyUniqueUser = (request, reply) => {
     const { db } = request.server.plugins['hapi-mongodb'];
     const { email } = request.payload;
 
-    db.collection('users').findOne({ $or: [{ email: email }] }, (err, user) => {
+    db.collection('users').findOne({ $or: [{ email }] }, (err, user) => {
         if (user && (user.email === email)) {
             return reply(Boom.create(401, 'Email already taken!'));
         }
 
         return reply(request.payload);
     });
-}
+};
 
 const updateUser = (request, reply) => {
     const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
@@ -183,20 +182,21 @@ const updateUser = (request, reply) => {
 
     try {
         Joi.validate(user, userSchema, (err, value) => {
-            // if value === null, object is valid
             if (err) {
                 console.log(err);
                 throw Boom.badRequest(err);
             }
-
-            return true;
+            // if value === null, object is valid
+            if (value === null) {
+                return true;
+            }
         });
     } catch (err) {
         return reply(err);
     }
 
     const userId = new ObjectID(user._id);
-    const { _id, ...fieldsToUpdate } = user;
+    const { ...fieldsToUpdate } = user;
 
     db.collection('users').update({ _id: userId },
         fieldsToUpdate,

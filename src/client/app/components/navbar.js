@@ -12,25 +12,23 @@ import { loginUser, logoutUser } from '../actions/authActions';
 const Menu = ({ dispatch }) => (
     <IconMenu
         iconButtonElement={
-          <IconButton><MoreVertIcon color={'white'}/></IconButton>
+            <IconButton><MoreVertIcon color={'white'} /></IconButton>
         }
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
     >
-
         <MenuItem primaryText="Shows" onTouchTap={() => dispatch(push('/shows'))} />
-        <MenuItem primaryText="Users" onTouchTap={() => dispatch(push('/users'))}/>
+        <MenuItem primaryText="Users" onTouchTap={() => dispatch(push('/users'))} />
         <MenuItem primaryText="Sign out" onTouchTap={() => dispatch(logoutUser())} />
     </IconMenu>
 );
 
-
-const renderLoginElement = (errorMessage, isAuthenticated, dispatch)  => {
+const renderLoginElement = (errorMessage, isAuthenticated, dispatch) => {
     if (!isAuthenticated) {
         return (
             <Login
                 errorMessage={errorMessage}
-                onLoginClick={ credentials => dispatch(loginUser(credentials)) }
+                onLoginClick={credentials => dispatch(loginUser(credentials))}
             />
         );
     }
@@ -40,17 +38,14 @@ const renderLoginElement = (errorMessage, isAuthenticated, dispatch)  => {
     );
 };
 
-const Navbar = ({ dispatch, errorMessage, isAuthenticated }) => {
-
-    return (
-        <AppBar
-            title="KFFP Admin"
-            showMenuIconButton={false}
-            onTitleTouchTap={() => dispatch(push('/'))}
-            iconElementRight={renderLoginElement(errorMessage, isAuthenticated, dispatch)}
-        />
-    );
-};
+const Navbar = ({ dispatch, errorMessage, isAuthenticated }) => (
+    <AppBar
+        title="KFFP Admin"
+        showMenuIconButton={false}
+        onTitleTouchTap={() => dispatch(push('/'))}
+        iconElementRight={renderLoginElement(errorMessage, isAuthenticated, dispatch)}
+    />
+);
 
 Navbar.propTypes = {
     dispatch: PropTypes.func.isRequired,
@@ -58,4 +53,4 @@ Navbar.propTypes = {
     errorMessage: PropTypes.string
 };
 
-export { Navbar };
+export default Navbar;

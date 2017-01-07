@@ -1,23 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Search from '../search';
-import { SearchResults } from '../search/searchResults';
+import SearchResults from '../search/searchResults';
 import SongList from './songList';
 
-const mapStateToProps = (state) => {
-    return {
-        auth: state.auth,
-        show: state.show,
-        playlist: state.playlist,
-        search: state.search
-    };
-};
+const mapStateToProps = state => ({
+    auth: state.auth,
+    show: state.show,
+    playlist: state.playlist,
+    search: state.search
+});
 
 class PlaylistForm extends Component {
-    constructor (props) {
-        super(props);
-    }
-
     render () {
         const { playlist, search, dispatch } = this.props;
         const { currentPlaylist } = playlist;
@@ -49,7 +43,7 @@ class PlaylistForm extends Component {
             <div>
                 <h2 className="h2">No Currently Selected Playlist</h2>
             </div>
-        )
+        );
     }
 }
 

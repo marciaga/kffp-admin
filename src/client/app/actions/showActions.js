@@ -3,8 +3,13 @@ import { push } from 'react-router-redux';
 import { SHOW_SELECT, GET_SHOW } from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 
+const receiveActiveShows = data => ({
+    type: SHOW_SELECT,
+    data
+});
+
 const getActiveShows = () => {
-    const url = `/api/shows?isActive=true`;
+    const url = '/api/shows?isActive=true';
     const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {
@@ -15,7 +20,7 @@ const getActiveShows = () => {
                 }
             });
 
-            const result = data.map(s => {
+            const result = data.map((s) => {
                 const { slug, showName } = s;
 
                 return {
@@ -25,40 +30,25 @@ const getActiveShows = () => {
             });
 
             dispatch(receiveActiveShows(result));
-
         } catch (err) {
             console.log(err);
         }
-
-    }
+    };
 };
 
-const navigateToPlaylists = (slug) => {
-    return dispatch => {
-        const locationObject = {
-            pathname: `/playlists/${slug}`
-        };
+const navigateToPlaylists = slug => (dispatch) => {
+    const locationObject = {
+        pathname: `/playlists/${slug}`
+    };
 
-        dispatch(push(locationObject));
-    }
+    dispatch(push(locationObject));
 };
 
-const receiveActiveShows = (data) => {
-    return {
-        type: SHOW_SELECT,
-        data: data
-    }
-};
+const receiveShow = data => ({
+    type: GET_SHOW,
+    data
+});
 
-const getShow = (show) => {
-    return dispatch => dispatch(receiveShow(show));
-};
-
-const receiveShow = (data) => {
-    return {
-        type: GET_SHOW,
-        data
-    }
-};
+const getShow = show => dispatch => dispatch(receiveShow(show));
 
 export { getActiveShows, getShow, navigateToPlaylists };

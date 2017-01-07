@@ -25,4 +25,4 @@ const ShowHeader = ({ currentShow }) => {
     );
 };
 
-export { ShowHeader };
+export default ShowHeader;

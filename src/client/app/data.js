@@ -20,12 +20,10 @@ const shows = {
                 label: 'Day of the Week',
                 name: 'select',
                 hintText: 'Select a Day of the Week',
-                items: daysOfWeek.map(d => {
-                    return {
-                        label: d,
-                        value: d
-                    }
-                })
+                items: daysOfWeek.map(d => ({
+                    label: d,
+                    value: d
+                }))
             },
             startTime: {
                 fieldType: 'Time',
@@ -96,12 +94,10 @@ const shows = {
                 label: 'Day of the Week',
                 name: 'select',
                 hintText: 'Select a Day of the Week',
-                items: daysOfWeek.map(d => {
-                    return {
-                        label: d,
-                        value: d
-                    }
-                })
+                items: daysOfWeek.map(d => ({
+                    label: d,
+                    value: d
+                }))
             },
             startTime: {
                 fieldType: 'Time',
@@ -153,12 +149,10 @@ const users = {
                 label: 'User Role',
                 name: 'select',
                 hintText: 'Select a User Role',
-                items: userRoles.map(r => {
-                    return {
-                        label: r,
-                        value: r
-                    }
-                })
+                items: userRoles.map(r => ({
+                    label: r,
+                    value: r
+                }))
             }
         }
     },
@@ -197,25 +191,21 @@ const users = {
                 label: 'User Role',
                 name: 'select',
                 hintText: 'Select a User Role',
-                items: userRoles.map(r => {
-                    return {
-                        label: r,
-                        value: r
-                    }
-                })
+                items: userRoles.map(r => ({
+                    label: r,
+                    value: r
+                }))
             }
         }
     }
 };
 
-const playlist = {
-    fields: {
-
-    }
-};
-
+// const playlist = {
+//     fields: {
+//
+//     }
+// };
 export default {
     shows,
-    users,
-    playlist
+    users
 };

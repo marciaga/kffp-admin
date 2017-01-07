@@ -1,22 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { Navbar } from './navbar';
-import { Modal } from './modal';
-import { verifyLogin } from '../actions/authActions';
+import Navbar from './navbar';
+import Modal from './modal';
 
-const mapStateToProps = (state) => {
-    return {
-        auth: state.auth,
-        modal: state.modal
-    };
-};
+const mapStateToProps = state => ({
+    auth: state.auth,
+    modal: state.modal
+});
 
 class App extends Component {
-    constructor (props) {
-        super(props);
-    }
-
     render () {
         const { dispatch, auth, modal } = this.props;
         const { isAuthenticated, errorMessage } = auth;
@@ -37,7 +30,7 @@ class App extends Component {
                     }
                 </div>
             </MuiThemeProvider>
-        )
+        );
     }
 }
 

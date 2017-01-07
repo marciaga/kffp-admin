@@ -1,6 +1,4 @@
-import Boom from 'boom';
-import { userSearchHandler } from '../../models/search';
-import Playlist from '../../models/playlist';
+import userSearchHandler from '../../models/search';
 import showRoutes from './routes/shows';
 import userRoutes from './routes/users';
 import playlistRoutes from './routes/playlists';

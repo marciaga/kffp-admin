@@ -3,14 +3,12 @@ import { UPDATE_SEARCH_FIELD, SEARCH_RESULTS, CLEAR_SEARCH_INPUT } from '../cons
 import { API_URL, API_OFFSET, API_LIMIT, API_RESULT_TYPE } from '../utils/constants';
 import { parseSearchResults, getAlbumIds } from '../utils/searchUtils';
 
-export const searchInput = (val) => {
-    return {
-        type: UPDATE_SEARCH_FIELD,
-        data:  {
-            currentSearch: val
-        }
+export const searchInput = val => ({
+    type: UPDATE_SEARCH_FIELD,
+    data: {
+        currentSearch: val
     }
-};
+});
 
 export const searchForm = (val) => {
     if (val === '') {
@@ -52,9 +50,8 @@ export const searchForm = (val) => {
                 type: SEARCH_RESULTS,
                 data: parsedSearchResults
             });
-
         } catch (err) {
             console.log(err);
         }
-    }
+    };
 };

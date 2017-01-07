@@ -6,15 +6,13 @@ import { navigateToPlaylists } from '../../actions/showActions';
 const ShowSelect = ({ dispatch, shows }) => {
     const renderItems = (list) => {
         if (list) {
-            return list.map((item, i) => {
-                return (
-                    <MenuItem
-                        key={i}
-                        value={item.slug}
-                        primaryText={item.showName}
-                    />
-                );
-            });
+            return list.map((item, i) => (
+                <MenuItem
+                    key={i}
+                    value={item.slug}
+                    primaryText={item.showName}
+                />
+            ));
         }
     };
 

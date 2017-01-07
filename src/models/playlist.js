@@ -28,11 +28,11 @@ const getPlaylists = async (db, show) => {
     .toArray();
 };
 
-const getShow = async (db, slug) => {
-    return await db.collection('shows').findOne({
-        slug: slug
-    });
-};
+const getShow = async (db, slug) => (
+    await db.collection('shows').findOne({
+        slug
+    })
+);
 
 // TODO this needs to be limited so we don't fetch everything at once
 const getPlaylistsByShow = async (request, reply) => {
@@ -43,12 +43,11 @@ const getPlaylistsByShow = async (request, reply) => {
         const show = await getShow(db, slug);
         const playlists = await getPlaylists(db, show);
         const mergedData = {
-            playlists: playlists,
+            playlists,
             show
         };
 
         return reply(mergedData);
-
     } catch (err) {
         console.log(err);
         return err;
@@ -86,13 +85,14 @@ const createPlaylist = async (request, reply) => {
 
         try {
             Joi.validate(newPlaylist, playlistSchema, (err, value) => {
-                // if value === null, object is valid
                 if (err) {
                     console.log(err);
                     throw Boom.badRequest(err);
                 }
-
-                return true;
+                // if value === null, object is valid
+                if (value === null) {
+                    return true;
+                }
             });
         } catch (err) {
             return reply(err);
@@ -103,16 +103,15 @@ const createPlaylist = async (request, reply) => {
                 return reply(Boom.internal('Internal MongoDB error', err));
             }
 
-            const { ops } =  doc;
-            const newDoc = ops.find((o, i) => {
-                return i === 0;
-            });
+            const { ops } = doc;
+            const newDoc = ops.find((o, i) => (
+                i === 0
+            ));
 
             return reply(newDoc);
         });
-
     } catch (err) {
-        console.log(err)
+        console.log(err);
         return reply(err);
     }
 };
@@ -141,7 +140,7 @@ const addTrack = async (request, reply) => {
 
         return reply({ success: false, message: 'Update was not successful' });
     } catch (err) {
-        console.log(err)
+        console.log(err);
         return reply(err);
     }
 };
