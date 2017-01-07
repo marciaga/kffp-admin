@@ -3,6 +3,13 @@ import Models from '../data';
 import { SET_MODEL, UPDATE_MODEL } from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 
+const receiveModelData = model => ({
+    type: SET_MODEL,
+    data: {
+        model
+    }
+});
+
 const setModel = (user, modelName, type) => {
     const model = Models[modelName][type];
 
@@ -26,27 +33,15 @@ const setModel = (user, modelName, type) => {
             model.type = type;
 
             dispatch(receiveModelData(model));
-
         } catch (err) {
             console.log(err);
         }
-    }
+    };
 };
 
-const receiveModelData = (model) => {
-    return {
-        type: SET_MODEL,
-        data: {
-            model
-        }
-    }
-};
-
-const updateModelData = (data) => {
-    return {
-        type: UPDATE_MODEL,
-        data
-    }
-};
+const updateModelData = data => ({
+    type: UPDATE_MODEL,
+    data
+});
 
 export { setModel, updateModelData };

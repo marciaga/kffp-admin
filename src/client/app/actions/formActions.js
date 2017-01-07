@@ -12,15 +12,19 @@ import { updateModelData } from './modelActions';
 import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
 import Models from '../data';
 
-const updateFormField = (fieldName, value) => {
-    return {
-        type: UPDATE_FORM_FIELD,
-        data: {
-            fieldName,
-            value
-        }
+const updateFormField = (fieldName, value) => ({
+    type: UPDATE_FORM_FIELD,
+    data: {
+        fieldName,
+        value
     }
-};
+});
+
+const receiveFormData = data => ({
+    type: SET_FORM_FIELDS,
+    data
+});
+
 
 const setUpdateFormData = (formType, modelName, data) => {
     const fields = Models[modelName][formType]['fields'];
@@ -47,20 +51,19 @@ const setFormData = (formType, modelName) => {
         modelName,
         formType
     };
-
     // TODO see if we can live without this
     if (formType === 'new') {
-
         return receiveFormData(formMetadata);
     }
 };
 
-const receiveFormData = (data) => {
-    return {
-        type: SET_FORM_FIELDS,
-        data
+const receiveUserAutocomplete = data => ({
+    type: SET_USER_AUTOCOMPLETE,
+    data: {
+        autocompleteResults: data
     }
-};
+});
+
 
 const getUserAutoComplete = (text) => {
     const url = `${API_ENDPOINT}/search/users?text=${text}`;
@@ -81,31 +84,34 @@ const getUserAutoComplete = (text) => {
     };
 };
 
-const receiveUserAutocomplete = (data) => {
-    return {
-        type: SET_USER_AUTOCOMPLETE,
-        data: {
-            autocompleteResults: data
-        }
-    }
-};
 // write a test for this!
-const addUsersToShow = (data) => {
-    return (dispatch, getState) => {
-        const { form } = getState();
-        const { fields } = form;
-        const { users } = fields;
-        const { value } = users;
+const addUsersToShow = data => (dispatch, getState) => {
+    const { form } = getState();
+    const { fields } = form;
+    const { users } = fields;
+    const { value } = users;
 
-        if (value && Array.isArray(value)) {
-            const nextValue = [...value, data];
-            return dispatch(updateFormField('users', nextValue));
-        }
-
-        const firstValue = [data];
-        dispatch(updateFormField('users', firstValue));
+    if (value && Array.isArray(value)) {
+        const nextValue = [...value, data];
+        return dispatch(updateFormField('users', nextValue));
     }
+
+    const firstValue = [data];
+    dispatch(updateFormField('users', firstValue));
 };
+
+
+const formSubmitError = message => ({
+    type: SUBMIT_ERROR,
+    data: {
+        message
+    }
+});
+
+const receiveFormResult = data => ({
+    type: FORM_SUCCESS,
+    data
+});
 
 const prepareFormSubmit = (type, modelName) => {
     const idToken = localStorage.getItem('idToken');
@@ -128,7 +134,7 @@ const prepareFormSubmit = (type, modelName) => {
             });
 
             if (data.code === 401) {
-                console.log(data.message)
+                console.log(data.message);
                 return dispatch(formSubmitError(data.message));
             }
 
@@ -147,22 +153,6 @@ const prepareFormSubmit = (type, modelName) => {
         } catch (err) {
             console.log(err);
         }
-    }
-};
-
-const receiveFormResult = (data) => {
-    return {
-        type: FORM_SUCCESS,
-        data: data
-    };
-};
-
-const formSubmitError = (message) => {
-    return {
-        type: SUBMIT_ERROR,
-        data: {
-            message: message
-        }
     };
 };
 
@@ -172,11 +162,13 @@ const deleteForm = (id, modelName) => {
 
     return async (dispatch) => {
         try {
-            const { data } = await axios.delete(url, {
+            const { data } = await axios.delete(url, { // TODO data is not used
                 headers: {
                     Authorization: `Bearer ${idToken}`
                 }
             });
+
+            console.log(data);
 
             dispatch({
                 type: DELETE_MODEL,
@@ -184,9 +176,6 @@ const deleteForm = (id, modelName) => {
                     id
                 }
             });
-
-
-
         } catch (err) {
             console.log(err);
         }
@@ -197,7 +186,7 @@ const deleteForm = (id, modelName) => {
                 showModal: false
             }
         });
-    }
+    };
 };
 
 export {

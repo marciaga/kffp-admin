@@ -12,13 +12,13 @@ export default function showReducer (state = initialState, action) {
         return {
             ...state,
             currentShow: action.data
-        }
+        };
 
     case SHOW_SELECT:
         return {
             ...state,
             shows: action.data
-        }
+        };
 
     default:
         return state;

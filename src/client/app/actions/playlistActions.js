@@ -10,102 +10,88 @@ import {
     REORDER_SONGS
 } from '../constants';
 
-const getShowPlaylists = (pathname) => {
-    return async (dispatch) => {
-        const idToken = getTokenFromLocalStorage();
-        const url = `${API_ENDPOINT}${pathname}`;
-        try {
-            const { data } = await axios.get(url, {
-                headers: {
-                    Authorization: `Bearer ${idToken}`
-                }
-            });
-            const { show, playlists } = data;
+const receiveTrack = data => ({
+    type: ADD_TRACK,
+    data
+});
 
-            dispatch(getShow(show));
-            dispatch(receivePlaylists(playlists));
-        } catch (err) {
-            console.log(err);
-        }
-    }
-}
+const receivePlaylist = data => ({
+    type: ADD_PLAYLIST,
+    data
+});
 
-const addNewPlaylist = (showId) => {
-    return async (dispatch) => {
-        const idToken = getTokenFromLocalStorage();
-        const url = `${API_ENDPOINT}/playlists`;
-        const showData = {
-            showId
-        };
+const receivePlaylists = data => ({
+    type: GET_SHOW_PLAYLISTS,
+    data
+});
 
-        try {
-            const { data } = await axios.post(url, showData, {
-                headers: {
-                    Authorization: `Bearer ${idToken}`
-                }
-            });
+const getShowPlaylists = pathname => async (dispatch) => {
+    const idToken = getTokenFromLocalStorage();
+    const url = `${API_ENDPOINT}${pathname}`;
 
-            dispatch(receivePlaylist(data));
-        } catch (err) {
-            console.log(err);
-        }
-    }
-};
-
-const addTrack = (track, playlistId) => {
-    return async (dispatch) => {
-        try {
-            const idToken = getTokenFromLocalStorage();
-            const url = `${API_ENDPOINT}/playlist/${playlistId}`;
-            const { data } = await axios.put(url, track, {
-                headers: {
-                    Authorization: `Bearer ${idToken}`
-                }
-            });
-
-            if (data.success) {
-                dispatch(receiveTrack(track));
-            } else {
-                // dispatch error message
-                console.log('add was unsuccessful');
+    try {
+        const { data } = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
             }
-
-        } catch (err) {
-            console.log(err);
-        }
-
-        dispatch({
-            type: CLEAR_SEARCH_RESULTS
         });
+        const { show, playlists } = data;
+
+        dispatch(getShow(show));
+        dispatch(receivePlaylists(playlists));
+    } catch (err) {
+        console.log(err);
     }
 };
 
-const reorderSongs = () => {
-    return {
-        type: REORDER_SONGS
+const addNewPlaylist = showId => async (dispatch) => {
+    const idToken = getTokenFromLocalStorage();
+    const url = `${API_ENDPOINT}/playlists`;
+    const showData = {
+        showId
+    };
+
+    try {
+        const { data } = await axios.post(url, showData, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        dispatch(receivePlaylist(data));
+    } catch (err) {
+        console.log(err);
     }
 };
 
-const receiveTrack = (data) => {
-    return {
-        type: ADD_TRACK,
-        data
+const addTrack = (track, playlistId) => async (dispatch) => {
+    try {
+        const idToken = getTokenFromLocalStorage();
+        const url = `${API_ENDPOINT}/playlist/${playlistId}`;
+        const { data } = await axios.put(url, track, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        if (data.success) {
+            dispatch(receiveTrack(track));
+        } else {
+            // dispatch error message
+            console.log('add was unsuccessful');
+        }
+    } catch (err) {
+        console.log(err);
     }
+
+    dispatch({
+        type: CLEAR_SEARCH_RESULTS
+    });
 };
 
-const receivePlaylist = (data) => {
-    return {
-        type: ADD_PLAYLIST,
-        data
-    }
-}
-
-const receivePlaylists = (data) => {
-    return {
-        type: GET_SHOW_PLAYLISTS,
-        data
-    }
-};
+const reorderSongs = () => ({
+    type: REORDER_SONGS
+});
 
 export {
     getShowPlaylists,

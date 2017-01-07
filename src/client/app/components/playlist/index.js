@@ -1,31 +1,25 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import { PlaylistHistory } from './list';
-import { ShowHeader } from './header';
+import PlaylistHistory from './list';
+import ShowHeader from './header';
 import PlaylistForm from './edit';
 import { getShowPlaylists, addNewPlaylist } from '../../actions/playlistActions';
 
-const mapStateToProps = (state) => {
-    return {
-        auth: state.auth,
-        routing: state.routing,
-        show: state.show,
-        playlist: state.playlist
-    };
-};
+const mapStateToProps = state => ({
+    auth: state.auth,
+    routing: state.routing,
+    show: state.show,
+    playlist: state.playlist
+});
 
 class Playlist extends Component {
     constructor (props) {
         super(props);
         this.handleAddClick = this.handleAddClick.bind(this);
-    }
-
-    handleAddClick (showId) {
-        this.props.dispatch(addNewPlaylist(showId));
     }
 
     componentWillReceiveProps (nextProps) {
@@ -37,6 +31,10 @@ class Playlist extends Component {
         if (this.props.auth.user !== user && pathname) {
             this.props.dispatch(getShowPlaylists(pathname));
         }
+    }
+
+    handleAddClick (showId) {
+        this.props.dispatch(addNewPlaylist(showId));
     }
 
     render () {

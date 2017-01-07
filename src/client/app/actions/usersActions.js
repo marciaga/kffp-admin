@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { GET_USERS } from '../constants';
 
-const getUsers = (user) => {
+const receiveUsers = data => ({
+    type: GET_USERS,
+    data
+});
 
+const getUsers = (user) => {
     if (user.role !== 'admin') {
         // redirect to root path
     }
@@ -19,18 +23,10 @@ const getUsers = (user) => {
             });
 
             dispatch(receiveUsers(data));
-
         } catch (err) {
             console.log(err);
         }
-    }
+    };
 };
 
-const receiveUsers = (data) => {
-    return {
-        type: GET_USERS,
-        data: data
-    }
-};
-
-export { getUsers };
+export default getUsers;

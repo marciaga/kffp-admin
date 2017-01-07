@@ -11,11 +11,39 @@
         "browser": true,
         "node": true
     },
-    # "extends": "airbnb",
+    "extends": "airbnb",
     "rules": {
         "indent": ["error", 4],
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "react/prop-types": 1,
+        "react/jsx-indent-props": [1, 4],
+        "react/no-multi-comp":[1, { "ignoreStateless": true }],
+        "react/jsx-boolean-value": [2, "always"],
+        "react/no-string-refs": 1,
+        "react/no-children-prop": ["warn"],
+        "react/no-find-dom-node": ["warn"],
+        "react/prefer-stateless-function": 1,
         "no-console": 0,
         "comma-dangle": ["error", "never"],
-        "extensions": 0
+        "extensions": 0,
+        "arrow-body-style": ["error", "as-needed"],
+        "consistent-return": [0],
+        "dot-notation": ["warn"],
+        "no-param-reassign": ["warn"],
+        "space-before-function-paren": ["error", "always"],
+        "class-methods-use-this": 0,
+        "no-underscore-dangle": 0,
+        "no-useless-constructor": 2,
+        "no-class-assign": ["warn"],
+        "array-callback-return": ["warn"],
+        "no-case-declarations": 0,
+        "global-require": ["warn"],
+        "func-names": ["warn", "as-needed"],
+        "import/no-extraneous-dependencies": 0,
+        "no-unused-vars": ["error", { "varsIgnorePattern": "^_" }]
+    },
+    "settings": {
+        "import/ignore": ["js"]
     }
 }

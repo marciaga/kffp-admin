@@ -15,6 +15,7 @@ export default function formReducer (state = initialState, action) {
 
     case SET_FORM_FIELDS:
         const { fields, modelName, formType } = action.data;
+
         return {
             ...state,
             fields,
@@ -34,7 +35,7 @@ export default function formReducer (state = initialState, action) {
                     value
                 }
             }
-        }
+        };
 
     case SET_USER_AUTOCOMPLETE:
         const { autocompleteResults } = action.data;
@@ -48,19 +49,19 @@ export default function formReducer (state = initialState, action) {
                     searchResults: autocompleteResults
                 }
             }
-        }
+        };
 
     case FORM_SUCCESS:
         return {
             ...state,
             errors: []
-        }
+        };
 
     case SUBMIT_ERROR:
         return {
             ...state,
             errors: [...state.errors, action.data.message]
-        }
+        };
 
     default:
         return state;

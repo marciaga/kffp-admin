@@ -1,13 +1,11 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import { searchInput, searchForm } from '../../actions/searchActions';
 
-const mapStateToProps = (state) => {
-    return {
-        search: state.search
-    };
-};
+const mapStateToProps = state => ({
+    search: state.search
+});
 
 export class Search extends Component {
     constructor (props) {
@@ -46,7 +44,7 @@ export class Search extends Component {
                 </form>
 
                 {errorMessage &&
-                  <p>{errorMessage}</p>
+                    <p>{errorMessage}</p>
                 }
             </div>
         );
@@ -54,7 +52,6 @@ export class Search extends Component {
 }
 
 Search.propTypes = {
-    search: PropTypes.object,
     dispatch: PropTypes.func.isRequired
 };
 

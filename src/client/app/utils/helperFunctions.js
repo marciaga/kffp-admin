@@ -1,13 +1,13 @@
 const debounce = (func, wait, immediate) => {
     let timeout;
 
-    return function () {
-        const args = arguments;
+    return function (...args) {
+        const params = args;
         const later = () => {
             timeout = null;
 
             if (!immediate) {
-                func.apply(this, args);
+                func.apply(this, params);
             }
         };
         const callNow = immediate && !timeout;
@@ -16,7 +16,7 @@ const debounce = (func, wait, immediate) => {
         timeout = setTimeout(later, wait);
 
         if (callNow) {
-            func.apply(this, args);
+            func.apply(this, params);
         }
     };
 };
@@ -33,7 +33,9 @@ const hoursToDateObj = (hours) => {
     return date;
 };
 
-const getTokenFromLocalStorage = () => window.localStorage ? localStorage.getItem('idToken') : null;
+const getTokenFromLocalStorage = () => (
+    window.localStorage ? localStorage.getItem('idToken') : null
+);
 
 // sorts objects by object keys ; data is an object
 const sortObjectsByKey = (data) => {

@@ -9,27 +9,21 @@ const renderListItems = (playlists, dispatch) => {
     }
 
     return (
-        playlists.map((p, i) => {
-
-            return (
-                <ListItem
-                    key={i}
-                    primaryText={p.dateSlug}
-                    leftIcon={<AvQueueMusic />}
-                    onClick={() => dispatch(receivePlaylist(p))}
-                />
-            )
-        })
+        playlists.map((p, i) => (
+            <ListItem
+                key={i}
+                primaryText={p.dateSlug}
+                leftIcon={<AvQueueMusic />}
+                onClick={() => dispatch(receivePlaylist(p))}
+            />
+        ))
     );
 };
 
-const PlaylistHistory = ({ dispatch, playlists }) => {
+const PlaylistHistory = ({ dispatch, playlists }) => (
+    <List>
+        {renderListItems(playlists, dispatch)}
+    </List>
+);
 
-    return (
-        <List>
-            {renderListItems(playlists, dispatch)}
-        </List>
-    );
-};
-
-export { PlaylistHistory };
+export default PlaylistHistory;

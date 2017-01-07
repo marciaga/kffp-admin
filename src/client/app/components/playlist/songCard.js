@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardHeader, CardText} from 'material-ui/Card';
+import { Card, CardHeader, CardText } from 'material-ui/Card';
 import SongForm from './songForm';
 
 const SongCard = (props) => {
@@ -7,9 +7,9 @@ const SongCard = (props) => {
         album,
         artist,
         track,
-        releaseDate,
-        id,
-        images
+        releaseDate
+        // id, TODO use these?
+        // images
     } = props;
 
     const title = `${track} by ${artist}`;
@@ -22,10 +22,10 @@ const SongCard = (props) => {
                 subtitle={subtitle}
                 actAsExpander={true}
                 showExpandableButton={true}
-                />
+            />
             <CardText expandable={true} children={<SongForm />} />
         </Card>
     );
 };
 
-export { SongCard };
+export default SongCard;

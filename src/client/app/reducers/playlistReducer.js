@@ -16,13 +16,13 @@ export default function playlistReducer (state = initialState, action) {
         return {
             ...state,
             playlists: action.data
-        }
+        };
 
     case ADD_PLAYLIST:
         return {
             ...state,
             currentPlaylist: action.data
-        }
+        };
 
     case ADD_TRACK:
         return {
@@ -33,11 +33,11 @@ export default function playlistReducer (state = initialState, action) {
                     action.data, ...state.currentPlaylist.songs
                 ]
             }
-        }
+        };
 
     case REORDER_SONGS:
-        
         return state;
+
     default:
         return state;
     }

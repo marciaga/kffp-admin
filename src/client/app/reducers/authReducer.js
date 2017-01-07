@@ -14,14 +14,13 @@ const initialState = {
 };
 
 export default function authReducer (state = initialState, action) {
-
     switch (action.type) {
 
     case LOGIN_REQUEST:
         return Object.assign({}, state, {
             isFetching: true,
             isAuthenticated: false,
-            user: creds
+            user: action.data.creds
         });
 
     case LOGIN_SUCCESS:
@@ -53,6 +52,9 @@ export default function authReducer (state = initialState, action) {
         });
 
     case LOGOUT_FAILURE:
+        return {
+            ...state
+        };
 
     case AUTH_VERIFICATION:
         return Object.assign({}, state, {

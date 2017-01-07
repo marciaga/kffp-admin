@@ -3,20 +3,14 @@ import { connect } from 'react-redux';
 import { getActiveShows } from '../../actions/showActions';
 import ShowSelect from './select';
 
-const mapStateToProps = (state) => {
-    return {
-        auth: state.auth,
-        modal: state.modal,
-        show: state.show
-    };
-};
+const mapStateToProps = state => ({
+    auth: state.auth,
+    modal: state.modal,
+    show: state.show
+});
 
 class Main extends Component {
-    constructor (props) {
-        super(props);
-    }
-
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps (nextProps) {
         const { auth } = nextProps;
         const { user } = auth;
 

@@ -1,43 +1,36 @@
+import axios from 'axios';
+import { push } from 'react-router-redux';
 import {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
     LOGIN_FAILURE,
     LOGOUT_SUCCESS,
     LOGOUT_REQUEST,
-    LOGOUT_FAILURE,
     AUTH_VERIFICATION
 } from '../constants';
-import axios from 'axios';
-import { push } from 'react-router-redux';
 
-const requestLogin = (creds) => {
-    return {
-        type: LOGIN_REQUEST,
-        data: {
-            isFetching: true,
-            isAuthenticated: false,
-            creds
-        }
-    };
-};
+const requestLogin = creds => ({
+    type: LOGIN_REQUEST,
+    data: {
+        isFetching: true,
+        isAuthenticated: false,
+        creds
+    }
+});
 
-const receiveLogin = (response) => {
-    return {
-        type: LOGIN_SUCCESS,
-        data: { ...response, isFetching: false, isAuthenticated: true }
-    };
-};
+const receiveLogin = response => ({
+    type: LOGIN_SUCCESS,
+    data: { ...response, isFetching: false, isAuthenticated: true }
+});
 
-const loginError = (message) => {
-    return {
-        type: LOGIN_FAILURE,
-        data: {
-            isFetching: false,
-            isAuthenticated: false,
-            message
-        }
-    };
-};
+const loginError = message => ({
+    type: LOGIN_FAILURE,
+    data: {
+        isFetching: false,
+        isAuthenticated: false,
+        message
+    }
+});
 
 const verifyLogin = (isAuthenticated) => {
     if (!isAuthenticated) {
@@ -46,10 +39,10 @@ const verifyLogin = (isAuthenticated) => {
             data: {
                 verified: false
             }
-        }
+        };
     }
 
-    const url = `/api/users/verify`;
+    const url = '/api/users/verify';
     const idToken = localStorage.getItem('idToken');
 
     return async (dispatch) => {
@@ -71,7 +64,7 @@ const verifyLogin = (isAuthenticated) => {
         } catch (err) {
             console.log(err);
         }
-    }
+    };
 };
 
 const loginUser = (creds) => {
@@ -97,41 +90,42 @@ const loginUser = (creds) => {
                 return dispatch(loginError(message));
             }
         }
+    };
+};
+
+const receiveLogout = () => ({
+    type: LOGOUT_SUCCESS,
+    data: {
+        isFetching: false,
+        isAuthenticated: false
+    }
+});
+
+const requestLogout = () => ({
+    type: LOGOUT_REQUEST,
+    data: {
+        isFetching: true,
+        isAuthenticated: true
+    }
+});
+
+const logoutUser = () => (dispatch) => {
+    dispatch(requestLogout());
+
+    try {
+        localStorage.removeItem('idToken');
+        dispatch(push('/'));
+        return dispatch(receiveLogout());
+    } catch (err) {
+        console.log(err);
     }
 };
 
-const receiveLogout = () => {
-    return {
-        type: LOGOUT_SUCCESS,
-        data: {
-            isFetching: false,
-            isAuthenticated: false
-        }
-    }
+export {
+    verifyLogin,
+    loginUser,
+    loginError,
+    receiveLogin,
+    requestLogin,
+    logoutUser
 };
-
-const requestLogout = () => {
-    return {
-        type: LOGOUT_REQUEST,
-        data: {
-            isFetching: true,
-            isAuthenticated: true
-        }
-    }
-};
-
-const logoutUser = () => {
-    return dispatch => {
-        dispatch(requestLogout());
-
-        try {
-            localStorage.removeItem('idToken')
-            dispatch(push('/'));
-            return dispatch(receiveLogout());
-        } catch (err) {
-            console.log(err);
-        }
-    }
-};
-
-export { verifyLogin, loginUser, loginError, receiveLogin, requestLogin, logoutUser };

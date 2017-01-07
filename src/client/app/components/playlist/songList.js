@@ -40,25 +40,15 @@ class SongList extends Component {
 
         return (
             <div style={style}>
-                {songs.map((song, i) => {
-                    const {
-                        album,
-                        artist,
-                        track,
-                        releaseDate,
-                        id,
-                        images
-                    } = song;
-
-                    return (
-                        <SongFormWrapper
-                            index={i}
-                            key={id}
-                            moveSong={this.moveSong}
-                            {...song}
-                        />
-                    );
-                })}
+                {songs.map((song, i) => (
+                    // song: album, artist, track, releaseDate, id, images
+                    <SongFormWrapper
+                        index={i}
+                        key={song.id}
+                        moveSong={this.moveSong}
+                        {...song}
+                    />
+                ))}
             </div>
         );
     }
