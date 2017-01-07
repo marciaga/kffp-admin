@@ -11,11 +11,17 @@
         "browser": true,
         "node": true
     },
-    # "extends": "airbnb",
+    "extends": "airbnb",
     "rules": {
         "indent": ["error", 4],
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "no-console": 0,
         "comma-dangle": ["error", "never"],
-        "extensions": 0
+        "extensions": 0,
+        "arrow-body-style": ["error", "as-needed"]
+    },
+    "settings": {
+        "import/ignore": ["js"]
     }
 }
