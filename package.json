@@ -4,7 +4,7 @@
   "description": "The admin, playlist manager, and API for Freeform Portland ",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -e js,jsx,hbs -w src --ignore src/client --ignore src/components",
+    "dev": "nodemon -e js,hbs -w src --ignore src/client",
     "build": "NODE_ENV=production webpack",
     "build:css": "npm run build:sass && npm run build:postcss",
     "watch:css": "node-sass src/client/css -o public -w & postcss -c ./postcss.json -w",
