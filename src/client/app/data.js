@@ -200,11 +200,31 @@ const users = {
     }
 };
 
-// const playlist = {
-//     fields: {
-//
-//     }
-// };
+export const playlistFields = {
+    fields: {
+        track: {
+            label: 'Track Name',
+            name: 'track-field',
+            hintText: 'Enter the track name'
+        },
+        artist: {
+            label: 'Artist Name',
+            name: 'artist-name',
+            hintText: 'Enter the artist name'
+        },
+        album: {
+            label: 'Album Name',
+            name: 'album-name',
+            hintText: 'Enter the album name'
+        },
+        releaseDate: {
+            label: 'Release Date',
+            name: 'release-date',
+            hintText: 'Enter the release date'
+        }
+    }
+};
+
 export default {
     shows,
     users

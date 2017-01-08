@@ -23,7 +23,11 @@ const SongCard = (props) => {
                 actAsExpander={true}
                 showExpandableButton={true}
             />
-            <CardText expandable={true} children={<SongForm />} />
+            <CardText expandable={true}>
+                <SongForm
+                {...props}    
+                />
+            </CardText>
         </Card>
     );
 };
