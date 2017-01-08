@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { DragSource, DropTarget } from 'react-dnd';
 import SongCard from './songCard';
+import { reorderSongs } from '../../actions/playlistActions';
+
+const mapStateToProps = () => ({});
 
 const style = {
     padding: '0.5rem 1rem',
@@ -16,10 +21,18 @@ const songSource = {
             id: props.id,
             index: props.index
         };
+    },
+    endDrag (props, monitor) {
+        const { id, index } = monitor.getDropResult();
+
+        props.dispatch(reorderSongs({ id, index }));
     }
 };
 
 const songTarget = {
+    drop (props, monitor) {
+        return monitor.getItem();
+    },
     hover (props, monitor, component) {
         const dragIndex = monitor.getItem().index;
         const hoverIndex = props.index;
@@ -70,13 +83,13 @@ const type = {
     SONG: 'song'
 };
 
-const collectDragSource = (connect, monitor) => ({
-    connectDragSource: connect.dragSource(),
+const collectDragSource = (dndConnect, monitor) => ({
+    connectDragSource: dndConnect.dragSource(),
     isDragging: monitor.isDragging()
 });
 
-const collectDropTarget = connect => ({
-    connectDropTarget: connect.dropTarget()
+const collectDropTarget = dndConnect => ({
+    connectDropTarget: dndConnect.dropTarget()
 });
 
 class SongFormWrapper extends Component {
@@ -98,4 +111,5 @@ class SongFormWrapper extends Component {
 }
 
 SongFormWrapper = DropTarget(type.SONG, songTarget, collectDropTarget)(SongFormWrapper);
-export default DragSource(type.SONG, songSource, collectDragSource)(SongFormWrapper);
+export default compose(connect(mapStateToProps),
+    DragSource(type.SONG, songSource, collectDragSource))(SongFormWrapper);

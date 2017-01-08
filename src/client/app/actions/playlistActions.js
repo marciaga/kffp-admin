@@ -89,8 +89,9 @@ const addTrack = (track, playlistId) => async (dispatch) => {
     });
 };
 
-const reorderSongs = () => ({
-    type: REORDER_SONGS
+const reorderSongs = data => ({
+    type: REORDER_SONGS,
+    data
 });
 
 export {

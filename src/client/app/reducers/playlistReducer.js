@@ -36,7 +36,30 @@ export default function playlistReducer (state = initialState, action) {
         };
 
     case REORDER_SONGS:
-        return state;
+        const { id, index } = action.data;
+        const { songs } = state.currentPlaylist;
+        const currentSong = songs.find(song => id === song.id);
+        const currentSongIndex = songs.indexOf(currentSong);
+        // check whether anything actually changed
+        if (index === currentSongIndex) {
+            return state;
+        }
+
+        // otherwise, reorder the songs accordingly
+        const newSongs = [
+            ...songs.slice(0, currentSongIndex),
+            ...songs.slice(currentSongIndex + 1)
+        ];
+
+        newSongs.splice(index, 0, currentSong);
+
+        return {
+            ...state,
+            currentPlaylist: {
+                ...state.currentPlaylist,
+                songs: newSongs
+            }
+        };
 
     default:
         return state;
