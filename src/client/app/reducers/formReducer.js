@@ -3,7 +3,8 @@ import {
     SUBMIT_ERROR,
     SET_FORM_FIELDS,
     UPDATE_FORM_FIELD,
-    SET_USER_AUTOCOMPLETE
+    SET_USER_AUTOCOMPLETE,
+    SET_SONG_FORM
 } from '../constants';
 
 const initialState = {
@@ -61,6 +62,12 @@ export default function formReducer (state = initialState, action) {
         return {
             ...state,
             errors: [...state.errors, action.data.message]
+        };
+
+    case SET_SONG_FORM:
+        return {
+            ...state,
+            songs: action.data
         };
 
     default:

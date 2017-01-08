@@ -6,7 +6,8 @@ import {
     FORM_SUCCESS,
     SUBMIT_ERROR,
     TOGGLE_MODAL,
-    DELETE_MODEL
+    DELETE_MODEL,
+    SET_SONG_FORM
 } from '../constants';
 import { updateModelData } from './modelActions';
 import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
@@ -189,9 +190,15 @@ const deleteForm = (id, modelName) => {
     };
 };
 
+const setSongForm = songs => ({
+    type: SET_SONG_FORM,
+    data: songs
+});
+
 export {
     prepareFormSubmit,
     setFormData,
+    setSongForm,
     updateFormField,
     getUserAutoComplete,
     addUsersToShow,

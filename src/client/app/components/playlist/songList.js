@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import update from 'react/lib/update';
+import RaisedButton from 'material-ui/RaisedButton';
 import SongFormWrapper from './songFormWrapper';
 
 const style = {
@@ -40,6 +41,8 @@ class SongList extends Component {
 
         return (
             <div style={style}>
+                <RaisedButton type="button" label="Save Track Order" primary={true} />
+
                 {songs.map((song, i) => (
                     // song: album, artist, track, releaseDate, id, images
                     <SongFormWrapper

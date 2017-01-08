@@ -7,11 +7,13 @@ const SongCard = (props) => {
         album,
         artist,
         track,
-        releaseDate
-        // id, TODO use these?
-        // images
+        releaseDate,
+        id,
+        form
     } = props;
 
+    const { songs } = form;
+    const currentSong = songs.find(s => id === s.id);
     const title = `${track} by ${artist}`;
     const subtitle = `on ${album} - released ${releaseDate}`;
 
@@ -24,9 +26,7 @@ const SongCard = (props) => {
                 showExpandableButton={true}
             />
             <CardText expandable={true}>
-                <SongForm
-                {...props}    
-                />
+                <SongForm {...currentSong} />
             </CardText>
         </Card>
     );

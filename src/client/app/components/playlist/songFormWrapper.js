@@ -6,7 +6,9 @@ import { DragSource, DropTarget } from 'react-dnd';
 import SongCard from './songCard';
 import { reorderSongs } from '../../actions/playlistActions';
 
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+    form: state.form
+});
 
 const style = {
     padding: '0.5rem 1rem',
