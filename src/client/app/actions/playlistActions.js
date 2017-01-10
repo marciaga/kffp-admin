@@ -7,7 +7,8 @@ import {
     ADD_PLAYLIST,
     ADD_TRACK,
     CLEAR_SEARCH_RESULTS,
-    REORDER_SONGS
+    REORDER_SONGS,
+    UPDATE_PLAYLIST_SONGS
 } from '../constants';
 
 const receiveTrack = data => ({
@@ -39,6 +40,29 @@ const getShowPlaylists = pathname => async (dispatch) => {
 
         dispatch(getShow(show));
         dispatch(receivePlaylists(playlists));
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+const receiveSongs = data => ({
+    type: UPDATE_PLAYLIST_SONGS,
+    data
+});
+
+const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
+    const idToken = getTokenFromLocalStorage();
+    const url = `${API_ENDPOINT}/playlists/${playlistId}`;
+    const songData = song;
+
+    try {
+        const { data } = await axios.patch(url, songData, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        dispatch(receiveSongs(data));
     } catch (err) {
         console.log(err);
     }
@@ -99,5 +123,6 @@ export {
     addNewPlaylist,
     receivePlaylist,
     addTrack,
-    reorderSongs
+    reorderSongs,
+    updatePlaylistSong
 };

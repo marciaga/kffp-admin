@@ -1,7 +1,8 @@
 import {
     getPlaylistsByShow,
     createPlaylist,
-    addTrack
+    addTrack,
+    updateTracks
 } from '../../../models/playlist';
 
 const playlistRoutes = [
@@ -31,7 +32,7 @@ const playlistRoutes = [
         }
     },
     {
-        path: '/api/playlist/{playlistId}',
+        path: '/api/playlists/{playlistId}',
         method: 'PUT',
         config: {
             auth: {
@@ -39,6 +40,17 @@ const playlistRoutes = [
                 scope: ['admin', 'dj']
             },
             handler: addTrack
+        }
+    },
+    {
+        path: '/api/playlists/{playlistId}',
+        method: 'PATCH',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin', 'dj']
+            },
+            handler: updateTracks
         }
     }
 ];

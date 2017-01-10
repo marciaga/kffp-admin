@@ -38,6 +38,7 @@ class SongList extends Component {
 
     render () {
         const { songs } = this.state;
+        const { _id } = this.props.currentPlaylist;
 
         return (
             <div style={style}>
@@ -49,6 +50,7 @@ class SongList extends Component {
                         index={i}
                         key={song.id}
                         moveSong={this.moveSong}
+                        playlistId={_id}
                         {...song}
                     />
                 ))}

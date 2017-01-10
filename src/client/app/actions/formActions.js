@@ -7,7 +7,8 @@ import {
     SUBMIT_ERROR,
     TOGGLE_MODAL,
     DELETE_MODEL,
-    SET_SONG_FORM
+    SET_SONG_FORM,
+    UPDATE_SONG_FORM
 } from '../constants';
 import { updateModelData } from './modelActions';
 import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
@@ -23,6 +24,11 @@ const updateFormField = (fieldName, value) => ({
 
 const receiveFormData = data => ({
     type: SET_FORM_FIELDS,
+    data
+});
+
+const updateSongForm = data => ({
+    type: UPDATE_SONG_FORM,
     data
 });
 
@@ -199,6 +205,7 @@ export {
     prepareFormSubmit,
     setFormData,
     setSongForm,
+    updateSongForm,
     updateFormField,
     getUserAutoComplete,
     addUsersToShow,

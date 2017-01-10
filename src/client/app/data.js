@@ -204,22 +204,22 @@ export const playlistFields = {
     fields: {
         track: {
             label: 'Track Name',
-            name: 'track-field',
+            name: 'track',
             hintText: 'Enter the track name'
         },
         artist: {
             label: 'Artist Name',
-            name: 'artist-name',
+            name: 'artist',
             hintText: 'Enter the artist name'
         },
         album: {
             label: 'Album Name',
-            name: 'album-name',
+            name: 'album',
             hintText: 'Enter the album name'
         },
         releaseDate: {
             label: 'Release Date',
-            name: 'release-date',
+            name: 'releaseDate',
             hintText: 'Enter the release date'
         }
     }

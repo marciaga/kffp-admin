@@ -4,7 +4,8 @@ import {
     SET_FORM_FIELDS,
     UPDATE_FORM_FIELD,
     SET_USER_AUTOCOMPLETE,
-    SET_SONG_FORM
+    SET_SONG_FORM,
+    UPDATE_SONG_FORM
 } from '../constants';
 
 const initialState = {
@@ -68,6 +69,20 @@ export default function formReducer (state = initialState, action) {
         return {
             ...state,
             songs: action.data
+        };
+
+    case UPDATE_SONG_FORM:
+        const { val, songId, field } = action.data;
+        const newSongs = state.songs.map((s) => {
+            if (s.id === songId) {
+                s[field] = val;
+            }
+            return s;
+        });
+
+        return {
+            ...state,
+            songs: newSongs
         };
 
     default:

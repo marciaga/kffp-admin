@@ -9,7 +9,9 @@ const SongCard = (props) => {
         track,
         releaseDate,
         id,
-        form
+        form,
+        playlistId,
+        dispatch
     } = props;
 
     const { songs } = form;
@@ -26,7 +28,12 @@ const SongCard = (props) => {
                 showExpandableButton={true}
             />
             <CardText expandable={true}>
-                <SongForm {...currentSong} />
+                <SongForm
+                    currentSong={currentSong}
+                    playlistId={playlistId}
+                    id={id}
+                    dispatch={dispatch}
+                />
             </CardText>
         </Card>
     );

@@ -24,6 +24,7 @@ export const SET_USER_AUTOCOMPLETE = 'SET_USER_AUTOCOMPLETE';
 export const FORM_SUCCESS = 'FORM_SUCCESS';
 export const SUBMIT_ERROR = 'SUBMIT_ERROR';
 export const SET_SONG_FORM = 'SET_SONG_FORM';
+export const UPDATE_SONG_FORM = 'UPDATE_SONG_FORM';
 
 // Model
 export const SET_MODEL = 'SET_MODEL';
@@ -42,6 +43,7 @@ export const ADD_PLAYLIST = 'ADD_PLAYLIST';
 export const CURRENT_PLAYLIST = 'CURRENT_PLAYLIST';
 export const ADD_TRACK = 'ADD_TRACK';
 export const REORDER_SONGS = 'REORDER_SONGS';
+export const UPDATE_PLAYLIST_SONGS = 'UPDATE_PLAYLIST_SONGS';
 
 // Show
 export const GET_SHOW = 'GET_SHOW';

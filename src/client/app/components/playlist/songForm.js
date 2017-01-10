@@ -5,6 +5,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { playlistFields } from '../../data';
 import { debounce } from '../../utils/helperFunctions';
 import { FORM_FIELD_DEBOUNCE_TIME } from '../../utils/constants';
+import { updateSongForm } from '../../actions/formActions';
+import { updatePlaylistSong } from '../../actions/playlistActions';
 
 class SongForm extends Component {
     constructor (props) {
@@ -16,22 +18,22 @@ class SongForm extends Component {
         this.debouncer = debounce(this.debouncedHandler, FORM_FIELD_DEBOUNCE_TIME);
     }
 
-    changeHandler (e) {
-        this.debouncer(e.target.value);
+    changeHandler (e, field) {
+        this.debouncer(e.target.value, field);
     }
 
-    debouncedHandler (val) {
-        // dispatch an action to update the form state playlist.currentPlaylist.songs
-        console.log(val);
+    debouncedHandler (val, field) {
+        const songId = this.props.id;
+
+        this.props.dispatch(updateSongForm({ val, songId, field }));
     }
 
     submitHandler (e) {
         e.preventDefault();
-        // const { formType, modelName } = this.props.form;
+        const songToUpdate = this.props.currentSong;
+        const { playlistId } = this.props;
         // TODO perform validation
-        console.log('submit');
-        // dispatch action to do a patch with song data from store
-        // this.props.dispatch(prepareFormSubmit(formType, modelName));
+        this.props.dispatch(updatePlaylistSong(songToUpdate, playlistId));
     }
 
     renderFormFields (fields) {
@@ -54,21 +56,20 @@ class SongForm extends Component {
                     defaultValue={value || ''}
                     hintText={hintText}
                     type={'text'}
-                    onChange={this.changeHandler}
+                    onChange={e => this.changeHandler(e, name)}
                 />
             );
         });
     }
 
     render () {
-        const { id } = this.props;
+        const { currentSong, playlistId } = this.props;
 
         return (
             <div>
                 <Divider />
                 <form onSubmit={this.submitHandler}>
-                    {this.renderFormFields(this.props)}
-                    <input type="hidden" value={id} />
+                    {this.renderFormFields(currentSong)}
                     <RaisedButton type="submit" label="Update Track Info" />
                 </form>
             </div>
