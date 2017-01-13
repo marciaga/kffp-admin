@@ -21,8 +21,9 @@ export const searchForm = (val) => {
     return async (dispatch) => {
         try {
             const { data, status } = await axios.get(searchUrl);
-
-            if (status !== 200) {
+            const { tracks } = data;
+            
+            if (status !== 200 || !tracks.items.length) {
                 console.log('Something went wrong...');
                 // dispatch error message
                 return;

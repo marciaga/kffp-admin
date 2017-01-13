@@ -91,7 +91,7 @@ const addNewPlaylist = showId => async (dispatch) => {
 const addTrack = (track, playlistId) => async (dispatch) => {
     try {
         const idToken = getTokenFromLocalStorage();
-        const url = `${API_ENDPOINT}/playlist/${playlistId}`;
+        const url = `${API_ENDPOINT}/playlists/${playlistId}`;
         const { data } = await axios.put(url, track, {
             headers: {
                 Authorization: `Bearer ${idToken}`
@@ -113,6 +113,29 @@ const addTrack = (track, playlistId) => async (dispatch) => {
     });
 };
 
+const reorderSongsSave = (songs, id) => async (dispatch) => {
+    const validatedSongData = songs; // TODO actually validate
+
+    try {
+        const idToken = getTokenFromLocalStorage();
+        const url = `${API_ENDPOINT}/playlists/${id}/tracks`;
+        const { data } = await axios.put(url, validatedSongData, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        if (data.success) {
+            // dispatch success message
+        } else {
+            // dispatch error message
+            console.log('update was unsuccessful');
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+
 const reorderSongs = data => ({
     type: REORDER_SONGS,
     data
@@ -124,5 +147,6 @@ export {
     receivePlaylist,
     addTrack,
     reorderSongs,
+    reorderSongsSave,
     updatePlaylistSong
 };

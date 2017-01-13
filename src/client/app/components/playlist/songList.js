@@ -4,6 +4,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import update from 'react/lib/update';
 import RaisedButton from 'material-ui/RaisedButton';
 import SongFormWrapper from './songFormWrapper';
+import { reorderSongsSave } from '../../actions/playlistActions';
 
 const style = {
     width: 400
@@ -16,6 +17,7 @@ class SongList extends Component {
         const { songs } = currentPlaylist;
 
         this.moveSong = this.moveSong.bind(this);
+        this.onSaveOrder = this.onSaveOrder.bind(this);
 
         this.state = {
             songs
@@ -36,13 +38,24 @@ class SongList extends Component {
         }));
     }
 
+    onSaveOrder () {
+        const { songs, _id } = this.props.currentPlaylist;
+
+        this.props.dispatch(reorderSongsSave(songs, _id));
+    }
+
     render () {
         const { songs } = this.state;
         const { _id } = this.props.currentPlaylist;
 
         return (
             <div style={style}>
-                <RaisedButton type="button" label="Save Track Order" primary={true} />
+                <RaisedButton
+                    type="button"
+                    label="Save Track Order"
+                    onClick={this.onSaveOrder}
+                    primary={true}
+                />
 
                 {songs.map((song, i) => (
                     // song: album, artist, track, releaseDate, id, images
