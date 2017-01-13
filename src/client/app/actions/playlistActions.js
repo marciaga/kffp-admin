@@ -133,7 +133,7 @@ const reorderSongsSave = (songs, id) => async (dispatch) => {
         } else {
             const errorMessage = 'Track reordering failed';
 
-            dispatch(snackbarMessage(message));
+            dispatch(snackbarMessage(errorMessage));
         }
     } catch (err) {
         console.log(err);
