@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import SnackbarMessage from './feedback/snackbar';
 import Navbar from './navbar';
 import Modal from './modal';
 
@@ -28,6 +29,7 @@ class App extends Component {
                             <Modal showModal={modal.showModal} dispatch={dispatch} />
                         </div>
                     }
+                    <SnackbarMessage />
                 </div>
             </MuiThemeProvider>
         );

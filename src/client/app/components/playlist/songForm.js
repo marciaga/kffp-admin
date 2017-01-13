@@ -63,7 +63,7 @@ class SongForm extends Component {
     }
 
     render () {
-        const { currentSong, playlistId } = this.props;
+        const { currentSong } = this.props;
 
         return (
             <div>

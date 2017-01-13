@@ -1,6 +1,11 @@
 import axios from 'axios';
-import { UPDATE_SEARCH_FIELD, SEARCH_RESULTS, CLEAR_SEARCH_INPUT } from '../constants';
+import {
+    UPDATE_SEARCH_FIELD,
+    SEARCH_RESULTS,
+    CLEAR_SEARCH_INPUT
+} from '../constants';
 import { API_URL, API_OFFSET, API_LIMIT, API_RESULT_TYPE } from '../utils/constants';
+import { snackbarMessage } from './feedbackActions';
 import { parseSearchResults, getAlbumIds } from '../utils/searchUtils';
 
 export const searchInput = val => ({
@@ -22,11 +27,17 @@ export const searchForm = (val) => {
         try {
             const { data, status } = await axios.get(searchUrl);
             const { tracks } = data;
-            
-            if (status !== 200 || !tracks.items.length) {
+
+            if (status !== 200) {
                 console.log('Something went wrong...');
-                // dispatch error message
                 return;
+            }
+
+            if (!tracks.items.length) {
+                const message = 'Song not found!';
+                // no song found, so dispatch action to open new form
+                dispatch({ type: CLEAR_SEARCH_INPUT });
+                return dispatch(snackbarMessage(message));
             }
 
             const albumIds = getAlbumIds(data);

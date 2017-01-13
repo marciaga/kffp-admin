@@ -37,8 +37,8 @@ export class Search extends Component {
                         <TextField
                             onChange={this.handleChange}
                             value={currentSearch}
-                            floatingLabelText={'Enter a search query'}
-                            hintText={'Enter a search query'}
+                            floatingLabelText={'Enter a search and press enter'}
+                            hintText={'Enter a search and press enter'}
                         />
                     </div>
                 </form>

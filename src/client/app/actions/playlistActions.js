@@ -2,6 +2,7 @@ import axios from 'axios';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 import { API_ENDPOINT } from '../utils/constants';
 import { getShow } from './showActions';
+import { snackbarMessage } from './feedbackActions';
 import {
     GET_SHOW_PLAYLISTS,
     ADD_PLAYLIST,
@@ -126,10 +127,13 @@ const reorderSongsSave = (songs, id) => async (dispatch) => {
         });
 
         if (data.success) {
-            // dispatch success message
+            const message = 'Track reorder successful!';
+
+            dispatch(snackbarMessage(message));
         } else {
-            // dispatch error message
-            console.log('update was unsuccessful');
+            const errorMessage = 'Track reordering failed';
+
+            dispatch(snackbarMessage(message));
         }
     } catch (err) {
         console.log(err);

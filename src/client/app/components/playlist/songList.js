@@ -24,6 +24,12 @@ class SongList extends Component {
         };
     }
 
+    onSaveOrder () {
+        const { songs, _id } = this.props.currentPlaylist;
+
+        this.props.dispatch(reorderSongsSave(songs, _id));
+    }
+
     moveSong (dragIndex, hoverIndex) {
         const { songs } = this.state;
         const dragSong = songs[dragIndex];
@@ -36,12 +42,6 @@ class SongList extends Component {
                 ]
             }
         }));
-    }
-
-    onSaveOrder () {
-        const { songs, _id } = this.props.currentPlaylist;
-
-        this.props.dispatch(reorderSongsSave(songs, _id));
     }
 
     render () {

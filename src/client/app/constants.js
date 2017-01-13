@@ -22,7 +22,6 @@ export const SET_FORM_FIELDS = 'SET_FORM_FIELDS';
 export const UPDATE_FORM_FIELD = 'UPDATE_FORM_FIELD';
 export const SET_USER_AUTOCOMPLETE = 'SET_USER_AUTOCOMPLETE';
 export const FORM_SUCCESS = 'FORM_SUCCESS';
-export const SUBMIT_ERROR = 'SUBMIT_ERROR';
 export const SET_SONG_FORM = 'SET_SONG_FORM';
 export const UPDATE_SONG_FORM = 'UPDATE_SONG_FORM';
 
@@ -47,3 +46,8 @@ export const UPDATE_PLAYLIST_SONGS = 'UPDATE_PLAYLIST_SONGS';
 
 // Show
 export const GET_SHOW = 'GET_SHOW';
+
+// error
+export const SUBMIT_ERROR = 'SUBMIT_ERROR';
+export const SNACKBAR_MESSAGE = 'SNACKBAR_MESSAGE';
+export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';

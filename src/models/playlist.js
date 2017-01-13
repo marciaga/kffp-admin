@@ -184,7 +184,7 @@ const updateTrackOrder = async (request, reply) => {
 
         const result = await db.collection('playlists').update(
             { _id: id },
-            { $set: { 'songs': tracks } }
+            { $set: { songs: tracks } }
         );
 
         const response = result.toJSON();
