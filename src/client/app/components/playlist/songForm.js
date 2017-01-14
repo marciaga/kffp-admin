@@ -2,11 +2,16 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 import RaisedButton from 'material-ui/RaisedButton';
+import IconButton from 'material-ui/IconButton';
+import ActionDelete from 'material-ui/svg-icons/action/delete';
 import { playlistFields } from '../../data';
 import { debounce } from '../../utils/helperFunctions';
 import { FORM_FIELD_DEBOUNCE_TIME } from '../../utils/constants';
 import { updateSongForm } from '../../actions/formActions';
-import { updatePlaylistSong } from '../../actions/playlistActions';
+import {
+    updatePlaylistSong,
+    deleteSongFromPlaylist
+} from '../../actions/playlistActions';
 
 class SongForm extends Component {
     constructor (props) {
@@ -15,11 +20,20 @@ class SongForm extends Component {
         this.renderFormFields = this.renderFormFields.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
         this.changeHandler = this.changeHandler.bind(this);
+        this.deleteSong = this.deleteSong.bind(this);
         this.debouncer = debounce(this.debouncedHandler, FORM_FIELD_DEBOUNCE_TIME);
     }
 
     changeHandler (e, field) {
         this.debouncer(e.target.value, field);
+    }
+
+    deleteSong (song, playlistId) {
+        if (!window.confirm('Are You Sure?')) {
+            return;
+        }
+
+        this.props.dispatch(deleteSongFromPlaylist(song, playlistId));
     }
 
     debouncedHandler (val, field) {
@@ -63,7 +77,7 @@ class SongForm extends Component {
     }
 
     render () {
-        const { currentSong } = this.props;
+        const { currentSong, playlistId } = this.props;
 
         return (
             <div>
@@ -72,6 +86,11 @@ class SongForm extends Component {
                     {this.renderFormFields(currentSong)}
                     <RaisedButton type="submit" label="Update Track Info" />
                 </form>
+                <IconButton
+                    onClick={() => this.deleteSong(currentSong, playlistId)}
+                >
+                    <ActionDelete />
+                </IconButton>
             </div>
         );
     }

@@ -49,4 +49,18 @@ const sortObjectsByKey = (data) => {
     }, {});
 };
 
-export { debounce, hoursToDateObj, sortObjectsByKey, getTokenFromLocalStorage };
+const generateBlankSongData = () => ({
+    album: '',
+    artist: '',
+    images: [],
+    releaseDate: '',
+    track: ''
+});
+
+export {
+    debounce,
+    hoursToDateObj,
+    sortObjectsByKey,
+    getTokenFromLocalStorage,
+    generateBlankSongData
+};

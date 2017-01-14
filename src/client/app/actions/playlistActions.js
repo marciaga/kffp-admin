@@ -114,6 +114,32 @@ const addTrack = (track, playlistId) => async (dispatch) => {
     });
 };
 
+const deleteSongFromPlaylist = (song, playlistId) => async (dispatch) => {
+    const { id } = song;
+    try {
+        const idToken = getTokenFromLocalStorage();
+        const url = `${API_ENDPOINT}/playlists/${playlistId}/tracks/${id}`;
+        const result = await axios.delete(url, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        if (data.success) {
+            const message = 'Track deleted successfully!';
+
+            // dispatch action to remove from UI
+            dispatch(snackbarMessage(message));
+        } else {
+            const errorMessage = 'Track delete failed';
+
+            dispatch(snackbarMessage(errorMessage));
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+
 const reorderSongsSave = (songs, id) => async (dispatch) => {
     const validatedSongData = songs; // TODO actually validate
 
@@ -152,5 +178,6 @@ export {
     addTrack,
     reorderSongs,
     reorderSongsSave,
-    updatePlaylistSong
+    updatePlaylistSong,
+    deleteSongFromPlaylist
 };

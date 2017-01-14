@@ -128,7 +128,14 @@ const addTrack = async (request, reply) => {
 
         const result = await db.collection('playlists').update(
             { _id: id },
-            { $push: { songs: track } }
+            {
+                $push: {
+                    songs: {
+                        $each: [ track ],
+                        $position: 0
+                    }
+                }
+            }
         );
 
         const response = result.toJSON();
@@ -201,10 +208,37 @@ const updateTrackOrder = async (request, reply) => {
     }
 };
 
+const deleteTrackFromPlaylist = async (request, reply) => {
+    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+
+    try {
+        const { playlistId, trackId } = request.params;
+        const pid = new ObjectID(playlistId);
+        const tid = new ObjectID(trackId);
+
+        const result = await db.collection('playlists').update(
+            { _id: pid }, { $pull: { songs: { id: tid } } });
+
+        const response = result.toJSON();
+        // { ok: 1, nModified: 1, n: 1 }
+        const { ok, nModified } = response;
+
+        if (ok && nModified) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    } catch (err) {
+        console.log(err);
+        return reply(err);
+    }
+};
+
 export {
     getPlaylistsByShow,
     createPlaylist,
     addTrack,
     updateTracks,
-    updateTrackOrder
+    updateTrackOrder,
+    deleteTrackFromPlaylist
 };

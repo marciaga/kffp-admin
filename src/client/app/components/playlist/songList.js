@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import update from 'react/lib/update';
 import RaisedButton from 'material-ui/RaisedButton';
+import update from 'immutability-helper';
+import cuid from 'cuid';
 import SongFormWrapper from './songFormWrapper';
-import { reorderSongsSave } from '../../actions/playlistActions';
+import { reorderSongsSave, addTrack } from '../../actions/playlistActions';
+import { generateBlankSongData } from '../../utils/helperFunctions';
 
 const style = {
     width: 400
@@ -18,6 +20,7 @@ class SongList extends Component {
 
         this.moveSong = this.moveSong.bind(this);
         this.onSaveOrder = this.onSaveOrder.bind(this);
+        this.addNewSong = this.addNewSong.bind(this);
 
         this.state = {
             songs
@@ -44,6 +47,17 @@ class SongList extends Component {
         }));
     }
 
+    addNewSong () {
+        const { _id } = this.props.currentPlaylist;
+        const blankSong = generateBlankSongData();
+
+        this.setState(update(this.state, {
+            songs: { $unshift: [ blankSong ]}
+        }));
+
+        this.props.dispatch(addTrack(blankSong, _id));
+    }
+
     render () {
         const { songs } = this.state;
         const { _id } = this.props.currentPlaylist;
@@ -52,16 +66,25 @@ class SongList extends Component {
             <div style={style}>
                 <RaisedButton
                     type="button"
-                    label="Save Track Order"
                     onClick={this.onSaveOrder}
-                    primary={true}
+                    label="Save Track Order"
+                    backgroundColor="#3F51B5"
+                    labelColor="#FFFFFF"
+                />
+
+                <RaisedButton
+                    type="button"
+                    label="Add New Track"
+                    onClick={this.addNewSong}
+                    backgroundColor="#8BC34A"
+                    labelColor="#FFFFFF"
                 />
 
                 {songs.map((song, i) => (
                     // song: album, artist, track, releaseDate, id, images
                     <SongFormWrapper
                         index={i}
-                        key={song.id}
+                        key={song.id || cuid()}
                         moveSong={this.moveSong}
                         playlistId={_id}
                         {...song}
