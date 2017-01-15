@@ -2,6 +2,7 @@ import {
     GET_SHOW_PLAYLISTS,
     ADD_PLAYLIST,
     ADD_TRACK,
+    DELETE_TRACK,
     REORDER_SONGS
 } from '../constants';
 
@@ -32,6 +33,18 @@ export default function playlistReducer (state = initialState, action) {
                 songs: [
                     action.data, ...state.currentPlaylist.songs
                 ]
+            }
+        };
+
+    case DELETE_TRACK:
+        const trackId = action.data.id;
+        const filteredSongs = state.currentPlaylist.songs.filter(s => s.id !== trackId);
+
+        return {
+            ...state,
+            currentPlaylist: {
+                ...state.currentPlaylist,
+                songs: filteredSongs
             }
         };
 

@@ -7,6 +7,7 @@ import cuid from 'cuid';
 import SongFormWrapper from './songFormWrapper';
 import { reorderSongsSave, addTrack } from '../../actions/playlistActions';
 import { generateBlankSongData } from '../../utils/helperFunctions';
+import { setSongForm } from '../../actions/formActions';
 
 const style = {
     width: 400
@@ -15,16 +16,34 @@ const style = {
 class SongList extends Component {
     constructor (props) {
         super(props);
-        const { currentPlaylist } = props;
-        const { songs } = currentPlaylist;
 
         this.moveSong = this.moveSong.bind(this);
         this.onSaveOrder = this.onSaveOrder.bind(this);
         this.addNewSong = this.addNewSong.bind(this);
+    }
+
+    componentWillMount () {
+        const { dispatch, currentPlaylist } = this.props;
+
+        dispatch(setSongForm(currentPlaylist.songs));
 
         this.state = {
-            songs
+            songs: currentPlaylist.songs
         };
+    }
+
+    componentWillReceiveProps (nextProps) {
+        const prevProps = this.props;
+        const prevSongs = prevProps.currentPlaylist.songs;
+        const { songs } = nextProps.currentPlaylist;
+
+        if (prevSongs.length === songs.length) {
+            return;
+        }
+
+        this.props.dispatch(setSongForm(songs));
+
+        this.state = { songs };
     }
 
     onSaveOrder () {
@@ -52,7 +71,7 @@ class SongList extends Component {
         const blankSong = generateBlankSongData();
 
         this.setState(update(this.state, {
-            songs: { $unshift: [ blankSong ]}
+            songs: { $unshift: [blankSong] }
         }));
 
         this.props.dispatch(addTrack(blankSong, _id));

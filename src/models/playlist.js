@@ -131,7 +131,7 @@ const addTrack = async (request, reply) => {
             {
                 $push: {
                     songs: {
-                        $each: [ track ],
+                        $each: [track],
                         $position: 0
                     }
                 }
@@ -142,7 +142,10 @@ const addTrack = async (request, reply) => {
         const { ok, nModified } = response;
 
         if (ok && nModified) {
-            return reply({ success: true });
+            return reply({
+                success: true,
+                track
+            });
         }
 
         return reply({ success: false, message: 'Update was not successful' });
@@ -214,14 +217,14 @@ const deleteTrackFromPlaylist = async (request, reply) => {
     try {
         const { playlistId, trackId } = request.params;
         const pid = new ObjectID(playlistId);
-        const tid = new ObjectID(trackId);
 
         const result = await db.collection('playlists').update(
-            { _id: pid }, { $pull: { songs: { id: tid } } });
+            { _id: pid }, { $pull: { songs: { id: trackId } } });
 
         const response = result.toJSON();
         // { ok: 1, nModified: 1, n: 1 }
         const { ok, nModified } = response;
+        console.log(response);
 
         if (ok && nModified) {
             return reply({ success: true });

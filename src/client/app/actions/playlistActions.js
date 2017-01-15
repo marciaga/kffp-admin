@@ -7,6 +7,7 @@ import {
     GET_SHOW_PLAYLISTS,
     ADD_PLAYLIST,
     ADD_TRACK,
+    DELETE_TRACK,
     CLEAR_SEARCH_RESULTS,
     REORDER_SONGS,
     UPDATE_PLAYLIST_SONGS
@@ -25,6 +26,11 @@ const receivePlaylist = data => ({
 const receivePlaylists = data => ({
     type: GET_SHOW_PLAYLISTS,
     data
+});
+
+const removeTrackFromPlaylist = id => ({
+    type: DELETE_TRACK,
+    data: { id }
 });
 
 const getShowPlaylists = pathname => async (dispatch) => {
@@ -100,7 +106,7 @@ const addTrack = (track, playlistId) => async (dispatch) => {
         });
 
         if (data.success) {
-            dispatch(receiveTrack(track));
+            dispatch(receiveTrack(data.track));
         } else {
             // dispatch error message
             console.log('add was unsuccessful');
@@ -119,7 +125,7 @@ const deleteSongFromPlaylist = (song, playlistId) => async (dispatch) => {
     try {
         const idToken = getTokenFromLocalStorage();
         const url = `${API_ENDPOINT}/playlists/${playlistId}/tracks/${id}`;
-        const result = await axios.delete(url, {
+        const { data } = await axios.delete(url, {
             headers: {
                 Authorization: `Bearer ${idToken}`
             }
@@ -128,7 +134,7 @@ const deleteSongFromPlaylist = (song, playlistId) => async (dispatch) => {
         if (data.success) {
             const message = 'Track deleted successfully!';
 
-            // dispatch action to remove from UI
+            dispatch(removeTrackFromPlaylist(id));
             dispatch(snackbarMessage(message));
         } else {
             const errorMessage = 'Track delete failed';
