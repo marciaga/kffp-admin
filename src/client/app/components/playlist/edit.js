@@ -15,7 +15,7 @@ class PlaylistForm extends Component {
     render () {
         const { playlist, search, dispatch } = this.props;
         const { currentPlaylist } = playlist;
-        const { searchResults } = search;
+        const { searchResults, currentSearch } = search;
 
         if (currentPlaylist) {
             return (
@@ -32,6 +32,7 @@ class PlaylistForm extends Component {
                     {!searchResults.length &&
                         <SongList
                             currentPlaylist={currentPlaylist}
+                            currentSearch={currentSearch}
                             dispatch={dispatch}
                         />
                     }

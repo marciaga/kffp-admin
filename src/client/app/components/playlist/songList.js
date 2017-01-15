@@ -33,16 +33,15 @@ class SongList extends Component {
     }
 
     componentWillReceiveProps (nextProps) {
-        const prevProps = this.props;
-        const prevSongs = prevProps.currentPlaylist.songs;
-        const { songs } = nextProps.currentPlaylist;
+        const previousSearch = this.props.currentSearch;
+        const { currentSearch, currentPlaylist } = nextProps;
+        const { songs } = currentPlaylist;
 
-        if (prevSongs.length === songs.length) {
+        if (previousSearch.length !== currentSearch.length) {
             return;
         }
 
         this.props.dispatch(setSongForm(songs));
-
         this.state = { songs };
     }
 
