@@ -2,15 +2,13 @@ import React from 'react';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import SongForm from './songForm';
 
-const AirBreakCard = (props) => {
-    return (
-        <Card>
-            <CardText>
-                <h1>Air Break</h1>
-            </CardText>
-        </Card>
-    );
-};
+const AirBreakCard = () =>
+    <Card>
+        <CardText>
+            <h1>Air Break</h1>
+        </CardText>
+    </Card>
+;
 
 const SongCard = (props) => {
     const {

@@ -46,7 +46,7 @@ class SongForm extends Component {
         e.preventDefault();
         const songToUpdate = this.props.currentSong;
         const { playlistId } = this.props;
-        // TODO perform validation
+        // TODO perform validation, incl. check to make sure any fields have actually changes
         this.props.dispatch(updatePlaylistSong(songToUpdate, playlistId));
     }
 
@@ -84,7 +84,7 @@ class SongForm extends Component {
                 <Divider />
                 <form onSubmit={this.submitHandler}>
                     {this.renderFormFields(currentSong)}
-                    <RaisedButton type="submit" label="Update Track Info" />
+                    <RaisedButton type="submit" label="Submit Track Info" />
                 </form>
                 <IconButton
                     onClick={() => this.deleteSong(currentSong, playlistId)}

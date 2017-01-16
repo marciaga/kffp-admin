@@ -2,6 +2,7 @@ import {
     GET_SHOW_PLAYLISTS,
     ADD_PLAYLIST,
     ADD_PLAYLIST_TO_SIDEBAR,
+    UPDATE_PLAYLIST_SONGS,
     ADD_TRACK,
     DELETE_TRACK,
     REORDER_SONGS
@@ -56,6 +57,11 @@ export default function playlistReducer (state = initialState, action) {
                 ...state.currentPlaylist,
                 songs: filteredSongs
             }
+        };
+
+    case UPDATE_PLAYLIST_SONGS:
+        return {
+            ...state
         };
 
     case REORDER_SONGS:

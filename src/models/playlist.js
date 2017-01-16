@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import Boom from 'boom';
 import moment from 'moment';
+import cuid from 'cuid';
 
 const songSchema = {
     id: Joi.string(),
@@ -124,7 +125,7 @@ const addTrack = async (request, reply) => {
         const { playlistId } = request.params;
         const id = new ObjectID(playlistId);
 
-        track.id = new ObjectID();
+        track.id = cuid();
 
         const result = await db.collection('playlists').update(
             { _id: id },
@@ -163,10 +164,8 @@ const updateTracks = async (request, reply) => {
         const { playlistId } = request.params;
         const id = new ObjectID(playlistId);
 
-        const trackId = new ObjectID(track.id);
-
         const result = await db.collection('playlists').update(
-            { _id: id, 'songs.id': trackId },
+            { _id: id, 'songs.id': track.id },
             { $set: { 'songs.$': track } }
         );
 
@@ -190,7 +189,7 @@ const updateTrackOrder = async (request, reply) => {
     try {
         const payload = request.payload;
         // don't save any airbreaks
-        const tracks = payload.filter(o => !o.airBreak)
+        const tracks = payload.filter(o => !o.airBreak);
         const { playlistId } = request.params;
         const id = new ObjectID(playlistId);
 
@@ -221,7 +220,7 @@ const deleteTrackFromPlaylist = async (request, reply) => {
         const pid = new ObjectID(playlistId);
 
         const result = await db.collection('playlists').update(
-            { _id: pid }, { $pull: { songs: { id: new ObjectID(trackId) } } });
+            { _id: pid }, { $pull: { songs: { id: trackId } } });
 
         const response = result.toJSON();
         // { ok: 1, nModified: 1, n: 1 }

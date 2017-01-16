@@ -75,7 +75,15 @@ const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
             }
         });
 
-        dispatch(receiveSongs(data));
+        const message = 'Track Updated Successfully!';
+        const errorMessage = 'Track Update Failed';
+
+        if (data.success) {
+            dispatch(snackbarMessage(message));
+            return dispatch(receiveSongs(song));
+        }
+
+        dispatch(snackbarMessage(errorMessage));
     } catch (err) {
         console.log(err);
     }
@@ -127,13 +135,10 @@ const addTrack = (track, playlistId) => async (dispatch) => {
     });
 };
 
-const addAirBreak = (data) => {
-    return {
-        type: ADD_TRACK,
-        data
-    };
-};
-
+const addAirBreak = data => ({
+    type: ADD_TRACK,
+    data
+});
 
 const deleteSongFromPlaylist = (song, playlistId) => async (dispatch) => {
     const { id } = song;
