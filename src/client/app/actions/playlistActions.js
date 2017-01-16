@@ -120,6 +120,14 @@ const addTrack = (track, playlistId) => async (dispatch) => {
     });
 };
 
+const addAirBreak = (data) => {
+    return {
+        type: ADD_TRACK,
+        data
+    };
+};
+
+
 const deleteSongFromPlaylist = (song, playlistId) => async (dispatch) => {
     const { id } = song;
     try {
@@ -182,6 +190,7 @@ export {
     addNewPlaylist,
     receivePlaylist,
     addTrack,
+    addAirBreak,
     reorderSongs,
     reorderSongsSave,
     updatePlaylistSong,

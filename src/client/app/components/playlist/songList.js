@@ -5,7 +5,11 @@ import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
 import cuid from 'cuid';
 import SongFormWrapper from './songFormWrapper';
-import { reorderSongsSave, addTrack } from '../../actions/playlistActions';
+import {
+    reorderSongsSave,
+    addTrack,
+    addAirBreak
+} from '../../actions/playlistActions';
 import { generateBlankSongData } from '../../utils/helperFunctions';
 import { setSongForm } from '../../actions/formActions';
 
@@ -20,6 +24,7 @@ class SongList extends Component {
         this.moveSong = this.moveSong.bind(this);
         this.onSaveOrder = this.onSaveOrder.bind(this);
         this.addNewSong = this.addNewSong.bind(this);
+        this.addAirBreak = this.addAirBreak.bind(this);
     }
 
     componentWillMount () {
@@ -76,6 +81,19 @@ class SongList extends Component {
         this.props.dispatch(addTrack(blankSong, _id));
     }
 
+    addAirBreak () {
+        const airBreak = {
+            airBreak: true,
+            id: cuid()
+        };
+
+        this.setState(update(this.state, {
+            songs: { $unshift: [airBreak] }
+        }));
+
+        this.props.dispatch(addAirBreak(airBreak));
+    }
+
     render () {
         const { songs } = this.state;
         const { _id } = this.props.currentPlaylist;
@@ -95,6 +113,14 @@ class SongList extends Component {
                     label="Add New Track"
                     onClick={this.addNewSong}
                     backgroundColor="#8BC34A"
+                    labelColor="#FFFFFF"
+                />
+
+                <RaisedButton
+                    type="button"
+                    label="Add Air Break"
+                    onClick={this.addAirBreak}
+                    backgroundColor="#FF9800"
                     labelColor="#FFFFFF"
                 />
 

@@ -2,6 +2,16 @@ import React from 'react';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import SongForm from './songForm';
 
+const AirBreakCard = (props) => {
+    return (
+        <Card>
+            <CardText>
+                <h1>Air Break</h1>
+            </CardText>
+        </Card>
+    );
+};
+
 const SongCard = (props) => {
     const {
         album,
@@ -18,6 +28,12 @@ const SongCard = (props) => {
     const currentSong = songs.find(s => id === s.id);
     const title = `${track} by ${artist}`;
     const subtitle = `on ${album} - released ${releaseDate}`;
+
+    if (props.airBreak) {
+        return (
+            <AirBreakCard {...props} />
+        );
+    }
 
     return (
         <Card>

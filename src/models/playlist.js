@@ -188,7 +188,9 @@ const updateTrackOrder = async (request, reply) => {
     const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
 
     try {
-        const tracks = request.payload;
+        const payload = request.payload;
+        // don't save any airbreaks
+        const tracks = payload.filter(o => !o.airBreak)
         const { playlistId } = request.params;
         const id = new ObjectID(playlistId);
 
@@ -219,12 +221,11 @@ const deleteTrackFromPlaylist = async (request, reply) => {
         const pid = new ObjectID(playlistId);
 
         const result = await db.collection('playlists').update(
-            { _id: pid }, { $pull: { songs: { id: trackId } } });
+            { _id: pid }, { $pull: { songs: { id: new ObjectID(trackId) } } });
 
         const response = result.toJSON();
         // { ok: 1, nModified: 1, n: 1 }
         const { ok, nModified } = response;
-        console.log(response);
 
         if (ok && nModified) {
             return reply({ success: true });
