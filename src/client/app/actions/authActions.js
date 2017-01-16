@@ -8,6 +8,7 @@ import {
     LOGOUT_REQUEST,
     AUTH_VERIFICATION
 } from '../constants';
+import { getActiveShows } from './showActions';
 
 const requestLogin = creds => ({
     type: LOGIN_REQUEST,
@@ -81,6 +82,7 @@ const loginUser = (creds) => {
             const { data } = response;
             localStorage.setItem('idToken', data.idToken);
 
+            dispatch(getActiveShows());
             dispatch(receiveLogin(response));
         } catch (err) {
             const error = { ...err };
