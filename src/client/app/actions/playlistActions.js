@@ -6,6 +6,7 @@ import { snackbarMessage } from './feedbackActions';
 import {
     GET_SHOW_PLAYLISTS,
     ADD_PLAYLIST,
+    ADD_PLAYLIST_TO_SIDEBAR,
     ADD_TRACK,
     DELETE_TRACK,
     CLEAR_SEARCH_RESULTS,
@@ -31,6 +32,11 @@ const receivePlaylists = data => ({
 const removeTrackFromPlaylist = id => ({
     type: DELETE_TRACK,
     data: { id }
+});
+
+const addNewPlaylistToSidebar = data => ({
+    type: ADD_PLAYLIST_TO_SIDEBAR,
+    data
 });
 
 const getShowPlaylists = pathname => async (dispatch) => {
@@ -90,6 +96,7 @@ const addNewPlaylist = showId => async (dispatch) => {
         });
 
         dispatch(receivePlaylist(data));
+        dispatch(addNewPlaylistToSidebar(data));
     } catch (err) {
         console.log(err);
     }

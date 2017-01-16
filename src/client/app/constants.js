@@ -39,6 +39,7 @@ export const SHOW_SELECT = 'SHOW_SELECT';
 // Playlist
 export const GET_SHOW_PLAYLISTS = 'GET_SHOW_PLAYLISTS';
 export const ADD_PLAYLIST = 'ADD_PLAYLIST';
+export const ADD_PLAYLIST_TO_SIDEBAR = 'ADD_PLAYLIST_TO_SIDEBAR';
 export const CURRENT_PLAYLIST = 'CURRENT_PLAYLIST';
 export const ADD_TRACK = 'ADD_TRACK';
 export const DELETE_TRACK = 'DELETE_TRACK';

@@ -1,6 +1,7 @@
 import {
     GET_SHOW_PLAYLISTS,
     ADD_PLAYLIST,
+    ADD_PLAYLIST_TO_SIDEBAR,
     ADD_TRACK,
     DELETE_TRACK,
     REORDER_SONGS
@@ -23,6 +24,15 @@ export default function playlistReducer (state = initialState, action) {
         return {
             ...state,
             currentPlaylist: action.data
+        };
+
+    case ADD_PLAYLIST_TO_SIDEBAR:
+        return {
+            ...state,
+            playlists: [
+                ...state.playlists,
+                action.data
+            ]
         };
 
     case ADD_TRACK:
