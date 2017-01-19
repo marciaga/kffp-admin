@@ -13,3 +13,6 @@ export const formTypesToHttpVerbs = {
     new: 'post',
     edit: 'put'
 };
+
+export const NOW_PLAYING_ACTIVE = 'green';
+export const NOW_PLAYING_COLOR = 'black';

@@ -8,12 +8,13 @@ const mapStateToProps = state => ({
     auth: state.auth,
     show: state.show,
     playlist: state.playlist,
-    search: state.search
+    search: state.search,
+    nowPlaying: state.nowPlaying
 });
 
 class PlaylistForm extends Component {
     render () {
-        const { playlist, search, dispatch } = this.props;
+        const { playlist, search, nowPlaying, dispatch } = this.props;
         const { currentPlaylist } = playlist;
         const { searchResults, currentSearch } = search;
 
@@ -33,6 +34,7 @@ class PlaylistForm extends Component {
                         <SongList
                             currentPlaylist={currentPlaylist}
                             currentSearch={currentSearch}
+                            nowPlaying={nowPlaying}
                             dispatch={dispatch}
                         />
                     }

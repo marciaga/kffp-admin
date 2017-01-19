@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import RaisedButton from 'material-ui/RaisedButton';
+import IconButton from 'material-ui/IconButton';
+import AvPlayCircleFilled from 'material-ui/svg-icons/av/play-circle-filled';
 import update from 'immutability-helper';
 import cuid from 'cuid';
 import SongFormWrapper from './songFormWrapper';
@@ -11,7 +13,9 @@ import {
     addAirBreak
 } from '../../actions/playlistActions';
 import { generateBlankSongData } from '../../utils/helperFunctions';
+import { NOW_PLAYING_ACTIVE, NOW_PLAYING_COLOR } from '../../utils/constants';
 import { setSongForm } from '../../actions/formActions';
+import { updateNowPlaying } from '../../actions/nowPlayingActions';
 
 const style = {
     width: 400
@@ -25,6 +29,7 @@ class SongList extends Component {
         this.onSaveOrder = this.onSaveOrder.bind(this);
         this.addNewSong = this.addNewSong.bind(this);
         this.addAirBreak = this.addAirBreak.bind(this);
+        this.addToNowPlaying = this.addToNowPlaying.bind(this);
     }
 
     componentWillMount () {
@@ -94,9 +99,15 @@ class SongList extends Component {
         this.props.dispatch(addAirBreak(airBreak));
     }
 
+    addToNowPlaying (song, playlistId) {
+        this.props.dispatch(updateNowPlaying({ song, playlistId }));
+    }
+
     render () {
         const { songs } = this.state;
-        const { _id } = this.props.currentPlaylist;
+        const { nowPlaying, currentPlaylist } = this.props;
+        const currentlyPlayingSong = nowPlaying.song;
+        const { _id } = currentPlaylist;
 
         return (
             <div style={style}>
@@ -124,16 +135,24 @@ class SongList extends Component {
                     labelColor="#FFFFFF"
                 />
 
-                {songs.map((song, i) => (
+                {songs.map((song, i) => {
+                    const nowPlayingColor = currentlyPlayingSong.songId === song.id ?
+                        NOW_PLAYING_ACTIVE : NOW_PLAYING_COLOR;
                     // song: album, artist, track, releaseDate, id, images
-                    <SongFormWrapper
-                        index={i}
-                        key={song.id || cuid()}
-                        moveSong={this.moveSong}
-                        playlistId={_id}
-                        {...song}
-                    />
-                ))}
+                    return (
+                        <div key={song.id || cuid()}>
+                            <SongFormWrapper
+                                index={i}
+                                moveSong={this.moveSong}
+                                playlistId={_id}
+                                {...song}
+                            />
+                            <IconButton onClick={() => this.addToNowPlaying(song, _id)}>
+                                <AvPlayCircleFilled color={nowPlayingColor} />
+                            </IconButton>
+                        </div>
+                    );
+                })}
             </div>
         );
     }

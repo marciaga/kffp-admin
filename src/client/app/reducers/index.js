@@ -6,6 +6,7 @@ import modelReducer from './modelReducer';
 import formReducer from './formReducer';
 import showReducer from './showReducer';
 import feedbackReducer from './feedbackReducer';
+import nowPlayingReducer from './nowPlayingReducer';
 
 export default {
     search: searchReducer,
@@ -15,5 +16,6 @@ export default {
     model: modelReducer,
     form: formReducer,
     show: showReducer,
-    feedback: feedbackReducer
+    feedback: feedbackReducer,
+    nowPlaying: nowPlayingReducer
 };

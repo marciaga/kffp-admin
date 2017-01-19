@@ -61,7 +61,7 @@ export default function playlistReducer (state = initialState, action) {
 
     case UPDATE_PLAYLIST_SONGS:
         return {
-            ...state
+            ...state // TODO @ma: this should actually replace the old song
         };
 
     case REORDER_SONGS:

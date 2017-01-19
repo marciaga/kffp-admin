@@ -46,6 +46,9 @@ export const DELETE_TRACK = 'DELETE_TRACK';
 export const REORDER_SONGS = 'REORDER_SONGS';
 export const UPDATE_PLAYLIST_SONGS = 'UPDATE_PLAYLIST_SONGS';
 
+// Now Playing
+export const SET_NOW_PLAYING = 'SET_NOW_PLAYING';
+
 // Show
 export const GET_SHOW = 'GET_SHOW';
 

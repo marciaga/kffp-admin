@@ -206,5 +206,6 @@ export {
     reorderSongs,
     reorderSongsSave,
     updatePlaylistSong,
-    deleteSongFromPlaylist
+    deleteSongFromPlaylist,
+    receiveSongs
 };

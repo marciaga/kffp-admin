@@ -4,7 +4,8 @@
         "sourceType": "module",
         "ecmaFeatures": {
             "jsx": true,
-            "experimentalObjectRestSpread": true
+            "experimentalObjectRestSpread": true,
+            "destructuring": true
         }
     },
     "env": {
@@ -41,7 +42,7 @@
         "global-require": ["warn"],
         "func-names": ["warn", "as-needed"],
         "import/no-extraneous-dependencies": 0,
-        "no-unused-vars": ["error", { "varsIgnorePattern": "^_" }]
+        "no-unused-vars": ["warn", { "varsIgnorePattern": "^_" }]
     },
     "settings": {
         "import/ignore": ["js"]

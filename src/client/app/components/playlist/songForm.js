@@ -97,6 +97,3 @@ class SongForm extends Component {
 }
 
 export default SongForm;
-/*
-    artist, track, album, releaseDate, id
-*/
