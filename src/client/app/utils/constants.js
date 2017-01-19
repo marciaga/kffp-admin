@@ -16,3 +16,4 @@ export const formTypesToHttpVerbs = {
 
 export const NOW_PLAYING_ACTIVE = 'green';
 export const NOW_PLAYING_COLOR = 'black';
+export const NOW_PLAYING_PLAYED = 'red';

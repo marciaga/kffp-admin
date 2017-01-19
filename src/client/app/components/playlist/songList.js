@@ -13,7 +13,11 @@ import {
     addAirBreak
 } from '../../actions/playlistActions';
 import { generateBlankSongData } from '../../utils/helperFunctions';
-import { NOW_PLAYING_ACTIVE, NOW_PLAYING_COLOR } from '../../utils/constants';
+import {
+    NOW_PLAYING_ACTIVE,
+    NOW_PLAYING_COLOR,
+    NOW_PLAYING_PLAYED
+} from '../../utils/constants';
 import { setSongForm } from '../../actions/formActions';
 import { updateNowPlaying } from '../../actions/nowPlayingActions';
 
@@ -30,6 +34,7 @@ class SongList extends Component {
         this.addNewSong = this.addNewSong.bind(this);
         this.addAirBreak = this.addAirBreak.bind(this);
         this.addToNowPlaying = this.addToNowPlaying.bind(this);
+        this.setNowPlayingColor = this.setNowPlayingColor.bind(this);
     }
 
     componentWillMount () {
@@ -61,18 +66,16 @@ class SongList extends Component {
         this.props.dispatch(reorderSongsSave(songs, _id));
     }
 
-    moveSong (dragIndex, hoverIndex) {
-        const { songs } = this.state;
-        const dragSong = songs[dragIndex];
+    setNowPlayingColor (currentSongId, song) {
+        if (currentSongId === song.id) {
+            return NOW_PLAYING_ACTIVE;
+        }
 
-        this.setState(update(this.state, {
-            songs: {
-                $splice: [
-                    [dragIndex, 1],
-                    [hoverIndex, 0, dragSong]
-                ]
-            }
-        }));
+        if (song.playedAt) {
+            return NOW_PLAYING_PLAYED;
+        }
+
+        return NOW_PLAYING_COLOR;
     }
 
     addNewSong () {
@@ -84,6 +87,10 @@ class SongList extends Component {
         }));
 
         this.props.dispatch(addTrack(blankSong, _id));
+    }
+
+    addToNowPlaying (song, playlistId) {
+        this.props.dispatch(updateNowPlaying({ song, playlistId }));
     }
 
     addAirBreak () {
@@ -99,8 +106,18 @@ class SongList extends Component {
         this.props.dispatch(addAirBreak(airBreak));
     }
 
-    addToNowPlaying (song, playlistId) {
-        this.props.dispatch(updateNowPlaying({ song, playlistId }));
+    moveSong (dragIndex, hoverIndex) {
+        const { songs } = this.state;
+        const dragSong = songs[dragIndex];
+
+        this.setState(update(this.state, {
+            songs: {
+                $splice: [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, dragSong]
+                ]
+            }
+        }));
     }
 
     render () {
@@ -136,8 +153,9 @@ class SongList extends Component {
                 />
 
                 {songs.map((song, i) => {
-                    const nowPlayingColor = currentlyPlayingSong.songId === song.id ?
-                        NOW_PLAYING_ACTIVE : NOW_PLAYING_COLOR;
+                    const nowPlayingColor = this.setNowPlayingColor(
+                        currentlyPlayingSong.songId, song
+                    );
                     // song: album, artist, track, releaseDate, id, images
                     return (
                         <div key={song.id || cuid()}>
