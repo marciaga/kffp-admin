@@ -28,6 +28,22 @@ class MainTable extends Component {
         this.sortDisplayData = this.sortDisplayData.bind(this);
     }
 
+    sortDisplayData (data) {
+        if (!data) {
+            return [];
+        }
+
+        const { fields } = this.props.model;
+        const keys = Object.keys(fields);
+
+        return data.map(m =>
+            keys.reduce((memo, v) => {
+                memo[v] = m[v];
+                return memo;
+            }, {})
+        );
+    }
+
     handleRowSelection (selectedRows) {
         if (selectedRows.length) {
             const modelName = this.props.model.name;
@@ -79,22 +95,6 @@ class MainTable extends Component {
                     <span>{value}</span>
                 </TableRowColumn>
             );
-        });
-    }
-
-    sortDisplayData (data) {
-        if (!data) {
-            return [];
-        }
-
-        const { fields } = this.props.model;
-        const keys = Object.keys(fields);
-
-        return data.map((m, i) => {
-            return keys.reduce((memo, v) => {
-                memo[v] = m[v];
-                return memo;
-            }, {});
         });
     }
 
