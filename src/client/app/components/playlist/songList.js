@@ -158,7 +158,10 @@ class SongList extends Component {
                     );
                     // song: album, artist, track, releaseDate, id, images
                     return (
-                        <div key={song.id || cuid()}>
+                        <div
+                            className="song-wrapper"
+                            key={song.id || cuid()}
+                        >
                             <SongFormWrapper
                                 index={i}
                                 moveSong={this.moveSong}
