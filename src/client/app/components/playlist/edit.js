@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import Search from '../search';
 import SearchResults from '../search/searchResults';
@@ -12,42 +12,40 @@ const mapStateToProps = state => ({
     nowPlaying: state.nowPlaying
 });
 
-class PlaylistForm extends Component {
-    render () {
-        const { playlist, search, nowPlaying, dispatch } = this.props;
-        const { currentPlaylist } = playlist;
-        const { searchResults, currentSearch } = search;
+const PlaylistForm = (props) => {
+    const { playlist, search, nowPlaying, dispatch } = props;
+    const { currentPlaylist } = playlist;
+    const { searchResults, currentSearch } = search;
 
-        if (currentPlaylist) {
-            return (
-                <div className="playlist-wrapper">
-                    <h2>{currentPlaylist.dateSlug}</h2>
-                    <Search />
-                    {!!searchResults.length &&
-                        <SearchResults
-                            searchResults={searchResults}
-                            playlistId={currentPlaylist._id}
-                            dispatch={dispatch}
-                        />
-                    }
-                    {!searchResults.length &&
-                        <SongList
-                            currentPlaylist={currentPlaylist}
-                            currentSearch={currentSearch}
-                            nowPlaying={nowPlaying}
-                            dispatch={dispatch}
-                        />
-                    }
-                </div>
-            );
-        }
-
+    if (currentPlaylist) {
         return (
-            <div>
-                <h2 className="h2">No Currently Selected Playlist</h2>
+            <div className="playlist-wrapper">
+                <h2>{currentPlaylist.dateSlug}</h2>
+                <Search />
+                {!!searchResults.length &&
+                    <SearchResults
+                        searchResults={searchResults}
+                        playlistId={currentPlaylist._id}
+                        dispatch={dispatch}
+                    />
+                }
+                {!searchResults.length &&
+                    <SongList
+                        currentPlaylist={currentPlaylist}
+                        currentSearch={currentSearch}
+                        nowPlaying={nowPlaying}
+                        dispatch={dispatch}
+                    />
+                }
             </div>
         );
     }
-}
+
+    return (
+        <div>
+            <h2 className="h2">No Currently Selected Playlist</h2>
+        </div>
+    );
+};
 
 export default connect(mapStateToProps)(PlaylistForm);

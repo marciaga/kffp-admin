@@ -10,9 +10,9 @@ const SearchResults = ({ searchResults, playlistId, dispatch }) => {
     return (
         <div className="search-results">
             <GridList
-              cellHeight={'auto'}
-              cols={3}
-              className="search-results__grid-wrapper"
+                cellHeight={'auto'}
+                cols={3}
+                className="search-results__grid-wrapper"
             >
                 {searchResults && searchResults.map((tile, i) => {
                     const { artist, track, album, images } = tile;

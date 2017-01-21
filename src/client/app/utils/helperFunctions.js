@@ -1,7 +1,7 @@
 const debounce = (func, wait, immediate) => {
     let timeout;
 
-    return function (...args) {
+    return function debouncify (...args) {
         const params = args;
         const later = () => {
             timeout = null;

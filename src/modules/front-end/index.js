@@ -2,7 +2,7 @@ const renderReactApp = (request, reply) => {
     reply.view('app');
 };
 
-exports.register = function (server, options, next) {
+exports.register = (server, options, next) => {
     server.route({
         path: '/css/{params*}',
         method: 'GET',

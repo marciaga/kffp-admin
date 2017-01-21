@@ -89,12 +89,12 @@ class MainTable extends Component {
 
         return (
             <Table
-            height={'300px'}
-            fixedHeader={tableConfig.fixedHeader}
-            fixedFooter={tableConfig.fixedFooter}
-            selectable={tableConfig.selectable}
-            multiSelectable={tableConfig.multiSelectable}
-            onRowSelection={this.handleRowSelection}
+                height={'300px'}
+                fixedHeader={tableConfig.fixedHeader}
+                fixedFooter={tableConfig.fixedFooter}
+                selectable={tableConfig.selectable}
+                multiSelectable={tableConfig.multiSelectable}
+                onRowSelection={this.handleRowSelection}
             >
                 <TableHeader
                     displaySelectAll={tableConfig.displaySelectAll}

@@ -4,7 +4,7 @@ import userRoutes from './routes/users';
 import playlistRoutes from './routes/playlists';
 import nowPlayingRoutes from './routes/nowPlaying';
 
-exports.register = function (server, options, next) {
+exports.register = (server, options, next) => {
     // register routes
     showRoutes.map(r => server.route(r));
     userRoutes.map(r => server.route(r));

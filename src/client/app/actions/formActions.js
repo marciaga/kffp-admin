@@ -34,7 +34,7 @@ const updateSongForm = data => ({
 
 
 const setUpdateFormData = (formType, modelName, data) => {
-    const fields = Models[modelName][formType]['fields'];
+    const fields = Models[modelName][formType].fields;
 
     const newFields = Object.keys(fields).reduce((memo, v) => {
         memo[v] = fields[v];
@@ -52,7 +52,7 @@ const setUpdateFormData = (formType, modelName, data) => {
 };
 
 const setFormData = (formType, modelName) => {
-    const fields = Models[modelName][formType]['fields'];
+    const fields = Models[modelName][formType].fields;
     const formMetadata = {
         fields,
         modelName,

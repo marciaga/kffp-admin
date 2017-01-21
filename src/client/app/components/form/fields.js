@@ -61,10 +61,10 @@ const ToggleField = ({ dispatch, fieldName, label, value }) => {
     return (
         <div style={styles.block}>
             <Toggle
-              label={label}
-              defaultToggled={value}
-              onToggle={handleToggle}
-              style={{}}
+                label={label}
+                defaultToggled={value}
+                onToggle={handleToggle}
+                style={{}}
             />
         </div>
     );
@@ -77,12 +77,12 @@ const Time = ({ dispatch, fieldName, hintText, value }) => {
         dispatch(updateFormField(fieldName, selectedHours));
     };
 
-    value = hoursToDateObj(value);
+    const val = hoursToDateObj(value);
     return (
         <TimePicker
             format="ampm"
             hintText={hintText}
-            value={value}
+            value={val}
             onChange={handleTimePickerChange}
         />
     );

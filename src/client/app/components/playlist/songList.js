@@ -22,7 +22,7 @@ import { setSongForm } from '../../actions/formActions';
 import { updateNowPlaying } from '../../actions/nowPlayingActions';
 
 const style = {
-    width: 400
+    width: 500
 };
 
 class SongList extends Component {

@@ -9,7 +9,7 @@ class Login extends Component {
     }
 
     handleClick () {
-        const { email, password } = this.refs;
+        const { email, password } = this;
         const credentials = {
             email: email.value.trim(),
             password: password.value.trim()
@@ -23,8 +23,8 @@ class Login extends Component {
 
         return (
             <div>
-                <input type="text" ref="email" placeholder="Email" />
-                <input type="password" ref="password" placeholder="Password" />
+                <input type="text" ref={(c) => { this.email = c; }} placeholder="Email" />
+                <input type="password" ref={(p) => { this.password = p; }} placeholder="Password" />
                 <RaisedButton onClick={e => this.handleClick(e)} label="Login" />
 
                 {errorMessage &&
