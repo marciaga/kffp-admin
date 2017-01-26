@@ -75,15 +75,14 @@ const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
             }
         });
 
-        const message = 'Track Updated Successfully!';
-        const errorMessage = 'Track Update Failed';
+        const { success, message } = data;
 
-        if (data.success) {
+        if (success) {
             dispatch(snackbarMessage(message));
             return dispatch(receiveSongs(song));
         }
 
-        dispatch(snackbarMessage(errorMessage));
+        dispatch(snackbarMessage(message));
     } catch (err) {
         console.log(err);
     }

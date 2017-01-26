@@ -162,18 +162,20 @@ const updateTracks = async (request, reply) => {
     try {
         const track = request.payload;
         const { playlistId } = request.params;
-        const id = new ObjectID(playlistId);
-
         const result = await db.collection('playlists').update(
-            { _id: id, 'songs.id': track.id },
+            { _id: ObjectID(playlistId), 'songs.id': track.id },
             { $set: { 'songs.$': track } }
         );
 
         const response = result.toJSON();
-        const { ok, nModified } = response;
+        const { ok, nModified, n } = response;
 
         if (ok && nModified) {
             return reply({ success: true });
+        }
+
+        if (ok && n) {
+            return reply({ success: false, message: 'Document was unchanged' });
         }
 
         return reply({ success: false, message: 'Update was not successful' });
