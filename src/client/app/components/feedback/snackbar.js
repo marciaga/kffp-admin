@@ -34,3 +34,8 @@ class SnackbarMessage extends Component {
 }
 
 export default connect(mapStateToProps)(SnackbarMessage);
+
+SnackbarMessage.propTypes = {
+    feedback: React.PropTypes.object,
+    dispatch: React.PropTypes.func
+};
