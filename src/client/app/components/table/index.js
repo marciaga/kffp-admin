@@ -25,6 +25,23 @@ class MainTable extends Component {
         this.renderTableBody = this.renderTableBody.bind(this);
         this.renderTableRowCell = this.renderTableRowCell.bind(this);
         this.handleRowSelection = this.handleRowSelection.bind(this);
+        this.sortDisplayData = this.sortDisplayData.bind(this);
+    }
+
+    sortDisplayData (data) {
+        if (!data) {
+            return [];
+        }
+
+        const { fields } = this.props.model;
+        const keys = Object.keys(fields);
+
+        return data.map(m =>
+            keys.reduce((memo, v) => {
+                memo[v] = m[v];
+                return memo;
+            }, {})
+        );
     }
 
     handleRowSelection (selectedRows) {
@@ -57,7 +74,7 @@ class MainTable extends Component {
 
     renderTableBody () {
         const { model } = this.props;
-        const tableData = model.data;
+        const tableData = this.sortDisplayData(model.data);
 
         return tableData.map((item, index) => (
             <TableRow
@@ -71,15 +88,13 @@ class MainTable extends Component {
 
     renderTableRowCell (item) {
         return Object.keys(item).map((r, i) => {
-            if (r !== '_id') { // don't display the id
-                const value = item[r];
+            const value = item[r];
 
-                return (
-                    <TableRowColumn key={i}>
-                        <span>{value}</span>
-                    </TableRowColumn>
-                );
-            }
+            return (
+                <TableRowColumn key={i}>
+                    <span>{value}</span>
+                </TableRowColumn>
+            );
         });
     }
 
