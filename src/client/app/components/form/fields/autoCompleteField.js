@@ -8,8 +8,6 @@ import { getUserAutoComplete, addUsersToShow } from '../../actions/formActions';
 import { FORM_FIELD_DEBOUNCE_TIME } from '../../utils/constants';
 import { debounce } from '../../utils/helperFunctions';
 
-
-
 export default class AutoCompleteField extends Component {
     constructor (props) {
         super(props);
