@@ -9,6 +9,10 @@ const updateNowPlaying = async (request, reply) => {
 
     try {
         const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+        const { socket } = request.server.plugins['web-sockets'];
+
+        socket.emit('now-playing', songData);
+
         const result = await db.collection('nowPlaying').findOneAndReplace({},
             nowPlayingData,
             {

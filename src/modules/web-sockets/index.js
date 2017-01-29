@@ -3,13 +3,7 @@ import io from 'socket.io';
 exports.register = (server, options, next) => {
     const socket = io(server.listener);
 
-
-    socket.on('connection', (s) => {
-        s.emit('now-playing', {
-            title: 'Test',
-            artist: 'Demo' 
-        });
-    });
+    server.expose('socket', socket);
 
     next();
 };
