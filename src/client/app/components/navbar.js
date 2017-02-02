@@ -9,21 +9,29 @@ import IconButton from 'material-ui/IconButton';
 import Login from './login';
 import { loginUser, logoutUser } from '../actions/authActions';
 
-const Menu = ({ dispatch }) => (
-    <IconMenu
-        iconButtonElement={
-            <IconButton><MoreVertIcon color={'white'} /></IconButton>
-        }
-        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-    >
-        <MenuItem primaryText="Shows" onTouchTap={() => dispatch(push('/shows'))} />
-        <MenuItem primaryText="Users" onTouchTap={() => dispatch(push('/users'))} />
-        <MenuItem primaryText="Sign out" onTouchTap={() => dispatch(logoutUser())} />
-    </IconMenu>
-);
+const Menu = ({ dispatch, user }) => {
+    const { scope } = user;
 
-const renderLoginElement = (errorMessage, isAuthenticated, dispatch) => {
+    return (
+        <IconMenu
+            iconButtonElement={
+                <IconButton><MoreVertIcon color={'white'} /></IconButton>
+            }
+            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+        >
+            {scope === 'admin' &&
+                <div>
+                    <MenuItem primaryText="Shows" onTouchTap={() => dispatch(push('/shows'))} />
+                    <MenuItem primaryText="Users" onTouchTap={() => dispatch(push('/users'))} />
+                </div>
+            }
+            <MenuItem primaryText="Sign out" onTouchTap={() => dispatch(logoutUser())} />
+        </IconMenu>
+    );
+};
+
+const renderLoginElement = (errorMessage, isAuthenticated, user, dispatch) => {
     if (!isAuthenticated) {
         return (
             <Login
@@ -34,16 +42,19 @@ const renderLoginElement = (errorMessage, isAuthenticated, dispatch) => {
     }
 
     return (
-        <Menu dispatch={dispatch} />
+        <Menu
+            dispatch={dispatch}
+            user={user}
+        />
     );
 };
 
-const Navbar = ({ dispatch, errorMessage, isAuthenticated }) => (
+const Navbar = ({ dispatch, errorMessage, user, isAuthenticated }) => (
     <AppBar
         title="KFFP Admin"
         showMenuIconButton={false}
         onTitleTouchTap={() => dispatch(push('/'))}
-        iconElementRight={renderLoginElement(errorMessage, isAuthenticated, dispatch)}
+        iconElementRight={renderLoginElement(errorMessage, isAuthenticated, user, dispatch)}
     />
 );
 

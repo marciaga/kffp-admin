@@ -12,13 +12,14 @@ const mapStateToProps = state => ({
 
 const App = (props) => {
     const { dispatch, auth, modal } = props;
-    const { isAuthenticated, errorMessage } = auth;
+    const { isAuthenticated, errorMessage, user } = auth;
 
     return (
         <MuiThemeProvider>
             <div>
                 <Navbar
                     isAuthenticated={isAuthenticated}
+                    user={user}
                     errorMessage={errorMessage}
                     dispatch={dispatch}
                 />
