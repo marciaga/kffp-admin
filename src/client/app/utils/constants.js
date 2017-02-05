@@ -14,6 +14,6 @@ export const formTypesToHttpVerbs = {
     edit: 'put'
 };
 
-export const NOW_PLAYING_ACTIVE = 'green';
-export const NOW_PLAYING_COLOR = 'black';
-export const NOW_PLAYING_PLAYED = 'red';
+export const NOW_PLAYING_ACTIVE = '#1DE9B6';
+export const NOW_PLAYING_COLOR = '#111111';
+export const NOW_PLAYING_PLAYED = '#E0E0E0';

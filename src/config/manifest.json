@@ -59,6 +59,11 @@
                 "options": "./webpack.config.js"
             }
         },
+        {
+            "plugin": {
+                "register": "web-sockets"
+            }
+        },
         { "plugin": "./modules/auth" },
         { "plugin": "./modules/api" },
         { "plugin": "./modules/front-end" }

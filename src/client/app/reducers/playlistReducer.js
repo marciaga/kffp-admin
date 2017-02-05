@@ -5,7 +5,8 @@ import {
     UPDATE_PLAYLIST_SONGS,
     ADD_TRACK,
     DELETE_TRACK,
-    REORDER_SONGS
+    REORDER_SONGS,
+    RESET_CURRENT_PLAYLIST
 } from '../constants';
 
 const initialState = {
@@ -25,6 +26,14 @@ export default function playlistReducer (state = initialState, action) {
         return {
             ...state,
             currentPlaylist: action.data
+        };
+
+    case RESET_CURRENT_PLAYLIST:
+        return {
+            ...state,
+            currentPlaylist: {
+                songs: []
+            }
         };
 
     case ADD_PLAYLIST_TO_SIDEBAR:

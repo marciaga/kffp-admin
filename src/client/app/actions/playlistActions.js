@@ -11,12 +11,17 @@ import {
     DELETE_TRACK,
     CLEAR_SEARCH_RESULTS,
     REORDER_SONGS,
-    UPDATE_PLAYLIST_SONGS
+    UPDATE_PLAYLIST_SONGS,
+    RESET_CURRENT_PLAYLIST
 } from '../constants';
 
 const receiveTrack = data => ({
     type: ADD_TRACK,
     data
+});
+
+const resetCurrentPlaylist = () => ({
+    type: RESET_CURRENT_PLAYLIST
 });
 
 const receivePlaylist = data => ({
@@ -206,5 +211,6 @@ export {
     reorderSongsSave,
     updatePlaylistSong,
     deleteSongFromPlaylist,
-    receiveSongs
+    receiveSongs,
+    resetCurrentPlaylist
 };

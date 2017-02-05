@@ -132,7 +132,7 @@ class SongList extends Component {
                     type="button"
                     onClick={this.onSaveOrder}
                     label="Save Track Order"
-                    backgroundColor="#3F51B5"
+                    backgroundColor="#111111"
                     labelColor="#FFFFFF"
                 />
 
@@ -140,7 +140,7 @@ class SongList extends Component {
                     type="button"
                     label="Add New Track"
                     onClick={this.addNewSong}
-                    backgroundColor="#8BC34A"
+                    backgroundColor="#111111"
                     labelColor="#FFFFFF"
                 />
 
@@ -148,7 +148,7 @@ class SongList extends Component {
                     type="button"
                     label="Add Air Break"
                     onClick={this.addAirBreak}
-                    backgroundColor="#FF9800"
+                    backgroundColor="#111111"
                     labelColor="#FFFFFF"
                 />
 

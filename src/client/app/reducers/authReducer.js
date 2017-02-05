@@ -10,7 +10,8 @@ import {
 
 const initialState = {
     isFetching: false,
-    isAuthenticated: localStorage.getItem('idToken') !== null
+    isAuthenticated: localStorage.getItem('idToken') !== null,
+    user: { scope: null }
 };
 
 export default function authReducer (state = initialState, action) {
