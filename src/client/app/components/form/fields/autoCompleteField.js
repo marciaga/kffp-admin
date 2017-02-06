@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Album from 'material-ui/svg-icons/av/album';
 import AutoComplete from 'material-ui/AutoComplete';
 import { List, ListItem } from 'material-ui/List';
 
 import MenuItem from 'material-ui/MenuItem';
-import { getUserAutoComplete, addUsersToShow } from '../../actions/formActions';
-import { FORM_FIELD_DEBOUNCE_TIME } from '../../utils/constants';
-import { debounce } from '../../utils/helperFunctions';
+import { getUserAutoComplete, addUsersToShow } from '../../../actions/formActions';
+import { FORM_FIELD_DEBOUNCE_TIME } from '../../../utils/constants';
+import { debounce } from '../../../utils/helperFunctions';
 
 export default class AutoCompleteField extends Component {
     constructor (props) {
@@ -91,3 +91,11 @@ export default class AutoCompleteField extends Component {
         );
     }
 }
+
+AutoCompleteField.propTypes = {
+    dispatch: PropTypes.func,
+    hintText: PropTypes.string,
+    label: PropTypes.string,
+    searchResults: PropTypes.arrayOf(PropTypes.object),
+    value: PropTypes.arrayOf(PropTypes.string)
+};

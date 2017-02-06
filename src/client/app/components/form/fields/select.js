@@ -2,8 +2,7 @@ import React from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 
-import { updateFormField } from '../../actions/formActions';
-
+import { updateFormField } from '../../../actions/formActions';
 
 const Select = ({ dispatch, fieldName, label, value, items }) => {
     const renderItems = (list) => {
@@ -29,4 +28,4 @@ const Select = ({ dispatch, fieldName, label, value, items }) => {
     );
 };
 
-export default { Select };
+export default Select;

@@ -9,7 +9,7 @@ import IconButton from 'material-ui/IconButton';
 import Login from './login';
 import { loginUser, logoutUser } from '../actions/authActions';
 
-const renderAdminMenuItem = (scope, text, location) => {
+const renderAdminMenuItem = (scope, text, location, dispatch) => {
     if (scope === 'admin') {
         const path = `/${location}`;
 
@@ -30,8 +30,8 @@ const Menu = ({ dispatch, user }) => {
             targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
         >
-            {renderAdminMenuItem(scope, 'Shows', 'shows')}
-            {renderAdminMenuItem(scope, 'Users', 'users')}
+            {renderAdminMenuItem(scope, 'Shows', 'shows', dispatch)}
+            {renderAdminMenuItem(scope, 'Users', 'users', dispatch)}
             <MenuItem primaryText="Sign out" onTouchTap={() => dispatch(logoutUser())} />
         </IconMenu>
     );

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
-import { updateFormField } from '../../actions/formActions';
+import { updateFormField } from '../../../actions/formActions';
 
 export default class Text extends Component {
     constructor (props) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import Toggle from 'material-ui/Toggle';
-import { updateFormField } from '../../actions/formActions';
+import { updateFormField } from '../../../actions/formActions';
 
 const ToggleField = ({ dispatch, fieldName, label, value }) => {
     const styles = {
@@ -26,4 +26,4 @@ const ToggleField = ({ dispatch, fieldName, label, value }) => {
     );
 };
 
-export default { ToggleField };
+export default ToggleField;

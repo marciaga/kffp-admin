@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import { prepareFormSubmit, deleteForm } from '../../actions/formActions';
-import FormFields from '../form/fields';
+import * as FormFields from './fields/index.js';
 
 const mapStateToProps = state => ({
     form: state.form,
