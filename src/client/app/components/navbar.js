@@ -9,7 +9,7 @@ import IconButton from 'material-ui/IconButton';
 import Login from './login';
 import { loginUser, logoutUser } from '../actions/authActions';
 
-const renderAdminMenuItem = (scope, text, location) => {
+const renderAdminMenuItem = (scope, text, location, dispatch) => {
     if (scope === 'admin') {
         const path = `/${location}`;
 
@@ -30,9 +30,12 @@ const Menu = ({ dispatch, user }) => {
             targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
         >
-            {renderAdminMenuItem(scope, 'Shows', 'shows')}
-            {renderAdminMenuItem(scope, 'Users', 'users')}
-            <MenuItem primaryText="Sign out" onTouchTap={() => dispatch(logoutUser())} />
+            {renderAdminMenuItem(scope, 'Shows', 'shows', dispatch)}
+            {renderAdminMenuItem(scope, 'Users', 'users', dispatch)}
+            <MenuItem
+                primaryText={'Sign out'}
+                onTouchTap={() => dispatch(logoutUser())}
+            />
         </IconMenu>
     );
 };
@@ -41,6 +44,7 @@ const renderLoginElement = (errorMessage, isAuthenticated, user, dispatch) => {
     if (!isAuthenticated) {
         return (
             <Login
+                dispatch={dispatch}
                 errorMessage={errorMessage}
                 onLoginClick={credentials => dispatch(loginUser(credentials))}
             />
@@ -55,14 +59,20 @@ const renderLoginElement = (errorMessage, isAuthenticated, user, dispatch) => {
     );
 };
 
-const Navbar = ({ dispatch, errorMessage, user, isAuthenticated }) => (
-    <AppBar
-        title="KFFP Admin"
-        showMenuIconButton={false}
-        onTitleTouchTap={() => dispatch(push('/'))}
-        iconElementRight={renderLoginElement(errorMessage, isAuthenticated, user, dispatch)}
-    />
-);
+const Navbar = ({ dispatch, errorMessage, user, isAuthenticated }) => {
+    const { displayName } = user;
+    const title = user.displayName ? `KFFP Admin / ${displayName}` : 'KFFP Admin';
+
+    return (
+        <AppBar
+            title={title}
+            showMenuIconButton={false}
+            onTitleTouchTap={() => dispatch(push('/'))}
+            iconElementRight={renderLoginElement(errorMessage, isAuthenticated, user, dispatch)}
+        />
+
+    );
+};
 
 Navbar.propTypes = {
     dispatch: PropTypes.func.isRequired,

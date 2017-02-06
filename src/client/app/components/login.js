@@ -1,36 +1,95 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+import { white } from 'material-ui/styles/colors';
+import { loginInputChange } from '../actions/authActions';
+
+const mapStateToProps = state => ({
+    auth: state.auth
+});
 
 class Login extends Component {
     constructor (props) {
         super(props);
 
-        this.handleClick = this.handleClick.bind(this);
+        this.handleInputUpdate = this.handleInputUpdate.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleClick () {
-        const { email, password } = this;
+    handleInputUpdate (e, text) {
+        const fieldName = e.target.name;
+
+        this.props.dispatch(loginInputChange({ text, fieldName }));
+    }
+
+    handleSubmit (e) {
+        e.preventDefault();
+
+        const { loginForm } = this.props.auth;
+        const { email, password } = loginForm;
         const credentials = {
-            email: email.value.trim(),
-            password: password.value.trim()
+            email: email.trim(),
+            password: password.trim()
         };
 
         this.props.onLoginClick(credentials);
     }
 
     render () {
+        // TODO @ma - improve the error handling
         const { errorMessage } = this.props;
+        const styles = {
+            wrapperStyle: {
+                marginRight: '10px'
+            },
+            inputStyles: {
+                color: white
+            },
+            underlineStyle: {
+                borderColor: white
+            },
+            hintStyle: {
+                color: white
+            },
+            underlineFocusStyle: {
+                color: '#006064'
+            }
+        };
 
         return (
-            <div>
-                <input type="text" ref={(c) => { this.email = c; }} placeholder="Email" />
-                <input type="password" ref={(p) => { this.password = p; }} placeholder="Password" />
-                <RaisedButton onClick={e => this.handleClick(e)} label="Login" />
-
-                {errorMessage &&
-                    <p>{errorMessage}</p>
-                }
-            </div>
+            <form>
+                <TextField
+                    onChange={this.handleInputUpdate}
+                    type="text"
+                    hintText="Email"
+                    name="email"
+                    errorText={errorMessage}
+                    style={styles.wrapperStyle}
+                    inputStyle={styles.inputStyles}
+                    hintStyle={styles.hintStyle}
+                    underlineFocusStyle={styles.underlineFocusStyle}
+                    underlineStyle={styles.underlineStyle}
+                />
+                <TextField
+                    onChange={this.handleInputUpdate}
+                    type="password"
+                    name="password"
+                    hintText="Password"
+                    errorText={errorMessage}
+                    style={styles.wrapperStyle}
+                    inputStyle={styles.inputColor}
+                    hintStyle={styles.hintStyle}
+                    underlineFocusStyle={styles.underlineFocusStyle}
+                    underlineStyle={styles.underlineStyle}
+                />
+                <RaisedButton
+                    onClick={e => this.handleSubmit(e)}
+                    type="submit"
+                    style={styles.wrapperStyle}
+                    label="Login"
+                />
+            </form>
         );
     }
 }
@@ -40,4 +99,4 @@ Login.propTypes = {
     errorMessage: PropTypes.string
 };
 
-export default Login;
+export default connect(mapStateToProps)(Login);

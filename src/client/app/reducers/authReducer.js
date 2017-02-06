@@ -5,13 +5,16 @@ import {
     LOGOUT_REQUEST,
     LOGOUT_SUCCESS,
     LOGOUT_FAILURE,
-    AUTH_VERIFICATION
+    AUTH_VERIFICATION,
+    UPDATE_LOGIN_FORM,
+    CLEAR_LOGIN_FORM
 } from '../constants';
 
 const initialState = {
     isFetching: false,
     isAuthenticated: localStorage.getItem('idToken') !== null,
-    user: { scope: null }
+    user: { scope: null },
+    loginForm: {}
 };
 
 export default function authReducer (state = initialState, action) {
@@ -25,12 +28,15 @@ export default function authReducer (state = initialState, action) {
         });
 
     case LOGIN_SUCCESS:
-        return Object.assign({}, state, {
-            isFetching: false,
-            isAuthenticated: true,
-            email: action.data.email,
+        const { isFetching, isAuthenticated, user } = action.data;
+
+        return {
+            ...state,
+            isFetching,
+            isAuthenticated,
+            user,
             errorMessage: ''
-        });
+        };
 
     case LOGIN_FAILURE:
         return Object.assign({}, state, {
@@ -62,6 +68,22 @@ export default function authReducer (state = initialState, action) {
             isAuthenticated: action.data.verified,
             user: action.data
         });
+
+    case UPDATE_LOGIN_FORM:
+        const { fieldName, text } = action.data;
+        return {
+            ...state,
+            loginForm: {
+                ...state.loginForm,
+                [fieldName]: text
+            }
+        };
+
+    case CLEAR_LOGIN_FORM:
+        return {
+            ...state,
+            loginForm: {}
+        };
 
     default:
         return state;

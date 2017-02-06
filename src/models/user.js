@@ -12,13 +12,14 @@ const userSchema = Joi.object().keys({
 });
 
 const createToken = (user) => {
-    const { _id, email, role } = user;
+    const { _id, email, role, displayName } = user;
     const secret = process.env.JWT_SECRET_KEY;
 
     return jwt.sign(
         {
             id: _id,
             email,
+            displayName,
             scope: role
         },
         secret,
@@ -42,7 +43,15 @@ const loginHandler = (request, reply) => {
         bcrypt.compare(password, user.password, (error, isValid) => {
             if (isValid) {
                 const idToken = createToken(user);
-                return reply({ email: user.email, verified: true, idToken });
+                const { email, displayName, role } = user;
+
+                return reply({
+                    email,
+                    displayName,
+                    idToken,
+                    scope: role,
+                    verified: true
+                });
             }
 
             return reply(Boom.create(401, 'Incorrect username or email!'));
