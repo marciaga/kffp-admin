@@ -6,9 +6,16 @@ import {
     LOGIN_FAILURE,
     LOGOUT_SUCCESS,
     LOGOUT_REQUEST,
-    AUTH_VERIFICATION
+    AUTH_VERIFICATION,
+    UPDATE_LOGIN_FORM,
+    CLEAR_LOGIN_FORM
 } from '../constants';
 import { getActiveShows } from './showActions';
+
+const loginInputChange = data => ({
+    type: UPDATE_LOGIN_FORM,
+    data
+});
 
 const requestLogin = creds => ({
     type: LOGIN_REQUEST,
@@ -19,10 +26,23 @@ const requestLogin = creds => ({
     }
 });
 
-const receiveLogin = response => ({
-    type: LOGIN_SUCCESS,
-    data: { ...response, isFetching: false, isAuthenticated: true }
-});
+const receiveLogin = (response) => {
+    const { verified, email, displayName, scope } = response.data;
+
+    return {
+        type: LOGIN_SUCCESS,
+        data: {
+            isFetching: false,
+            isAuthenticated: true,
+            user: {
+                verified,
+                email,
+                displayName,
+                scope
+            }
+        }
+    };
+};
 
 const loginError = message => ({
     type: LOGIN_FAILURE,
@@ -68,6 +88,10 @@ const verifyLogin = (isAuthenticated) => {
     };
 };
 
+const clearLoginForm = () => ({
+    type: CLEAR_LOGIN_FORM
+});
+
 const loginUser = (creds) => {
     const { email, password } = creds;
     const url = '/api/users/authenticate';
@@ -82,6 +106,7 @@ const loginUser = (creds) => {
             const { data } = response;
             localStorage.setItem('idToken', data.idToken);
 
+            dispatch(clearLoginForm());
             dispatch(getActiveShows());
             dispatch(receiveLogin(response));
         } catch (err) {
@@ -129,5 +154,6 @@ export {
     loginError,
     receiveLogin,
     requestLogin,
-    logoutUser
+    logoutUser,
+    loginInputChange
 };
