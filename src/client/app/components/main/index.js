@@ -29,7 +29,6 @@ class Main extends Component {
             <div>
                 <h1>Select a show</h1>
                 <ShowSelect dispatch={dispatch} shows={shows} />
-                
             </div>
         );
     }
