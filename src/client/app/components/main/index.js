@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getActiveShows } from '../../actions/showActions';
+import { getUserShows } from '../../actions/showActions';
 import ShowSelect from './select';
 
 const mapStateToProps = state => ({
@@ -15,7 +15,9 @@ class Main extends Component {
         const { user } = auth;
 
         if (this.props.auth.user !== user) {
-            this.props.dispatch(getActiveShows());
+            const { displayName } = user;
+
+            this.props.dispatch(getUserShows(displayName));
         }
     }
 
@@ -27,6 +29,7 @@ class Main extends Component {
             <div>
                 <h1>Select a show</h1>
                 <ShowSelect dispatch={dispatch} shows={shows} />
+                
             </div>
         );
     }

@@ -3,13 +3,14 @@ import { push } from 'react-router-redux';
 import { SHOW_SELECT, GET_SHOW } from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 
-const receiveActiveShows = data => ({
+const receiveUserShows = data => ({
     type: SHOW_SELECT,
     data
 });
 
-const getActiveShows = () => {
-    const url = '/api/shows?isActive=true';
+const getUserShows = (userName) => {
+    const user = encodeURIComponent(userName);
+    const url = `/api/shows?isActive=true&users=${user}`;
     const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {
@@ -29,7 +30,7 @@ const getActiveShows = () => {
                 };
             });
 
-            dispatch(receiveActiveShows(result));
+            dispatch(receiveUserShows(result));
         } catch (err) {
             console.log(err);
         }
@@ -51,4 +52,4 @@ const receiveShow = data => ({
 
 const getShow = show => dispatch => dispatch(receiveShow(show));
 
-export { getActiveShows, getShow, navigateToPlaylists };
+export { getUserShows, getShow, navigateToPlaylists };
