@@ -197,6 +197,25 @@ const users = {
                 }))
             }
         }
+    },
+    settings: {
+        fields: {
+            oldPassword: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Enter your current password'
+            },
+            newPasswordFirst: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Enter your new password'
+            },
+            newPasswordSecond: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Enter your new password again'
+            }
+        }
     }
 };
 
