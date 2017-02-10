@@ -49,20 +49,22 @@ then fill in the values.
 
 Now you can run the app:
 ```
-$ yarn run dev
+$ yarn dev
 ```
 
 The app is available in your browser at `localhost:3000`.
 
 You'll also, at first, want to build the CSS files, which can be done with:
 ```
-$ yarn run build:css
+$ yarn build:css
 ```
 
 If you're doing a lot of styling, you can run the watcher which will rebuild the CSS whenever you change a `.scss` file:
 ```
-$ yarn run watch:css
+$ yarn watch:css
 ```
+
+Note that the command `$ yarn run dev` also runs the CSS watcher.
 
 ## Tests
 We use the `Jest` testing framework.

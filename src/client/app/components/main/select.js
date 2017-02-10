@@ -4,7 +4,7 @@ import MenuItem from 'material-ui/MenuItem';
 import { navigateToPlaylists } from '../../actions/showActions';
 import { resetCurrentPlaylist } from '../../actions/playlistActions';
 
-const ShowSelect = ({ dispatch, shows }) => {
+const ShowSelect = ({ dispatch, userShows }) => {
     const renderItems = (list) => {
         if (list) {
             return list.map((item, i) => (
@@ -28,7 +28,7 @@ const ShowSelect = ({ dispatch, shows }) => {
             floatingLabelText={'Select a Show'}
             onChange={selectChangeHandler}
         >
-            { renderItems(shows) }
+            { renderItems(userShows) }
         </SelectField>
     );
 };

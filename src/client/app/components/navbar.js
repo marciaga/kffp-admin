@@ -33,6 +33,10 @@ const Menu = ({ dispatch, user }) => {
             {renderAdminMenuItem(scope, 'Shows', 'shows', dispatch)}
             {renderAdminMenuItem(scope, 'Users', 'users', dispatch)}
             <MenuItem
+                primaryText={'Settings'}
+                onTouchTap={() => dispatch(push('settings'))}
+            />
+            <MenuItem
                 primaryText={'Sign out'}
                 onTouchTap={() => dispatch(logoutUser())}
             />

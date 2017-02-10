@@ -1,8 +1,9 @@
-import { GET_SHOW, SHOW_SELECT } from '../constants';
+import { GET_SHOW, USER_SHOW_SELECT, SHOW_SELECT } from '../constants';
 
 const initialState = {
     currentShow: {},
-    shows: []
+    shows: [],
+    userShows: []
 };
 
 export default function showReducer (state = initialState, action) {
@@ -12,6 +13,12 @@ export default function showReducer (state = initialState, action) {
         return {
             ...state,
             currentShow: action.data
+        };
+
+    case USER_SHOW_SELECT:
+        return {
+            ...state,
+            userShows: action.data
         };
 
     case SHOW_SELECT:

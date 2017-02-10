@@ -5,6 +5,7 @@ import Users from './components/users';
 import Playlist from './components/playlist';
 import Shows from './components/shows';
 import Main from './components/main';
+import Settings from './components/settings';
 
 export default (
     <Route>
@@ -15,6 +16,7 @@ export default (
                 <Route component={Playlist} path="/playlists/:slug" />
             </Route>
             <Route component={Shows} path="/shows" />
+            <Route component={Settings} path="/settings" />
         </Route>
     </Route>
 );

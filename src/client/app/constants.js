@@ -37,6 +37,7 @@ export const LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
 
 // Main page
 export const SHOW_SELECT = 'SHOW_SELECT';
+export const USER_SHOW_SELECT = 'USER_SHOW_SELECT';
 
 // Playlist
 export const GET_SHOW_PLAYLISTS = 'GET_SHOW_PLAYLISTS';
