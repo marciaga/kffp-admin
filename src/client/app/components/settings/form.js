@@ -13,7 +13,7 @@ const UserSettingsForm = ({ fields, user, dispatch }) => {
         const { name } = e.target;
         const { id } = user;
 
-        dispatch(updateUserPassword({ id, name, fields }))
+        dispatch(updateUserPassword({ id, name, fields }));
     };
 
     const handleInputUpdate = (e) => {

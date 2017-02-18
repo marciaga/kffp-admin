@@ -197,8 +197,8 @@ const deleteForm = (id, modelName) => {
     };
 };
 
-const updateUserPassword = (data) => {
-    const { name, fields, id } = data;
+const updateUserPassword = (obj) => {
+    const { name, fields, id } = obj;
     const url = `${API_ENDPOINT}/users/${id}`;
     const idToken = getTokenFromLocalStorage();
 
@@ -209,10 +209,15 @@ const updateUserPassword = (data) => {
                     Authorization: `Bearer ${idToken}`
                 }
             });
+            // TODO change this
+            dispatch({
+                type: '',
+                data
+            });
         } catch (e) {
             console.log(e);
         }
-    }
+    };
 };
 
 const updateUserSettingsInput = data => ({

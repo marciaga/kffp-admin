@@ -11,6 +11,16 @@ const userSchema = Joi.object().keys({
     role: Joi.string().required()
 });
 
+const getUserById = async (id, db) => {
+    try {
+        const result = await db.collection('users').findOne({ _id: id });
+
+        return result;
+    } catch (e) {
+        console.log(e);
+    }
+};
+
 const createToken = (user) => {
     const { _id, email, role, displayName } = user;
     const secret = process.env.JWT_SECRET_KEY;
@@ -270,7 +280,10 @@ const verifyPassword = async (request, reply) => {
         const user = await getUserById(userId, db);
         const { currentPassword } = fields;
 
-        bcrypt.compare(currentPassword, user.password, (err, isValid) => {
+        bcrypt.compare(currentPassword, user.password, (e, isValid) => {
+            if (e) {
+                return reply(Boom.internal('Something went wrong with encryption...', e));
+            }
             if (isValid) {
                 hashPassword(newPasswordFirst, (err, hash) => {
                     if (err) {
@@ -302,29 +315,18 @@ const updateUserField = (request, reply) => {
     const { result } = request.pre;
 
     if (result && result.success) {
-        console.log('inside', result.password)
+        console.log('inside', result.password);
         // update password field
-
         return reply('password update');
     }
 
     if (result && !result.sucess) {
-        console.log(result.message)
-        return reply(result.message)
+        console.log(result.message);
+        return reply(result.message);
     }
 
-    console.log('not a password field')
+    console.log('not a password field');
     return reply('not a password field');
-};
-
-const getUserById = async (id, db) => {
-    try {
-        const result = await db.collection('users').findOne({ _id: id });
-
-        return result;
-    } catch (e) {
-        console.log(e);
-    }
 };
 
 export {
