@@ -1,39 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import RaisedButton from 'material-ui/RaisedButton';
-import { showOrHideModal } from '../../actions/modalActions';
-import { setUpdateFormData } from '../../actions/formActions';
-
-/*
- * open a modal which has a field for user's password
- * it will also have two fields for new password
- * send all these to the server to validate and assign a new password
- */
+import UserSettingsForm from './form';
 
 const mapStateToProps = state => ({
-    modal: state.modal
+    form: state.form,
+    auth: state.auth
 });
 
 class Settings extends Component {
-    constructor (props) {
-        super(props);
-
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    handleClick () {
-        this.props.dispatch(setUpdateFormData('settings', 'users', {}));
-        this.props.dispatch(showOrHideModal(true));
-    }
-
     render () {
+        const { dispatch, form, auth } = this.props;
+        const { user } = auth;
+
         return (
             <div className="user-settings">
-                <RaisedButton
-                    label="Change Your Password"
-                    type="button"
-                    secondary={true}
-                    onClick={this.handleClick}
+                <UserSettingsForm
+                    dispatch={dispatch}
+                    fields={form.fields}
+                    user={user}
                 />
             </div>
         );

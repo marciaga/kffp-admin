@@ -24,8 +24,14 @@ class Text extends Component {
     }
 
     render () {
-        const { id, name, label, value, hintText, fieldName, disabled } = this.props;
-        const fieldType = fieldName === 'password' ? 'password' : 'text';
+        const {
+            id,
+            name,
+            label,
+            value,
+            hintText,
+            disabled
+        } = this.props;
 
         return (
             <TextField
@@ -35,7 +41,7 @@ class Text extends Component {
                 value={value || ''}
                 hintText={hintText}
                 onChange={this.handleTextFieldChange}
-                type={fieldType}
+                type={name}
                 disabled={disabled}
             />
         );

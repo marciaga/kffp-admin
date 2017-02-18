@@ -5,7 +5,8 @@ import {
     UPDATE_FORM_FIELD,
     SET_USER_AUTOCOMPLETE,
     SET_SONG_FORM,
-    UPDATE_SONG_FORM
+    UPDATE_SONG_FORM,
+    UPDATE_USER_SETTINGS_FIELD
 } from '../constants';
 
 const initialState = {
@@ -83,6 +84,15 @@ export default function formReducer (state = initialState, action) {
         return {
             ...state,
             songs: newSongs
+        };
+
+    case UPDATE_USER_SETTINGS_FIELD:
+        return {
+            ...state,
+            fields: {
+                ...state.fields,
+                [action.data.name]: action.data.value
+            }
         };
 
     default:

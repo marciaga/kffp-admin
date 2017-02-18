@@ -42,6 +42,7 @@ const shows = {
             },
             slug: {
                 fieldType: 'Text',
+                name: 'text',
                 label: 'Slug',
                 hintText: 'Enter the show slug'
             }
@@ -116,6 +117,7 @@ const shows = {
             },
             slug: {
                 fieldType: 'Text',
+                name: 'text',
                 label: 'Slug',
                 disabled: true
             }
@@ -134,7 +136,7 @@ const users = {
             },
             email: {
                 fieldType: 'Text',
-                name: 'email_field',
+                name: 'text',
                 hintText: 'Enter Email Address',
                 label: 'Email'
             },
@@ -182,7 +184,7 @@ const users = {
             },
             email: {
                 fieldType: 'Text',
-                name: 'email_field',
+                name: 'text',
                 hintText: 'Enter Email Address',
                 label: 'Email'
             },

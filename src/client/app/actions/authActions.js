@@ -10,7 +10,7 @@ import {
     UPDATE_LOGIN_FORM,
     CLEAR_LOGIN_FORM
 } from '../constants';
-import { getActiveShows } from './showActions';
+import { getUserShows, getAllShows } from './showActions';
 
 const loginInputChange = data => ({
     type: UPDATE_LOGIN_FORM,
@@ -26,8 +26,8 @@ const requestLogin = creds => ({
     }
 });
 
-const receiveLogin = (response) => {
-    const { verified, email, displayName, scope } = response.data;
+const receiveLogin = (data) => {
+    const { verified, email, displayName, scope } = data;
 
     return {
         type: LOGIN_SUCCESS,
@@ -98,17 +98,18 @@ const loginUser = (creds) => {
 
     return async (dispatch) => {
         try {
-            const response = await axios.post(url, {
+            const { data } = await axios.post(url, {
                 email,
                 password
             });
+            const { idToken, displayName } = data;
 
-            const { data } = response;
-            localStorage.setItem('idToken', data.idToken);
+            localStorage.setItem('idToken', idToken);
 
             dispatch(clearLoginForm());
-            dispatch(getActiveShows());
-            dispatch(receiveLogin(response));
+            dispatch(getAllShows());
+            dispatch(getUserShows(displayName));
+            dispatch(receiveLogin(data));
         } catch (err) {
             const error = { ...err };
             const message = error.response.data.message;

@@ -8,10 +8,12 @@ import {
     TOGGLE_MODAL,
     DELETE_MODEL,
     SET_SONG_FORM,
-    UPDATE_SONG_FORM
+    UPDATE_SONG_FORM,
+    UPDATE_USER_SETTINGS_FIELD
 } from '../constants';
 import { updateModelData } from './modelActions';
 import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
+import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 import Models from '../data';
 
 const updateFormField = (fieldName, value) => ({
@@ -74,7 +76,7 @@ const receiveUserAutocomplete = data => ({
 
 const getUserAutoComplete = (text) => {
     const url = `${API_ENDPOINT}/search/users?text=${text}`;
-    const idToken = localStorage.getItem('idToken');
+    const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {
         try {
@@ -121,7 +123,7 @@ const receiveFormResult = data => ({
 });
 
 const prepareFormSubmit = (type, modelName) => {
-    const idToken = localStorage.getItem('idToken');
+    const idToken = getTokenFromLocalStorage();
     const method = formTypesToHttpVerbs[type];
     const formUrl = `${API_ENDPOINT}/${modelName}`;
 
@@ -141,7 +143,6 @@ const prepareFormSubmit = (type, modelName) => {
             });
 
             if (data.code === 401) {
-                console.log(data.message);
                 return dispatch(formSubmitError(data.message));
             }
 
@@ -165,7 +166,7 @@ const prepareFormSubmit = (type, modelName) => {
 
 const deleteForm = (id, modelName) => {
     const url = `${API_ENDPOINT}/${modelName}?id=${id}`;
-    const idToken = localStorage.getItem('idToken');
+    const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {
         try {
@@ -196,6 +197,29 @@ const deleteForm = (id, modelName) => {
     };
 };
 
+const updateUserPassword = (data) => {
+    const { name, fields, id } = data;
+    const url = `${API_ENDPOINT}/users/${id}`;
+    const idToken = getTokenFromLocalStorage();
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.patch(url, { name, fields }, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+};
+
+const updateUserSettingsInput = data => ({
+    type: UPDATE_USER_SETTINGS_FIELD,
+    data
+});
+
 const setSongForm = songs => ({
     type: SET_SONG_FORM,
     data: songs
@@ -210,5 +234,7 @@ export {
     getUserAutoComplete,
     addUsersToShow,
     setUpdateFormData,
-    deleteForm
+    deleteForm,
+    updateUserSettingsInput,
+    updateUserPassword
 };

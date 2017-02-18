@@ -247,6 +247,86 @@ const deleteUser = (request, reply) => {
     });
 };
 
+const verifyPassword = async (request, reply) => {
+    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { id } = request.params;
+    const { name, fields } = request.payload;
+    // if it's not the changePassword request, continue
+    if (name === 'changePassword') {
+        return reply.continue();
+    }
+
+    const { newPasswordFirst, newPasswordSecond } = fields;
+    // if it is the changePassword request, verify the relevant fields match
+    if (newPasswordFirst !== newPasswordSecond) {
+        return reply({
+            success: false,
+            message: 'New password entries do not match.'
+        });
+    }
+
+    const userId = new ObjectID(id);
+    try {
+        const user = await getUserById(userId, db);
+        const { currentPassword } = fields;
+
+        bcrypt.compare(currentPassword, user.password, (err, isValid) => {
+            if (isValid) {
+                hashPassword(newPasswordFirst, (err, hash) => {
+                    if (err) {
+                        return reply({
+                            success: false,
+                            message: 'Something went wrong...'
+                        });
+                    }
+
+                    // hash the password and return it to the route handler
+                    return reply({
+                        success: true,
+                        password: hash
+                    });
+                });
+            }
+
+            return reply({
+                success: false,
+                message: 'Current password is incorrect.'
+            });
+        });
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+const updateUserField = (request, reply) => {
+    const { result } = request.pre;
+
+    if (result && result.success) {
+        console.log('inside', result.password)
+        // update password field
+
+        return reply('password update');
+    }
+
+    if (result && !result.sucess) {
+        console.log(result.message)
+        return reply(result.message)
+    }
+
+    console.log('not a password field')
+    return reply('not a password field');
+};
+
+const getUserById = async (id, db) => {
+    try {
+        const result = await db.collection('users').findOne({ _id: id });
+
+        return result;
+    } catch (e) {
+        console.log(e);
+    }
+};
+
 export {
     getUsers,
     verifyToken,
@@ -255,5 +335,7 @@ export {
     deleteUser,
     loginHandler,
     verifyCredentials,
-    verifyUniqueUser
+    verifyUniqueUser,
+    verifyPassword,
+    updateUserField
 };
