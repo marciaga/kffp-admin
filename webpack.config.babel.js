@@ -16,13 +16,14 @@ module.exports = {
         filename: '[name].js'
     },
     resolve: {
-        modulesDirectories: ['node_modules', 'src/client'],
-        extensions: ['', '.js']
+        modules: [
+            'src',
+            'node_modules'
+        ]
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
-        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.NoEmitOnErrorsPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify(NODE_ENV)
@@ -30,22 +31,17 @@ module.exports = {
         })
     ],
     module: {
-        loaders: [
+        rules: [
             {
-                test: /\.js/,
-                loader: 'babel',
+                test: /\.(js|jsx)$/,
+                use: 'babel-loader',
                 exclude: /node_modules/,
-
                 query: {
                     cacheDirectory: true,
                     presets: ['es2015'],
                     plugins: ['syntax-async-functions', 'transform-regenerator']
                 },
                 include: path.resolve('..', __dirname)
-            },
-            {
-                test: /\.json/,
-                loader: 'json'
             }
         ]
     }

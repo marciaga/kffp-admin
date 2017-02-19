@@ -9,6 +9,7 @@ import {
 const UserSettingsForm = ({ fields, user, dispatch }) => {
     const submitHandler = (e) => {
         e.preventDefault();
+        console.log('yolo');
 
         const { name } = e.target;
         const { id } = user;

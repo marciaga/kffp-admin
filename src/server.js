@@ -1,6 +1,6 @@
 import Glue from 'glue';
 import 'babel-polyfill';
-import manifest from './config/manifest.json';
+import manifest from './config/manifest';
 
 const url = process.env.DB_CONNECTION;
 const options = { relativeTo: __dirname };
