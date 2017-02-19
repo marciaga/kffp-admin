@@ -7,9 +7,10 @@ import {
 } from '../../actions/formActions';
 
 const UserSettingsForm = ({ fields, user, dispatch }) => {
+    const { currentPassword, newPasswordFirst, newPasswordSecond } = fields;
+
     const submitHandler = (e) => {
         e.preventDefault();
-        console.log('yolo');
 
         const { name } = e.target;
         const { id } = user;
@@ -30,18 +31,21 @@ const UserSettingsForm = ({ fields, user, dispatch }) => {
                 type="password"
                 hintText="Enter your current password."
                 name="currentPassword"
+                value={currentPassword || ''}
             />
             <TextField
                 onChange={handleInputUpdate}
                 type="password"
                 name="newPasswordFirst"
                 hintText="Enter your new password."
+                value={newPasswordFirst || ''}
             />
             <TextField
                 onChange={handleInputUpdate}
                 type="password"
                 name="newPasswordSecond"
                 hintText="Enter your new password again."
+                value={newPasswordSecond || ''}
             />
             <RaisedButton
                 label="Update Password"

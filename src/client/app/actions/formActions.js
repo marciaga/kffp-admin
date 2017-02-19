@@ -10,7 +10,8 @@ import {
     SET_SONG_FORM,
     UPDATE_SONG_FORM,
     UPDATE_USER_SETTINGS_FIELD,
-    SNACKBAR_MESSAGE
+    SNACKBAR_MESSAGE,
+    CLEAR_INPUT_FIELDS
 } from '../constants';
 import { updateModelData } from './modelActions';
 import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
@@ -198,6 +199,8 @@ const deleteForm = (id, modelName) => {
     };
 };
 
+const clearInputFields = () => ({ type: CLEAR_INPUT_FIELDS });
+
 const updateUserPassword = (obj) => {
     const { name, fields, id } = obj;
     const url = `${API_ENDPOINT}/users/${id}`;
@@ -211,6 +214,8 @@ const updateUserPassword = (obj) => {
                 }
             });
             const message = data.success ? 'Update was successful!' : 'Update Failed.';
+
+            dispatch(clearInputFields());
 
             dispatch({
                 type: SNACKBAR_MESSAGE,
