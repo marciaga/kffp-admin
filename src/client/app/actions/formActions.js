@@ -9,7 +9,8 @@ import {
     DELETE_MODEL,
     SET_SONG_FORM,
     UPDATE_SONG_FORM,
-    UPDATE_USER_SETTINGS_FIELD
+    UPDATE_USER_SETTINGS_FIELD,
+    SNACKBAR_MESSAGE
 } from '../constants';
 import { updateModelData } from './modelActions';
 import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
@@ -209,10 +210,11 @@ const updateUserPassword = (obj) => {
                     Authorization: `Bearer ${idToken}`
                 }
             });
-            // TODO change this
+            const message = data.success ? 'Update was successful!' : 'Update Failed.';
+
             dispatch({
-                type: '',
-                data
+                type: SNACKBAR_MESSAGE,
+                data: { message }
             });
         } catch (e) {
             console.log(e);

@@ -262,7 +262,7 @@ const verifyPassword = async (request, reply) => {
     const { id } = request.params;
     const { name, fields } = request.payload;
     // if it's not the changePassword request, continue
-    if (name === 'changePassword') {
+    if (name !== 'changePassword') {
         return reply.continue();
     }
 
@@ -285,15 +285,14 @@ const verifyPassword = async (request, reply) => {
                 return reply(Boom.internal('Something went wrong with encryption...', e));
             }
             if (isValid) {
-                hashPassword(newPasswordFirst, (err, hash) => {
+                // hash the password and return it to the route handler
+                return hashPassword(newPasswordFirst, (err, hash) => {
                     if (err) {
                         return reply({
                             success: false,
                             message: 'Something went wrong...'
                         });
                     }
-
-                    // hash the password and return it to the route handler
                     return reply({
                         success: true,
                         password: hash
@@ -311,22 +310,74 @@ const verifyPassword = async (request, reply) => {
     }
 };
 
-const updateUserField = (request, reply) => {
+const updateField = async (id, fieldName, value, db, ObjectID) => {
+    const userId = new ObjectID(id);
+
+    try {
+        const result = await db.collection('users').update(
+            { _id: userId },
+            { $set: {
+                [fieldName]: value
+            } }
+        );
+
+        return result.toJSON();
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+const updateUserField = async (request, reply) => {
+    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
     const { result } = request.pre;
+    const { id } = request.params;
+    const { name, fields } = request.payload;
 
     if (result && result.success) {
-        console.log('inside', result.password);
-        // update password field
-        return reply('password update');
+        try {
+            const response = await updateField(
+                id,
+                'password',
+                result.password,
+                db,
+                ObjectID
+            );
+            const { ok, nModified } = response;
+
+            if (ok && nModified) {
+                return reply({ success: true });
+            }
+
+            return reply({ success: false, message: 'Update was not successful' });
+        } catch (e) {
+            console.log(e);
+        }
     }
 
-    if (result && !result.sucess) {
-        console.log(result.message);
+    if (result && !result.success) {
         return reply(result.message);
     }
+    // @ma: currently, this block isn't being used, but it probably will later on
+    try {
+        const key = Object.keys(fields).find(f => fields[f]);
+        const value = fields[key];
+        const response = await updateField(
+            id,
+            name,
+            value,
+            db,
+            ObjectID
+        );
+        const { ok, nModified } = response;
 
-    console.log('not a password field');
-    return reply('not a password field');
+        if (ok && nModified) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    } catch (e) {
+        console.log(e);
+    }
 };
 
 export {
