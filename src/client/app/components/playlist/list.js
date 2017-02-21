@@ -1,4 +1,5 @@
 import React from 'react';
+import Paper from 'material-ui/Paper';
 import { List, ListItem } from 'material-ui/List';
 import AvQueueMusic from 'material-ui/svg-icons/av/queue-music';
 import { receivePlaylist } from '../../actions/playlistActions';
@@ -29,9 +30,12 @@ const renderListItems = (playlists, dispatch) => {
 };
 
 const PlaylistHistory = ({ dispatch, playlists }) => (
-    <List>
-        {renderListItems(playlists, dispatch)}
-    </List>
+    <Paper className="col col-md-2 col-sm-12">
+        <h2 className="h2">Past Playlists</h2>
+        <List>
+            {renderListItems(playlists, dispatch)}
+        </List>
+    </Paper>
 );
 
 export default PlaylistHistory;

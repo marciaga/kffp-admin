@@ -1,5 +1,8 @@
 import axios from 'axios';
-import { getTokenFromLocalStorage } from '../utils/helperFunctions';
+import {
+    getTokenFromLocalStorage,
+    cleanPathname
+} from '../utils/helperFunctions';
 import { API_ENDPOINT } from '../utils/constants';
 import { getShow } from './showActions';
 import { snackbarMessage } from './feedbackActions';
@@ -46,7 +49,8 @@ const addNewPlaylistToSidebar = data => ({
 
 const getShowPlaylists = pathname => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
-    const url = `${API_ENDPOINT}${pathname}`;
+    const path = cleanPathname(pathname);
+    const url = `${API_ENDPOINT}${path}`;
 
     try {
         const { data } = await axios.get(url, {

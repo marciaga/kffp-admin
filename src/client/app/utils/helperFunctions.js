@@ -56,11 +56,19 @@ const generateBlankSongData = () => ({
     releaseDate: '',
     track: ''
 });
+// returns slug from pathname
+const cleanPathname = (pathname) => {
+    const blacklist = ['edit']; // words you don't want to return
+    const splitPath = pathname.split('/').filter(item => blacklist.indexOf(item) === -1);
+
+    return splitPath.join('/');
+};
 
 export {
     debounce,
     hoursToDateObj,
     sortObjectsByKey,
     getTokenFromLocalStorage,
-    generateBlankSongData
+    generateBlankSongData,
+    cleanPathname
 };
