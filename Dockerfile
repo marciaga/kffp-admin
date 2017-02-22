@@ -1,20 +1,19 @@
 FROM node:6.9.1
 
-# Install Yarn
+# Install the latest version of Yarn
+
 RUN apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
 RUN echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install yarn=0.16.1-1 && apt-get clean
+RUN apt-get update && apt-get install yarn && apt-get clean
 
-WORKDIR /app
+# Create app directory
 
-# install dependencies
-COPY package.json yarn.lock /tmp/
-RUN cd /tmp && yarn install --pure-lockfile
+RUN mkdir -p /opt/app
 
-RUN mkdir -p /app && cp -a /tmp/node_modules /app/
+# Set working directory
 
-# Copy the application code
-ADD . /app
+WORKDIR /opt/app
 
-EXPOSE 3000
-CMD ["yarn", "run", "dev"]
+# Copy app source
+
+COPY . /opt/app

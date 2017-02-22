@@ -1,5 +1,7 @@
 import webpackConfig from '../../webpack.config.babel';
 
+const DB_URL = `${process.env.DB_CONNECTION}/${process.env.DB_NAME}`;
+
 export default {
     server: {
         app: {
@@ -46,7 +48,7 @@ export default {
             plugin: {
                 register: 'hapi-mongodb',
                 options: {
-                    url: 'mongodb://localhost:27017/playlist-dev',
+                    url: DB_URL,
                     settings: {
                         db: {
                             native_parser: false

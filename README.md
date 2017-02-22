@@ -1,6 +1,6 @@
 # Freeform Portland Admin Application and API
 
-### Set Up Local Development Environment:
+### Set Up Local Development Environment on OSX:
 
 Clone the repository
 ```
@@ -15,14 +15,25 @@ $ npm -v
 ```
 We use Node `6.9.1` and NPM `3.10.9` and recommend globally installing [n](https://github.com/tj/n) to manage your Node versions.
 
-Next, install [Yarn](https://yarnpkg.com/) which we use form managing dependencies. If you're on a Mac you can use `Homebrew`, but we recommend using `npm` to globally install `yarn`:
+Next, install [Yarn](https://yarnpkg.com/) which we use for managing dependencies. If you're on a Mac you can use `Homebrew`:
+```
+$ brew install yarn
+```
+
+or `npm`:
+
 ```
 $ npm i yarn -g
+```
+or just install the binary!
+
+```
+$ curl -o- -L https://yarnpkg.com/install.sh | bash
 ```
 
 Now, install the dependencies with:
 ```
-$ yarn install
+$ yarn
 ```
 
 Next, you'll need a running instance of `MongoDB` version `>=3.2`. To install, we recommend using `Homebrew`:
@@ -64,19 +75,39 @@ If you're doing a lot of styling, you can run the watcher which will rebuild the
 $ yarn watch:css
 ```
 
-Note that the command `$ yarn run dev` also runs the CSS watcher.
+Note that the command `$ yarn dev` also runs the CSS watcher.
+
+### Alternative (recommended) Local Environment
+First, install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
+
+Next, clone the repository
+```
+$ git clone git@github.com:marciaga/playlist-v2.git
+```
+
+> env vars
+
+> mongo connection: 'mongodb://localhost:27017/playlist-dev'
+
+
+Next, run:
+```
+$ docker-compose up -d --build
+```
+This command will build the images, install the dependencies, and start the application in development mode. The application will be accessible at `http://localhost:3000`
+
 
 ## Tests
 We use the `Jest` testing framework.
 To run the tests, use:
 ```
-$ yarn run test
+$ yarn test
 ```
 
 ## Code Style
 We use ESLint to ensure style consistency:
 ```
-$ yarn run lint
+$ yarn lint
 ```
 
 ## Adding New Dependencies
@@ -88,6 +119,7 @@ or to add to `devDependencies`, use
 ```
 $ yarn add -D <package>
 ```
+
 
 ### Coming soon:
 * CI integration

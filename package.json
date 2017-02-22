@@ -5,16 +5,16 @@
   "main": "index.js",
   "scripts": {
     "dev": "npm run watch:css & npm run dev:js",
-    "dev:js": "nodemon -e js,hbs -w src --ignore src/client",
+    "dev:js": "./node_modules/.bin/nodemon -e js,hbs -w src --ignore src/client",
     "build:js": "NODE_ENV=production webpack --colors",
     "build:css": "npm run build:sass && npm run build:postcss",
-    "watch:css": "node-sass src/client/css -o public -w & postcss -c ./postcss.json -w",
+    "watch:css": "./node_modules/.bin/node-sass src/client/css -o public -w & postcss -c ./postcss.json -w",
     "start": "NODE_ENV=production node index.js",
     "lint": "./node_modules/.bin/eslint ./src",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "build:sass": "node-sass src/client/css -o public",
-    "build:postcss": "postcss -c ./postcss.json"
+    "build:sass": "./node_modules/.bin/node-sass src/client/css -o public",
+    "build:postcss": "./node_modules/.bin/postcss -c ./postcss.json"
   },
   "repository": {
     "url": "git+https://github.com/marciaga/playlist-v2.git",
