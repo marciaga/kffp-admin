@@ -14,6 +14,14 @@ RUN mkdir -p /opt/app
 
 WORKDIR /opt/app
 
-# Copy app source
+# Copy depenency management files
+
+COPY package.json yarn.lock /opt/app/
+
+# Install dependencies
+
+RUN yarn
+
+# Copy app source code
 
 COPY . /opt/app
