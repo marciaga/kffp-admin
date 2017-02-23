@@ -14,7 +14,7 @@ RUN mkdir -p /opt/app
 
 WORKDIR /opt/app
 
-# Copy depenency management files
+# Copy dependency management files
 
 COPY package.json yarn.lock /opt/app/
 

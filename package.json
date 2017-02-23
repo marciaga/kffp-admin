@@ -8,7 +8,7 @@
     "dev:js": "./node_modules/.bin/nodemon -e js,hbs -w src --ignore src/client",
     "build:js": "NODE_ENV=production webpack --colors",
     "build:css": "npm run build:sass && npm run build:postcss",
-    "watch:css": "./node_modules/.bin/node-sass src/client/css -o public -w & postcss -c ./postcss.json -w",
+    "watch:css": "./node_modules/.bin/node-sass src/client/css -o public -w & postcss -c ./postcss.config.js",
     "start": "NODE_ENV=production node index.js",
     "lint": "./node_modules/.bin/eslint ./src",
     "test": "jest",

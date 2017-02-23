@@ -11,7 +11,7 @@ services:
       - db
     environment:
       NODE_ENV: development
-    command: yarn dev
+    command: bash -c "yarn install && yarn dev"
     depends_on:
         - db
   db:
