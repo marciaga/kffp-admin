@@ -34,13 +34,15 @@ module.exports = {
         rules: [
             {
                 test: /\.(js|jsx)$/,
-                use: 'babel-loader',
-                exclude: /node_modules/,
-                query: {
-                    cacheDirectory: true,
-                    presets: ['es2015'],
-                    plugins: ['syntax-async-functions', 'transform-regenerator']
+                use: {
+                    loader: 'babel-loader',
+                    query: {
+                        cacheDirectory: true,
+                        presets: ['es2015'],
+                        plugins: ['syntax-async-functions', 'transform-regenerator']
+                    }
                 },
+                exclude: /node_modules/,
                 include: path.resolve('..', __dirname)
             }
         ]

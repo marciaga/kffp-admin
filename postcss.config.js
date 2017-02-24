@@ -11,7 +11,6 @@ module.exports = {
         sort: true
     },
     'local-plugins': false,
-    watch: true,
     input: 'public/main.css',
     output: 'public/main.css'
 };
