@@ -42,7 +42,7 @@ const createToken = (user) => {
 
 /* Route Handlers */
 const loginHandler = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const password = request.payload.password;
 
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
@@ -71,7 +71,7 @@ const loginHandler = (request, reply) => {
 
 // Fetch all users
 const getUsers = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
 
     db.collection('users').find({}, { password: 0 }, async (err, cursor) => {
         if (err) {
@@ -92,7 +92,7 @@ const hashPassword = (password, callback) => {
 
 // CREATE user method
 const createUser = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
 
     try {
         Joi.validate(request.payload, userSchema, (err, value) => {
@@ -161,7 +161,7 @@ const verifyToken = (request, reply) => {
 };
 
 const verifyCredentials = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const password = request.payload.password;
 
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
@@ -183,7 +183,7 @@ const verifyCredentials = (request, reply) => {
 };
 
 const verifyUniqueUser = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const { email } = request.payload;
 
     db.collection('users').findOne({ $or: [{ email }] }, (err, user) => {
@@ -196,7 +196,7 @@ const verifyUniqueUser = (request, reply) => {
 };
 
 const updateUser = (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const user = request.payload;
 
     try {
@@ -237,7 +237,7 @@ const updateUser = (request, reply) => {
 };
 
 const deleteUser = (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const { id } = request.query;
     const userId = new ObjectID(id);
 
@@ -258,7 +258,7 @@ const deleteUser = (request, reply) => {
 };
 
 const verifyPassword = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const { id } = request.params;
     const { name, fields } = request.payload;
     // if it's not the changePassword request, continue
@@ -328,7 +328,7 @@ const updateField = async (id, fieldName, value, db, ObjectID) => {
 };
 
 const updateUserField = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const { result } = request.pre;
     const { id } = request.params;
     const { name, fields } = request.payload;

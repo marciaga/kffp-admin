@@ -37,7 +37,7 @@ const getShow = async (db, slug) => (
 
 // TODO this needs to be limited so we don't fetch everything at once
 const getPlaylistsByShow = async (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const { slug } = request.params;
 
     try {
@@ -56,7 +56,7 @@ const getPlaylistsByShow = async (request, reply) => {
 };
 
 const createPlaylist = async (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const now = moment();
     const showDateTime = now.toISOString();
     const dateSlug = now.format('Y[-]MM[-]DD');
@@ -118,7 +118,7 @@ const createPlaylist = async (request, reply) => {
 };
 
 const addTrack = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
 
     try {
         const track = request.payload;
@@ -157,7 +157,7 @@ const addTrack = async (request, reply) => {
 };
 
 const updateTracks = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
 
     try {
         const track = request.payload;
@@ -186,7 +186,7 @@ const updateTracks = async (request, reply) => {
 };
 
 const updateTrackOrder = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
 
     try {
         const payload = request.payload;
@@ -215,7 +215,7 @@ const updateTrackOrder = async (request, reply) => {
 };
 
 const deleteTrackFromPlaylist = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
 
     try {
         const { playlistId, trackId } = request.params;

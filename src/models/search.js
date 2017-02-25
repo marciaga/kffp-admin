@@ -1,7 +1,7 @@
 import Boom from 'boom';
 
 const userSearchHandler = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const { text } = request.query;
 
     db.collection('users').find({ email: { $regex: `${text}`, $options: '$i' } },

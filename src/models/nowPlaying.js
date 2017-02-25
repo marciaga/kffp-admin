@@ -8,7 +8,7 @@ const updateNowPlaying = async (request, reply) => {
     };
 
     try {
-        const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+        const { db, ObjectID } = request.server.plugins.mongodb;
         const { socket } = request.server.plugins['web-sockets'];
 
         socket.emit('now-playing', songData);

@@ -46,7 +46,7 @@ export default {
         },
         {
             plugin: {
-                register: 'hapi-mongodb',
+                register: './modules/mongodb',
                 options: {
                     url: DB_URL,
                     settings: {
