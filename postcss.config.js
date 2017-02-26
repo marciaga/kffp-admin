@@ -11,6 +11,6 @@ module.exports = {
         sort: true
     },
     'local-plugins': false,
-    input: 'public/main.css',
-    output: 'public/main.css'
+    input: 'public/css/main.css',
+    output: 'public/css/main.css'
 };

@@ -1,8 +1,20 @@
-import webpackConfig from '../../webpack.config.babel';
-
+import webpackConfig from '../../webpack.config.js';
 const DB_URL = `${process.env.DB_CONNECTION}/${process.env.DB_NAME}`;
+const webpackHotMiddleware = {
+    plugin: {
+        register: 'hapi-webpack-hot-middleware'
+    }
+};
+const webpackDevMiddleware = {
+    plugin: {
+        register: 'hapi-webpack-dev-middleware',
+        options: {
+            config: webpackConfig(process.env.NODE_ENV)
+        }
+    }
+};
 
-export default {
+const manifest = {
     server: {
         app: {
             slogan: 'Hapi.js backend with SPA React and Redux front-end'
@@ -59,19 +71,6 @@ export default {
         },
         {
             plugin: {
-                register: 'hapi-webpack-dev-middleware',
-                options: {
-                    config: webpackConfig
-                }
-            }
-        },
-        {
-            plugin: {
-                register: 'hapi-webpack-hot-middleware'
-            }
-        },
-        {
-            plugin: {
                 register: 'web-sockets'
             }
         },
@@ -80,3 +79,10 @@ export default {
         { plugin: './modules/front-end' }
     ]
 };
+
+
+if (process.env.NODE_ENV !== 'production') {
+    manifest.registrations.push(webpackDevMiddleware, webpackHotMiddleware);
+}
+
+export default manifest;

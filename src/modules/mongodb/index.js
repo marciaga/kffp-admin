@@ -48,7 +48,6 @@ exports.register = (serv, pluginOptions, next) => {
 
                 server.on('stop', () => [].concat(expose.db).forEach(db => db.close(err => server.log(['mongodb', 'error'], err))));
 
-                next();
             } catch (e) {
                 console.log(e);
             } finally {

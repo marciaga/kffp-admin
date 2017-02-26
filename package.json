@@ -6,15 +6,15 @@
   "scripts": {
     "dev": "yarn watch:css & yarn dev:js",
     "dev:js": "./node_modules/.bin/nodemon -e js,hbs -w src --ignore src/client",
-    "build:js": "NODE_ENV=production webpack --optimize-minimize",
-    "build:css": "yarn  build:sass && yarn  build:postcss",
-    "build:production": "yarn  build:css && yarn  build:js",
-    "watch:css": "./node_modules/.bin/node-sass src/client/css -o public -w & postcss -c ./postcss.config.js -w",
-    "start": "pm2 start ecosystem.config.js --env production",
+    "build:js": "webpack --env=production --progress --profile --colors",
+    "build:css": "yarn build:sass && yarn build:postcss",
+    "build:production": "yarn build:css && yarn build:js",
+    "watch:css": "./node_modules/.bin/node-sass -w src/client/css -o public/css & postcss -w -c ./postcss.config.js",
+    "start": "pm2 start --no-daemon ecosystem.config.js --env production",
     "lint": "./node_modules/.bin/eslint ./src",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "build:sass": "./node_modules/.bin/node-sass src/client/css -o public",
+    "build:sass": "./node_modules/.bin/node-sass src/client/css -o public/css",
     "build:postcss": "./node_modules/.bin/postcss -c ./postcss.config.js"
   },
   "repository": {
@@ -84,7 +84,8 @@
     "socket.io": "^1.7.2",
     "vision": "^4.1.0",
     "visionary": "^6.0.1",
-    "webpack": "^2.2.1"
+    "webpack": "^2.2.1",
+    "webpack-merge": "^3.0.0"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.7.1",
@@ -99,8 +100,7 @@
     "jest": "^17.0.3",
     "nodemon": "^1.10.0",
     "react-test-renderer": "^15.4.0",
-    "redux-mock-store": "^1.2.1",
-    "webpack-hot-middleware": "^2.13.2"
+    "redux-mock-store": "^1.2.1"
   },
   "jest": {
     "verbose": true
