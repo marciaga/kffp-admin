@@ -22,6 +22,8 @@ COPY package.json yarn.lock /opt/app/
 
 RUN yarn
 
+RUN yarn global add pm2
+
 # Copy app source code
 
 COPY . /opt/app
