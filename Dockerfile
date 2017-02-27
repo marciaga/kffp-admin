@@ -20,10 +20,14 @@ COPY package.json yarn.lock /opt/app/
 
 # Install dependencies
 
-RUN yarn
-
-RUN yarn global add pm2
+RUN \
+  yarn global add pm2 &&\
+  yarn
 
 # Copy app source code
 
 COPY . /opt/app
+
+RUN yarn build:production
+
+CMD ["yarn", "start"]

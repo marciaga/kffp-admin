@@ -10,5 +10,3 @@ RUN rm /etc/nginx/nginx.conf
 COPY nginx.conf /etc/nginx/
 
 COPY default.conf /etc/nginx/conf.d/
-
-# RUN service nginx restart

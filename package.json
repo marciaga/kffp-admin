@@ -4,18 +4,20 @@
   "description": "The admin, playlist manager, and API for Freeform Portland ",
   "main": "index.js",
   "scripts": {
+    "build:js": "NODE_ENV=production webpack --env=production --progress --profile --colors",
+    "build:css": "yarn build:sass && yarn build:postcss",
+    "build:sass": "./node_modules/.bin/node-sass src/client/css -o public/css",
+    "build:postcss": "./node_modules/.bin/postcss -c ./postcss.config.js",
+    "build:production": "yarn build:css && yarn build:js",
     "dev": "yarn watch:css & yarn dev:js",
     "dev:js": "./node_modules/.bin/nodemon -e js,hbs -w src --ignore src/client",
-    "build:js": "webpack --env=production --progress --profile --colors",
-    "build:css": "yarn build:sass && yarn build:postcss",
-    "build:production": "yarn build:css && yarn build:js",
-    "watch:css": "./node_modules/.bin/node-sass -w src/client/css -o public/css & postcss -w -c ./postcss.config.js",
-    "start": "pm2 start --no-daemon ecosystem.config.js --env production",
+    "docker:production": "docker-compose -f docker-compose.prod.yml up --build -d",
+    "docker:stop": "docker-compose down --remove-orphans",
     "lint": "./node_modules/.bin/eslint ./src",
+    "start": "pm2 start --no-daemon ecosystem.config.js --env production",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "build:sass": "./node_modules/.bin/node-sass src/client/css -o public/css",
-    "build:postcss": "./node_modules/.bin/postcss -c ./postcss.config.js"
+    "watch:css": "./node_modules/.bin/node-sass -w src/client/css -o public/css & postcss -w -c ./postcss.config.js"
   },
   "repository": {
     "url": "git+https://github.com/marciaga/playlist-v2.git",

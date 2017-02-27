@@ -5,13 +5,15 @@ services:
     image: marciaga/kffpadmin
     volumes:
       - .:/opt/app
+      - /opt/app/node_modules
+
     ports:
       - "3000:3000"
     links:
       - db
     environment:
       NODE_ENV: development
-    command: bash -c "yarn install && yarn dev"
+    command: yarn dev
     depends_on:
         - db
   db:

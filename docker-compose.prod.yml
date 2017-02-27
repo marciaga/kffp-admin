@@ -2,17 +2,13 @@ version: "3"
 services:
   web:
     build: .
-    image: marciaga/kffpadmin
-    volumes:
-      - ./:/opt/app
+    image: marciaga/kffp-admin
     ports:
       - "3000"
-    command: bash -c "yarn && yarn build:production && yarn start"
+    command: yarn start
     environment:
       NODE_ENV: production
     links:
-      - db
-    depends_on:
       - db
 
   db:
