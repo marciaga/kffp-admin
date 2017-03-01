@@ -1,20 +1,16 @@
 import React from 'react';
-import { Route, browserHistory } from 'react-router';
+import { Route } from 'react-router';
 import App from './components/index';
-import UserContainer from './components/users';
-
-const authCheck = () => {
-    const hasToken = localStorage.getItem('idToken') !== null;
-
-    if (!hasToken) {
-        return browserHistory.push('/');
-    }
-};
+import Users from './components/users';
+import Playlist from './components/playlist';
+import Shows from './components/shows';
 
 export default (
     <Route>
         <Route component={App} path='/'>
-            <Route component={UserContainer} path="/users" onEnter={authCheck} />
+            <Route component={Users} path="/users" />
+            <Route component={Playlist} path="/playlists" />
+            <Route component={Shows} path="/shows" />
         </Route>
     </Route>
 );

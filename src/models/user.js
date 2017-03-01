@@ -4,14 +4,16 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const userSchema = Joi.object().keys({
+    _id: Joi.string(),
     email: Joi.string().email().required(),
-    password: Joi.string().required(),
+    password: Joi.string(),
+    displayName: Joi.string().required(),
     role: Joi.string().required()
-}).and('email', 'password');
+});
 
 /* Route Handlers */
 const loginHandler = (request, reply) => {
-    const db = request.server.plugins['hapi-mongodb'].db;
+    const { db } = request.server.plugins['hapi-mongodb'];
     const password = request.payload.password;
 
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
@@ -31,7 +33,7 @@ const loginHandler = (request, reply) => {
 
 // Fetch all users
 const getUsers = (request, reply) => {
-    const db = request.server.plugins['hapi-mongodb'].db;
+    const { db } = request.server.plugins['hapi-mongodb'];
 
     db.collection('users').find({}, { password: 0 }, async (err, cursor) => {
         if (err) {
@@ -46,7 +48,7 @@ const getUsers = (request, reply) => {
 
 // CREATE user method
 const createUser = (request, reply) => {
-    const db = request.server.plugins['hapi-mongodb'].db;
+    const { db } = request.server.plugins['hapi-mongodb'];
 
     try {
         Joi.validate(request.payload, userSchema, (err, value) => {
@@ -61,7 +63,7 @@ const createUser = (request, reply) => {
         return reply(err);
     }
 
-    const { email, password, role } = request.payload;
+    const { email, password, role, displayName } = request.payload;
 
     hashPassword(password, (err, hash) => {
         if (err) {
@@ -69,6 +71,7 @@ const createUser = (request, reply) => {
         }
 
         db.collection('users').insert({
+            displayName: displayName,
             email: email,
             password: hash,
             role: role
@@ -99,7 +102,6 @@ const verifyToken = (request, reply) => {
 
         jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
             if (err) {
-                console.log(err.message);
                 // return error message to client
                 /*
                 err = {
@@ -108,7 +110,11 @@ const verifyToken = (request, reply) => {
                     expiredAt: 1408621000
                 }
                 */
-                return reply('something went wrong with that jwt');
+                const error = {
+                    ...err,
+                    code: 401
+                };
+                return reply(error);
             }
 
             return reply({ ...decoded, verified: true }).code(201);
@@ -119,7 +125,7 @@ const verifyToken = (request, reply) => {
 };
 
 const verifyCredentials = (request, reply) => {
-    const db = request.server.plugins['hapi-mongodb'].db;
+    const { db } = request.server.plugins['hapi-mongodb'];
     const password = request.payload.password;
 
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
@@ -159,7 +165,7 @@ const createToken = (user) => {
 };
 
 const verifyUniqueUser = (request, reply) => {
-    const db = request.server.plugins['hapi-mongodb'].db;
+    const { db } = request.server.plugins['hapi-mongodb'];
     const { email } = request.payload;
 
     db.collection('users').findOne({ $or: [{ email: email }] }, (err, user) => {
@@ -167,8 +173,78 @@ const verifyUniqueUser = (request, reply) => {
             return reply(Boom.create(401, 'Email already taken!'));
         }
 
-        return reply(req.payload);
+        return reply(request.payload);
     });
 }
 
-export { getUsers, verifyToken, createUser, loginHandler, verifyCredentials, verifyUniqueUser };
+const updateUser = (request, reply) => {
+    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const user = request.payload;
+
+    try {
+        Joi.validate(user, userSchema, (err, value) => {
+            // if value === null, object is valid
+            if (err) {
+                console.log(err);
+                throw Boom.badRequest(err);
+            }
+
+            return true;
+        });
+    } catch (err) {
+        return reply(err);
+    }
+
+    const userId = new ObjectID(user._id);
+    const { _id, ...fieldsToUpdate } = user;
+
+    db.collection('users').update({ _id: userId },
+        fieldsToUpdate,
+        (err, result) => {
+            if (err) {
+                return reply(Boom.internal('Internal MongoDB error', err));
+            }
+            // response, e.g. { ok: 1, nModified: 1, n: 1 }
+            const response = result.toJSON();
+            const { ok, nModified } = response;
+
+            if (ok && nModified) {
+                return reply({ success: true });
+            }
+
+            return reply({ success: false, message: 'Update was not successful' });
+        }
+    );
+};
+
+const deleteUser = (request, reply) => {
+    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { id } = request.query;
+    const userId = new ObjectID(id);
+
+    db.collection('users').remove({ _id: userId }, { justOne: true }, (err, result) => {
+        if (err) {
+            return reply(Boom.internal('Internal MongoDB error', err));
+        }
+        // result, e.g. { ok: 1, n: 0 }
+        const response = result.toJSON();
+        const { ok, n } = response;
+
+        if (ok && n) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    });
+};
+
+export {
+    getUsers,
+    verifyToken,
+    createUser,
+    updateUser,
+    deleteUser,
+    loginHandler,
+    verifyCredentials,
+    verifyUniqueUser
+};

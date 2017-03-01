@@ -1,0 +1,59 @@
+import {
+    getShows,
+    updateShow,
+    upsertShow,
+    removeShow
+} from '../../../models/shows';
+
+// get all shows
+const showRoutes = [
+    {
+        path: '/api/shows',
+        method: 'GET',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: getShows
+        }
+    },
+    // create a show
+    {
+        path: '/api/shows',
+        method: 'POST',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: upsertShow
+        }
+    },
+    // update a show
+    {
+        path: '/api/shows',
+        method: 'PUT',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: updateShow
+        }
+    },
+    // Delete a show
+    {
+        path: '/api/shows',
+        method: 'DELETE',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: removeShow
+        }
+    }
+];
+
+export default showRoutes;

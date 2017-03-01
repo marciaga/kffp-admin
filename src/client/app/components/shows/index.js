@@ -17,7 +17,7 @@ const mapStateToProps = (state) => {
     }
 };
 
-class Users extends Component {
+class Shows extends Component {
     constructor (props) {
         super(props);
 
@@ -31,7 +31,7 @@ class Users extends Component {
         this.props.dispatch(handleModal(showModal));
     }
 
-    componentWillReceiveProps (nextProps) {
+    componentWillReceiveProps(nextProps) {
         const { auth, routing } = nextProps;
         const { user } = auth;
         const { locationBeforeTransitions } = routing;
@@ -40,8 +40,7 @@ class Users extends Component {
             if (user.scope !== 'admin') {
                 return browserHistory.push('/');
             }
-
-            this.props.dispatch(setModel(user, 'users', 'show'));
+            this.props.dispatch(setModel(user, 'shows', 'show'));
         }
     }
 
@@ -50,8 +49,8 @@ class Users extends Component {
 
         return (
             <div>
-                <p>Add New User</p>
-                <FloatingActionButton onClick={() => this.handleClick('new', 'users')} secondary={true} style={{}}>
+                <p>Add New Show</p>
+                <FloatingActionButton onClick={() => this.handleClick('new', 'shows')} secondary={true} style={{}}>
                     <ContentAdd />
                 </FloatingActionButton>
                 <MainTable model={model} />
@@ -60,4 +59,4 @@ class Users extends Component {
     }
 }
 
-export default connect(mapStateToProps)(Users);
+export default connect(mapStateToProps)(Shows);
