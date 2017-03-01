@@ -1,3 +1,5 @@
+[![Build Status](https://semaphoreci.com/api/v1/freeformportland/kffp-admin/branches/master/badge.svg)](https://semaphoreci.com/freeformportland/kffp-admin)
+
 # Freeform Portland Admin Application and API
 
 ### Set Up Local Development Environment:
