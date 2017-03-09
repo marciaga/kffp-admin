@@ -6,8 +6,8 @@ module.exports = function () {
         entry: {},
         output: {
             path: path.join(__dirname, '../', 'public', 'js'),
-            publicPath: '/',
-            filename: '[name].js'
+            filename: '[name].js',
+            publicPath: '/js/'
         },
         resolve: {
             modules: [

@@ -1,3 +1,4 @@
+import path from 'path';
 import webpackConfig from '../../webpack.config.js';
 const DB_URL = `${process.env.DB_CONNECTION}/${process.env.DB_NAME}`;
 const webpackHotMiddleware = {
@@ -9,7 +10,11 @@ const webpackDevMiddleware = {
     plugin: {
         register: 'hapi-webpack-dev-middleware',
         options: {
-            config: webpackConfig(process.env.NODE_ENV)
+            config: webpackConfig(process.env.NODE_ENV),
+            options: {
+                path: '/',
+                publicPath: '/js/',
+            }
         }
     }
 };

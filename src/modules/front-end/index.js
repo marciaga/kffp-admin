@@ -1,9 +1,5 @@
-const isProd = process.env.NODE_ENV === 'production';
-
 const renderReactApp = (request, reply) => {
-    const assetPath = isProd ? '/js/' : '';
-
-    reply.view('app', { assetPath });
+    reply.view('app');
 };
 
 const renderStaticFiles = (request, reply) => {
