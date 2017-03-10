@@ -171,7 +171,7 @@ const updateTracks = async (request, reply) => {
         const { ok, nModified, n } = response;
 
         if (ok && nModified) {
-            return reply({ success: true });
+            return reply({ success: true, message: 'Song updated' });
         }
 
         if (ok && n) {

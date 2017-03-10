@@ -1,5 +1,6 @@
 import path from 'path';
 import webpackConfig from '../../webpack.config.js';
+
 const DB_URL = `${process.env.DB_CONNECTION}/${process.env.DB_NAME}`;
 const webpackHotMiddleware = {
     plugin: {
@@ -12,8 +13,7 @@ const webpackDevMiddleware = {
         options: {
             config: webpackConfig(process.env.NODE_ENV),
             options: {
-                path: '/',
-                publicPath: '/js/',
+                publicPath: '/js/'
             }
         }
     }
