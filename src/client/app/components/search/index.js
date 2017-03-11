@@ -1,11 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import ActionSearch from 'material-ui/svg-icons/action/search';
 import TextField from 'material-ui/TextField';
 import { searchInput, searchForm } from '../../actions/searchActions';
 
 const mapStateToProps = state => ({
     search: state.search
 });
+
+const searchIconStyles = {
+    position: 'relative',
+    top: '10px',
+    height: '30px',
+    width: '30px',
+    color: 'rgba(0, 0, 0, 0.298039)'
+};
 
 export class Search extends Component {
     constructor (props) {
@@ -31,9 +40,10 @@ export class Search extends Component {
         const errorMessage = false;
 
         return (
-            <div className="search-form">
+            <div className="search-form flex-horizontal-center col col-md-12">
                 <form onSubmit={this.handleSubmit}>
                     <div>
+                        <ActionSearch style={searchIconStyles} className="search-icon" />
                         <TextField
                             onChange={this.handleChange}
                             value={currentSearch}

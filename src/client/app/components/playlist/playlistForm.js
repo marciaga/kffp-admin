@@ -16,10 +16,10 @@ const PlaylistForm = (props) => {
     const { playlist, search, nowPlaying, dispatch } = props;
     const { currentPlaylist } = playlist;
     const { searchResults, currentSearch } = search;
-
+    {/* should be: show the search if flagged to do so */}
     if (currentPlaylist) {
         return (
-            <div className="playlist-wrapper">
+            <div className="playlist-wrapper row">
                 <h2>{currentPlaylist.dateSlug}</h2>
                 <Search />
                 {!!searchResults.length &&
@@ -43,7 +43,7 @@ const PlaylistForm = (props) => {
 
     return (
         <div>
-            <h2 className="h2">No Currently Selected Playlist</h2>
+            {/*<h2 className="h2">No Currently Selected Playlist</h2>*/}
         </div>
     );
 };

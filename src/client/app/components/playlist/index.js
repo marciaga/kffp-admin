@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Divider from 'material-ui/Divider';
 import PlaylistHistory from './list';
 import ShowHeader from './header';
 import PlaylistForm from './playlistForm';
@@ -36,25 +35,19 @@ class Playlist extends Component {
         return (
             <div className="playlist-main">
                 <div className="row">
-                    <div className="col col-md-12 col-sm-12">
+                    <div className="flex-horizontal-center col col-md-12 col-sm-12">
                         <ShowHeader currentShow={currentShow} />
                     </div>
                 </div>
                 <div className="row">
-                    {/* Main Buttons */}
-                    <ActionButtons
-                        showId={currentShow._id}
-                        slug={editUrl}
-                        dispatch={dispatch}
-                    />
-                    {/* playlist history */}
-                    <PlaylistHistory
-                        dispatch={dispatch}
-                        playlists={playlists}
-                    />
-                    <Divider />
-                    {/* playlist edit section */}
-                    <PlaylistForm />
+                        {/* Main Buttons */}
+                        <ActionButtons
+                            showId={currentShow._id}
+                            slug={editUrl}
+                            dispatch={dispatch}
+                        />
+                        {/* playlist edit section */}
+                        <PlaylistForm />
                 </div>
             </div>
         );

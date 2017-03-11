@@ -24,7 +24,7 @@ const App = (props) => {
                     dispatch={dispatch}
                 />
                 {isAuthenticated &&
-                    <div>
+                    <div className="main-container">
                         {props.children}
                         <Modal showModal={modal.showModal} dispatch={dispatch} />
                     </div>

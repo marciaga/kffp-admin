@@ -24,7 +24,7 @@ const ShowsAutoCompleteFilter = ({ dispatch, shows }) => {
 
     return (
         <AutoComplete
-            floatingLabelText="Start Typing to Find a Show"
+            floatingLabelText="Sub Playlist"
             filter={AutoComplete.fuzzyFilter}
             dataSource={showData}
             dataSourceConfig={dataSourceConfig}

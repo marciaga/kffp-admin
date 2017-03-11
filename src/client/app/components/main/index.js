@@ -28,10 +28,14 @@ class Main extends Component {
         const { shows, userShows } = show;
 
         return (
-            <div>
-                <h1>Select a show</h1>
-                <ShowSelect dispatch={dispatch} userShows={userShows} />
-                <ShowsAutoCompleteFilter dispatch={dispatch} shows={shows} />
+            <div className="row">
+                <h1 className="flex-horizontal-center col col-md-12">Select a show</h1>
+                <div className="flex-horizontal-center user-shows col col-md-6">
+                    <ShowSelect dispatch={dispatch} userShows={userShows} />
+                </div>
+                <div className="flex-horizontal-center col col-md-6">
+                    <ShowsAutoCompleteFilter dispatch={dispatch} shows={shows} />
+                </div>
             </div>
         );
     }

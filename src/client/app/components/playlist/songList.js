@@ -127,7 +127,10 @@ class SongList extends Component {
         const { _id } = currentPlaylist;
 
         return (
-            <div style={style}>
+            <div
+                className="col col-md-12 flex-horizontal-center"
+                style={style}
+            >
                 <RaisedButton
                     type="button"
                     onClick={this.onSaveOrder}
