@@ -1,23 +1,25 @@
 import React from 'react';
-import { Route, IndexRoute } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
 import App from './components/index';
 import Users from './components/users';
 import Playlist from './components/playlist';
+import PlaylistForm from './components/playlist/playlistForm';
 import Shows from './components/shows';
 import Main from './components/main';
 import Settings from './components/settings';
+import FourZeroFour from './components/error/404';
 
-export default (
-    <Route>
-        <Route component={App} path="/">
-            <IndexRoute component={Main} />
-            <Route component={Users} path="/users" />
-            <Route component={Playlist} path="/playlists">
-                <Route component={Playlist} path="/playlists/:slug" />
-                <Route component={Playlist} path="/playlists/edit/:slug" />
-            </Route>
-            <Route component={Shows} path="/shows" />
-            <Route component={Settings} path="/settings" />
+const AppRoutes = () => (
+    <Switch>
+        <Route component={App} exact path="/" />
+        <Route component={Users} path="/users" />
+        <Route component={Playlist} path="/playlists/:slug">
+            <Route component={PlaylistForm} path="/playlists/:slug/:id" />
         </Route>
-    </Route>
+        <Route component={Playlist} path="/playlists/edit/:slug" />
+        <Route component={Shows} path="/shows" />
+        <Route component={Settings} path="/settings" />
+    </Switch>
 );
+
+export default AppRoutes;

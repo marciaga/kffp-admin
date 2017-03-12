@@ -5,7 +5,7 @@ import {
     combineReducers
 } from 'redux';
 import thunk from 'redux-thunk';
-import { browserHistory } from 'react-router';
+import createHistory from 'history/createBrowserHistory'
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import reducers from './reducers';
 import authMiddleware from './middleware/authMiddleware';
@@ -13,12 +13,12 @@ import authMiddleware from './middleware/authMiddleware';
 const NODE_ENV = process.env.NODE_ENV;
 console.log('__NODE_ENV__', NODE_ENV);
 
-const storeFactory = (initialState) => {
+const storeFactory = (initialState, history) => {
     const rootReducer = combineReducers({
         ...reducers,
-        routing: routerReducer
+        router: routerReducer
     });
-    const middleware = [thunk, authMiddleware, routerMiddleware(browserHistory)];
+    const middleware = [thunk, authMiddleware, routerMiddleware(history)];
 
     const devToolComposition = compose(
         applyMiddleware(...middleware),
@@ -27,6 +27,7 @@ const storeFactory = (initialState) => {
 
     const factory = process.env.NODE_ENV !== 'production' ? devToolComposition : applyMiddleware(...middleware)(createStore);
     const store = factory(rootReducer, initialState);
+
     return store;
 };
 

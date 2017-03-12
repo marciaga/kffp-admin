@@ -47,7 +47,7 @@ class Playlist extends Component {
                             dispatch={dispatch}
                         />
                         {/* playlist edit section */}
-                        <PlaylistForm />
+                        {/* <PlaylistForm /> */}
                 </div>
             </div>
         );
