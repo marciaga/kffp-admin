@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
+import { push } from 'react-router-redux';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import MainTable from '../table';
@@ -12,23 +12,25 @@ const mapStateToProps = state => ({
     modal: state.modal,
     model: state.model,
     auth: state.auth,
-    routing: state.routing
+    router: state.router
 });
 
 class Shows extends Component {
     constructor (props) {
         super(props);
-
+        console.log('show constructor', props.router)
         this.handleClick = this.handleClick.bind(this);
     }
 
     componentWillReceiveProps (nextProps) {
+        console.log('current', this.props.router)
+        console.log('next', nextProps.router)
         const { auth } = nextProps;
         const { user } = auth;
 
         if (this.props.auth.user !== user) {
             if (user.scope !== 'admin') {
-                return browserHistory.push('/');
+                return this.props.dispatch(push('/'));
             }
             this.props.dispatch(setModel(user, 'shows', 'show'));
         }
@@ -44,6 +46,7 @@ class Shows extends Component {
     render () {
         const { model } = this.props;
 
+        console.log('show render', model)
         return (
             <div>
                 <p>Add New Show</p>

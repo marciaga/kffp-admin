@@ -11,7 +11,7 @@ const mapStateToProps = state => ({
 });
 
 const App = (props) => {
-    const { dispatch, auth, modal } = props;
+    const { dispatch, auth, modal, routes } = props;
     const { isAuthenticated, errorMessage, user } = auth;
 
     return (
@@ -25,7 +25,7 @@ const App = (props) => {
                 />
                 {isAuthenticated &&
                     <div className="main-container">
-                        {props.children}
+                        {routes}
                         <Modal showModal={modal.showModal} dispatch={dispatch} />
                     </div>
                 }

@@ -15,10 +15,9 @@ const mapStateToProps = state => ({
 
 class Playlist extends Component {
     componentWillReceiveProps (nextProps) {
-        const { auth, routing } = nextProps;
+        const { auth, location } = nextProps;
+        const { pathname } = location;
         const { user } = auth;
-        const { locationBeforeTransitions } = routing;
-        const { pathname } = locationBeforeTransitions;
 
         if (this.props.auth.user !== user && pathname) {
             this.props.dispatch(getShowPlaylists(pathname));

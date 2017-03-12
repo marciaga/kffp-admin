@@ -12,15 +12,22 @@ const mapStateToProps = state => ({
 
 class Main extends Component {
     componentWillReceiveProps (nextProps) {
+        console.log('prev props', this.props)
+        console.log('next props', nextProps)
         const { auth } = nextProps;
         const { user } = auth;
 
+        // console.log(this.props.auth.user)
+        // console.log(user)
+        /*
         if (this.props.auth.user !== user) {
             const { displayName } = user;
-
+            // this is getting called when it shouldn't be and probably other components doing this check as well
+            console.log('gonna do a dispatch')
             this.props.dispatch(getUserShows(displayName));
             this.props.dispatch(getAllShows());
         }
+        */
     }
 
     render () {

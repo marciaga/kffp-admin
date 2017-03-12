@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
     modal: state.modal,
     model: state.model,
     auth: state.auth,
-    routing: state.routing
+    router: state.router
 });
 
 class Users extends Component {
