@@ -13,9 +13,9 @@ export default (
         <Route component={App} path="/">
             <IndexRoute component={Main} />
             <Route component={Users} path="/users" />
+            <Route component={NotFound} path="/playlists/edit" />
             <Route component={Playlist} path="/playlists/:slug" />
             <Route component={Playlist} path="/playlists/:slug/:id" />
-            <Route component={Playlist} path="/playlists/edit/:slug" />
             <Route component={Shows} path="/shows" />
             <Route component={Settings} path="/settings" />
             <Route component={NotFound} path="*" />

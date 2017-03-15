@@ -127,56 +127,63 @@ class SongList extends Component {
         const { _id } = currentPlaylist;
 
         return (
-            <div
-                className="col col-md-12 flex-horizontal-center"
-                style={style}
-            >
-                <RaisedButton
-                    type="button"
-                    onClick={this.onSaveOrder}
-                    label="Save Track Order"
-                    backgroundColor="#111111"
-                    labelColor="#FFFFFF"
-                />
+            <div className="col col-md-12">
+                <div
+                    className="col col-md-12 flex-horizontal-center"
+                    style={{}}
+                >
+                    <RaisedButton
+                        type="button"
+                        label="Add New Track"
+                        onClick={this.addNewSong}
+                        backgroundColor="#111111"
+                        labelColor="#FFFFFF"
+                        className="playlist-action__button"
+                    />
 
-                <RaisedButton
-                    type="button"
-                    label="Add New Track"
-                    onClick={this.addNewSong}
-                    backgroundColor="#111111"
-                    labelColor="#FFFFFF"
-                />
+                    <RaisedButton
+                        type="button"
+                        onClick={this.onSaveOrder}
+                        label="Save Track Order"
+                        backgroundColor="#111111"
+                        labelColor="#FFFFFF"
+                        className="playlist-action__button"
+                    />
 
-                <RaisedButton
-                    type="button"
-                    label="Add Air Break"
-                    onClick={this.addAirBreak}
-                    backgroundColor="#111111"
-                    labelColor="#FFFFFF"
-                />
+                    <RaisedButton
+                        type="button"
+                        label="Add Air Break"
+                        onClick={this.addAirBreak}
+                        backgroundColor="#111111"
+                        labelColor="#FFFFFF"
+                        className="playlist-action__button"
+                    />
+                </div>
+                <div className="col col-md-12">
+                    {songs.map((song, i) => {
+                        const nowPlayingColor = this.setNowPlayingColor(
+                            currentlyPlayingSong.songId, song
+                        );
+                        // song: album, artist, track, releaseDate, id, images
+                        return (
+                            <div
+                                className="song-wrapper"
+                                key={song.id || cuid()}
+                            >
+                                <SongFormWrapper
+                                    index={i}
+                                    moveSong={this.moveSong}
+                                    playlistId={_id}
+                                    {...song}
+                                />
+                                <IconButton onClick={() => this.addToNowPlaying(song, _id)}>
+                                    <AvPlayCircleFilled color={nowPlayingColor} />
+                                </IconButton>
+                            </div>
+                        );
+                    })}
 
-                {songs.map((song, i) => {
-                    const nowPlayingColor = this.setNowPlayingColor(
-                        currentlyPlayingSong.songId, song
-                    );
-                    // song: album, artist, track, releaseDate, id, images
-                    return (
-                        <div
-                            className="song-wrapper"
-                            key={song.id || cuid()}
-                        >
-                            <SongFormWrapper
-                                index={i}
-                                moveSong={this.moveSong}
-                                playlistId={_id}
-                                {...song}
-                            />
-                            <IconButton onClick={() => this.addToNowPlaying(song, _id)}>
-                                <AvPlayCircleFilled color={nowPlayingColor} />
-                            </IconButton>
-                        </div>
-                    );
-                })}
+                </div>
             </div>
         );
     }

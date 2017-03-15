@@ -14,6 +14,12 @@ const mapStateToProps = state => ({
 });
 
 class Playlist extends Component {
+    constructor (props) {
+        super(props);
+
+        this.isEditPath = this.isEditPath.bind(this);
+    }
+
     componentWillReceiveProps (nextProps) {
         const { auth, routing } = nextProps;
         const { user } = auth;
@@ -25,12 +31,20 @@ class Playlist extends Component {
         }
     }
 
+    isEditPath (path) {
+        const ri = new RegExp('edit', 'i');
+
+        return ri.test(path);
+    }
+
     render () {
-        const { show, playlist, dispatch } = this.props;
+        const { show, playlist, dispatch, route, routeParams } = this.props;
         const { playlists } = playlist;
         const { currentShow } = show;
+        const { path } = route;
         const { slug } = currentShow;
-        const editUrl = slug ? `/playlists/edit/${slug}` : '';
+        
+        console.log(routeParams);
 
         return (
             <div className="playlist-main">
@@ -40,14 +54,17 @@ class Playlist extends Component {
                     </div>
                 </div>
                 <div className="row">
-                        {/* Main Buttons */}
-                        <ActionButtons
-                            showId={currentShow._id}
-                            slug={editUrl}
-                            dispatch={dispatch}
-                        />
-                        {/* playlist edit section */}
-                        <PlaylistForm />
+                    <ActionButtons
+                        showId={currentShow._id}
+                        dispatch={dispatch}
+                    />
+
+                    <PlaylistHistory
+                        dispatch={dispatch}
+                        playlists={playlists}
+                    />
+
+                    <PlaylistForm isEditPath={this.isEditPath(path)} />
                 </div>
             </div>
         );

@@ -3,8 +3,10 @@
         display: flex;
     }
 
-    .playlist-action-button {
-        margin: 10px;
+    .playlist-action {
+        &__button {
+            margin: 10px;
+        }
     }
 
     .playlist-wrapper {

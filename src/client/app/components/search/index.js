@@ -40,7 +40,7 @@ export class Search extends Component {
         const errorMessage = false;
 
         return (
-            <div className="search-form flex-horizontal-center col col-md-12">
+            <div className="col col-md-12 search-form flex-horizontal-center">
                 <form onSubmit={this.handleSubmit}>
                     <div>
                         <ActionSearch style={searchIconStyles} className="search-icon" />

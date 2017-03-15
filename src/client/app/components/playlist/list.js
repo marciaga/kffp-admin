@@ -1,41 +1,67 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
 import { List, ListItem } from 'material-ui/List';
 import AvQueueMusic from 'material-ui/svg-icons/av/queue-music';
 import { receivePlaylist } from '../../actions/playlistActions';
 import { setSongForm } from '../../actions/formActions';
+import { togglePlaylistDrawer } from '../../actions/uiActions';
 
-const clickHandler = (p, dispatch) => {
-    const { songs } = p;
+const mapStateToProps = (state) => ({
+    ui: state.ui
+});
 
-    dispatch(setSongForm(songs));
-    dispatch(receivePlaylist(p));
-};
+class PlaylistHistory extends Component {
+    constructor (props) {
+        super(props);
 
-const renderListItems = (playlists, dispatch) => {
-    if (!playlists.length) {
-        return;
+        this.clickHandler = this.clickHandler.bind(this);
+        this.renderListItems = this.renderListItems.bind(this);
     }
 
-    return (
-        playlists.map((p, i) => (
-            <ListItem
-                key={i}
-                primaryText={p.dateSlug}
-                leftIcon={<AvQueueMusic />}
-                onClick={() => clickHandler(p, dispatch)}
-            />
-        ))
-    );
-};
+    clickHandler (p, dispatch) {
+        const { playlistDrawer } = this.props;
+        const { songs } = p;
 
-const PlaylistHistory = ({ dispatch, playlists }) => (
-    <Paper className="col col-md-2 col-sm-12">
-        <h2 className="h2">Past Playlists</h2>
-        <List>
-            {renderListItems(playlists, dispatch)}
-        </List>
-    </Paper>
-);
+        dispatch(togglePlaylistDrawer(!playlistDrawer));
+        dispatch(setSongForm(songs));
+        dispatch(receivePlaylist(p));
+    }
 
-export default PlaylistHistory;
+    renderListItems (playlists, dispatch) {
+        if (!playlists.length) {
+            return;
+        }
+
+        return (
+            playlists.map((p, i) => (
+                <MenuItem
+                    key={i}
+                    primaryText={p.dateSlug}
+                    leftIcon={<AvQueueMusic />}
+                    onClick={() => this.clickHandler(p, dispatch)}
+                />
+            ))
+        );
+    }
+
+    render () {
+        const { dispatch, playlists, ui } = this.props;
+        const { playlistDrawer } = ui;
+
+        return (
+            <Drawer
+                docked={false}
+                width={200}
+                open={playlistDrawer}
+                onRequestChange={() => dispatch(togglePlaylistDrawer(playlistDrawer))}
+            >
+                {this.renderListItems(playlists, dispatch)}
+            </Drawer>
+        );
+    }
+}
+
+export default connect(mapStateToProps)(PlaylistHistory);

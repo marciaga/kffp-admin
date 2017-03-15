@@ -4,22 +4,23 @@ import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import RaisedButton from 'material-ui/RaisedButton';
 import { push } from 'react-router-redux';
 import { addNewPlaylist } from '../../actions/playlistActions';
+import { togglePlaylistDrawer } from '../../actions/uiActions';
 
-const ActionButtons = ({ dispatch, slug, showId }) => (
+const ActionButtons = ({ dispatch, showId }) => (
     <div className="flex-horizontal-center col col-md-12 col-sm-12">
         <RaisedButton
             onClick={() => dispatch(addNewPlaylist(showId))}
             label="Make Playlist"
             secondary={true}
             icon={<ContentAdd />}
-            className="playlist-action-button"
+            className="playlist-action__button"
         />
         <RaisedButton
-            onClick={() => dispatch(push(slug))}
+            onClick={() => dispatch(togglePlaylistDrawer(false))}
             label="Edit Past Playlists"
             secondary={true}
             icon={<EditorModeEdit />}
-            className="playlist-action-button"
+            className="playlist-action__button"
         />
     </div>
 );

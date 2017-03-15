@@ -12,15 +12,19 @@ const mapStateToProps = state => ({
     nowPlaying: state.nowPlaying
 });
 
+const showCurrentPlaylist = (obj) => {
+    return obj ? Object.keys(obj).length > 1 : false;
+};
+
 const PlaylistForm = (props) => {
-    const { playlist, search, nowPlaying, dispatch } = props;
+    const { playlist, search, nowPlaying, dispatch, isEditPath } = props;
     const { currentPlaylist } = playlist;
     const { searchResults, currentSearch } = search;
-    {/* should be: show the search if flagged to do so */}
-    if (currentPlaylist) {
+
+    if (showCurrentPlaylist(currentPlaylist)) {
         return (
             <div className="playlist-wrapper row">
-                <h2>{currentPlaylist.dateSlug}</h2>
+                <h1 className="col col-md-12 flex-horizontal-center">{currentPlaylist.dateSlug}</h1>
                 <Search />
                 {!!searchResults.length &&
                     <SearchResults
