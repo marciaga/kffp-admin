@@ -20,12 +20,10 @@ const shows = {
                 label: 'Day of the Week',
                 name: 'select',
                 hintText: 'Select a Day of the Week',
-                items: daysOfWeek.map(d => {
-                    return {
-                        label: d,
-                        value: d
-                    }
-                })
+                items: daysOfWeek.map(d => ({
+                    label: d,
+                    value: d
+                }))
             },
             startTime: {
                 fieldType: 'Time',
@@ -41,6 +39,12 @@ const shows = {
                 fieldType: 'ToggleField',
                 label: 'Active Show?',
                 value: true // default toggled
+            },
+            slug: {
+                fieldType: 'Text',
+                name: 'text',
+                label: 'Slug',
+                hintText: 'Enter the show slug'
             }
         }
     },
@@ -63,6 +67,9 @@ const shows = {
             },
             isActive: {
                 label: 'Active'
+            },
+            slug: {
+                label: 'Slug'
             }
         }
     },
@@ -88,12 +95,10 @@ const shows = {
                 label: 'Day of the Week',
                 name: 'select',
                 hintText: 'Select a Day of the Week',
-                items: daysOfWeek.map(d => {
-                    return {
-                        label: d,
-                        value: d
-                    }
-                })
+                items: daysOfWeek.map(d => ({
+                    label: d,
+                    value: d
+                }))
             },
             startTime: {
                 fieldType: 'Time',
@@ -109,6 +114,12 @@ const shows = {
                 fieldType: 'ToggleField',
                 label: 'Active Show?',
                 value: true // default toggled
+            },
+            slug: {
+                fieldType: 'Text',
+                name: 'text',
+                label: 'Slug',
+                disabled: true
             }
         }
     }
@@ -125,7 +136,7 @@ const users = {
             },
             email: {
                 fieldType: 'Text',
-                name: 'email_field',
+                name: 'text',
                 hintText: 'Enter Email Address',
                 label: 'Email'
             },
@@ -140,12 +151,10 @@ const users = {
                 label: 'User Role',
                 name: 'select',
                 hintText: 'Select a User Role',
-                items: userRoles.map(r => {
-                    return {
-                        label: r,
-                        value: r
-                    }
-                })
+                items: userRoles.map(r => ({
+                    label: r,
+                    value: r
+                }))
             }
         }
     },
@@ -175,7 +184,7 @@ const users = {
             },
             email: {
                 fieldType: 'Text',
-                name: 'email_field',
+                name: 'text',
                 hintText: 'Enter Email Address',
                 label: 'Email'
             },
@@ -184,25 +193,60 @@ const users = {
                 label: 'User Role',
                 name: 'select',
                 hintText: 'Select a User Role',
-                items: userRoles.map(r => {
-                    return {
-                        label: r,
-                        value: r
-                    }
-                })
+                items: userRoles.map(r => ({
+                    label: r,
+                    value: r
+                }))
+            }
+        }
+    },
+    settings: {
+        fields: {
+            oldPassword: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Enter your current password'
+            },
+            newPasswordFirst: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Enter your new password'
+            },
+            newPasswordSecond: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Enter your new password again'
             }
         }
     }
 };
 
-const playlist = {
+export const playlistFields = {
     fields: {
-
+        track: {
+            label: 'Track Name',
+            name: 'track',
+            hintText: 'Enter the track name'
+        },
+        artist: {
+            label: 'Artist Name',
+            name: 'artist',
+            hintText: 'Enter the artist name'
+        },
+        album: {
+            label: 'Album Name',
+            name: 'album',
+            hintText: 'Enter the album name'
+        },
+        releaseDate: {
+            label: 'Release Date',
+            name: 'releaseDate',
+            hintText: 'Enter the release date'
+        }
     }
 };
 
 export default {
     shows,
-    users,
-    playlist
+    users
 };

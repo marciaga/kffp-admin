@@ -8,18 +8,14 @@ import {
     TableRow,
     TableRowColumn
 } from 'material-ui/Table';
-import TextField from 'material-ui/TextField';
-import Toggle from 'material-ui/Toggle';
-import { TableConfig } from './TableConfig';
+import TableConfig from './tableConfig';
 import { setUpdateFormData } from '../../actions/formActions';
 import { showOrHideModal } from '../../actions/modalActions';
 
-const mapStateToProps = (state) => {
-    return {
-        tableConfig: TableConfig,
-        model: state.model
-    }
-};
+const mapStateToProps = state => ({
+    tableConfig: TableConfig,
+    model: state.model
+});
 
 class MainTable extends Component {
     constructor (props) {
@@ -29,6 +25,34 @@ class MainTable extends Component {
         this.renderTableBody = this.renderTableBody.bind(this);
         this.renderTableRowCell = this.renderTableRowCell.bind(this);
         this.handleRowSelection = this.handleRowSelection.bind(this);
+        this.sortDisplayData = this.sortDisplayData.bind(this);
+    }
+
+    sortDisplayData (data) {
+        if (!data) {
+            return [];
+        }
+
+        const { fields } = this.props.model;
+        const keys = Object.keys(fields);
+
+        return data.map(m =>
+            keys.reduce((memo, v) => {
+                memo[v] = m[v];
+                return memo;
+            }, {})
+        );
+    }
+
+    handleRowSelection (selectedRows) {
+        if (selectedRows.length) {
+            const modelName = this.props.model.name;
+            const rowIndex = selectedRows[0];
+            const rowData = this.props.model.data[rowIndex];
+
+            this.props.dispatch(setUpdateFormData('edit', modelName, rowData));
+            this.props.dispatch(showOrHideModal(true));
+        }
     }
 
     renderTableHeader () {
@@ -44,47 +68,34 @@ class MainTable extends Component {
                 >
                     {label}
                 </TableHeaderColumn>
-            )
+            );
         });
     }
 
     renderTableBody () {
         const { model } = this.props;
-        const tableData = model.data;
+        const tableData = this.sortDisplayData(model.data);
 
-        return tableData.map((item, index) => {
-            return (
-                <TableRow
-                    key={index}
-                    selected={item.selected}
-                >
-                    {this.renderTableRowCell(item)}
-                </TableRow>
-            )
-        });
+        return tableData.map((item, index) => (
+            <TableRow
+                key={index}
+                selected={item.selected}
+            >
+                {this.renderTableRowCell(item)}
+            </TableRow>
+        ));
     }
 
     renderTableRowCell (item) {
         return Object.keys(item).map((r, i) => {
-            if (r !== '_id') { // don't display the id
-                const value = item[r];
+            const value = item[r];
 
-                return (
-                    <TableRowColumn key={i}>
-                        <span>{value}</span>
-                    </TableRowColumn>
-                )
-            }
+            return (
+                <TableRowColumn key={i}>
+                    <span>{value}</span>
+                </TableRowColumn>
+            );
         });
-    }
-
-    handleRowSelection (selectedRows) {
-        if (selectedRows.length) {
-            const rowIndex = selectedRows[0];
-            const rowData = this.props.model.data[rowIndex];
-            this.props.dispatch(setUpdateFormData('edit', 'users', rowData));
-            this.props.dispatch(showOrHideModal(true));
-        }
     }
 
     render () {
@@ -93,20 +104,20 @@ class MainTable extends Component {
 
         return (
             <Table
-            height={'300px'}
-            fixedHeader={tableConfig.fixedHeader}
-            fixedFooter={tableConfig.fixedFooter}
-            selectable={tableConfig.selectable}
-            multiSelectable={tableConfig.multiSelectable}
-            onRowSelection={this.handleRowSelection}
+                height={'300px'}
+                fixedHeader={tableConfig.fixedHeader}
+                fixedFooter={tableConfig.fixedFooter}
+                selectable={tableConfig.selectable}
+                multiSelectable={tableConfig.multiSelectable}
+                onRowSelection={this.handleRowSelection}
             >
                 <TableHeader
                     displaySelectAll={tableConfig.displaySelectAll}
                     adjustForCheckbox={tableConfig.adjustForCheckbox}
                     enableSelectAll={tableConfig.enableSelectAll}
-                    >
+                >
                     <TableRow>
-                        <TableHeaderColumn colSpan={colSpan} style={{textAlign: 'center'}}>
+                        <TableHeaderColumn colSpan={colSpan} style={{ textAlign: 'center' }}>
                             <h1 className="">{model.name}</h1>
                         </TableHeaderColumn>
                     </TableRow>

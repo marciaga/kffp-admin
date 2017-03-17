@@ -1,11 +1,12 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Router, createRoutes, browserHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux'
+import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
-import rawRoutes from './client/app/routes';
-import storeFactory from 'app/configureStore';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import rawRoutes from './client/app/routes';
+import storeFactory from './client/app/configureStore';
+
 const initialState = {};
 const store = storeFactory(initialState);
 const history = syncHistoryWithStore(browserHistory, store);

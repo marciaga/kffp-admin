@@ -1,0 +1,15 @@
+.playlist-main {
+    .song-wrapper {
+        display: flex;
+    }
+
+    .playlist-action {
+        &__button {
+            margin: 10px;
+        }
+    }
+
+    .playlist-wrapper {
+        width: 100%;
+    }
+}

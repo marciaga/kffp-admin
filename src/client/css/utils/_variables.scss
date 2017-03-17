@@ -1,0 +1,31 @@
+$fonts: (
+
+    // e.g. font(family, sans);
+
+    family: (
+        sans: #{'Roboto', sans-serif},
+        // serif: #{'Crimson Text', serif},
+    ),
+
+    // e.g. font(size, small);
+
+    size: (
+        base:    10px,
+        xx-small: 1rem,
+        x-small: 1.1rem,
+        small:   1.3rem,
+        regular: 1.4rem,
+        medium:  1.7rem,
+        large: 2.2rem,
+        x-large:   2.8rem,
+        xx-large: 3.6rem
+    ),
+
+    // e.g. font(weight, regular);
+
+    weight: (
+        regular: 400,
+        medium: 500,
+        bold: 700
+    )
+);

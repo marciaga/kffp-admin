@@ -1,11 +1,19 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import ActionSearch from 'material-ui/svg-icons/action/search';
+import TextField from 'material-ui/TextField';
 import { searchInput, searchForm } from '../../actions/searchActions';
 
-const mapStateToProps = (state) => {
-    return {
-        currentSearch: state.search.currentSearch
-    };
+const mapStateToProps = state => ({
+    search: state.search
+});
+
+const searchIconStyles = {
+    position: 'relative',
+    top: '10px',
+    height: '30px',
+    width: '30px',
+    color: 'rgba(0, 0, 0, 0.298039)'
 };
 
 export class Search extends Component {
@@ -21,27 +29,32 @@ export class Search extends Component {
     }
 
     handleSubmit (e) {
-        const { currentSearch } = this.props;
+        const { currentSearch } = this.props.search;
+
         e.preventDefault();
         this.props.dispatch(searchForm(currentSearch));
     }
 
     render () {
-        const { currentSearch } = this.props;
+        const { currentSearch } = this.props.search;
         const errorMessage = false;
 
         return (
-            <div>
+            <div className="col col-md-12 search-form flex-horizontal-center">
                 <form onSubmit={this.handleSubmit}>
-                    <div className='mdl-textfield mdl-js-textfield'>
-                        <input type='text' value={currentSearch} onChange={this.handleChange} className='mdl-textfield__input' id='search-input'/>
-                        <label className='mdl-textfield__label' htmlFor='search-input'>Enter Search Query</label>
+                    <div>
+                        <ActionSearch style={searchIconStyles} className="search-icon" />
+                        <TextField
+                            onChange={this.handleChange}
+                            value={currentSearch}
+                            floatingLabelText={'Enter a search and press enter'}
+                            hintText={'Enter a search and press enter'}
+                        />
                     </div>
-                    <button type='submit' className='mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent'>Search</button>
                 </form>
 
                 {errorMessage &&
-                  <p>{errorMessage}</p>
+                    <p>{errorMessage}</p>
                 }
             </div>
         );
@@ -49,7 +62,6 @@ export class Search extends Component {
 }
 
 Search.propTypes = {
-    search: PropTypes.object,
     dispatch: PropTypes.func.isRequired
 };
 

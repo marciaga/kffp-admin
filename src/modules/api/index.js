@@ -1,13 +1,15 @@
-import Boom from 'boom';
-import { userSearchHandler } from '../../models/search';
-import Playlist from '../../models/playlist';
+import userSearchHandler from '../../models/search';
 import showRoutes from './routes/shows';
 import userRoutes from './routes/users';
+import playlistRoutes from './routes/playlists';
+import nowPlayingRoutes from './routes/nowPlaying';
 
-exports.register = function (server, options, next) {
+exports.register = (server, options, next) => {
     // register routes
     showRoutes.map(r => server.route(r));
     userRoutes.map(r => server.route(r));
+    playlistRoutes.map(r => server.route(r));
+    nowPlayingRoutes.map(r => server.route(r));
 
     // users search endpoint for autocomplete
     server.route({
@@ -19,26 +21,6 @@ exports.register = function (server, options, next) {
                 scope: ['admin']
             },
             handler: userSearchHandler
-        }
-    });
-
-    // refactor this
-    server.route({
-        method: 'POST',
-        path: '/api/v1/playlist/{id}',
-        handler: (request, reply) => {
-            const { showId, title, description, img } = request.payload;
-
-            Playlist.create(showId, title, description, img, (err, playlist) => {
-                if (err) {
-                    return reply(Boom.wrap(err));
-                }
-
-                return reply({
-                    success: true,
-                    playlist: playlist
-                });
-            });
         }
     });
 

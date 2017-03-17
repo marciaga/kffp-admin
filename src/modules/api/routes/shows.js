@@ -1,3 +1,4 @@
+import Joi from 'joi';
 import {
     getShows,
     updateShow,
@@ -5,15 +6,21 @@ import {
     removeShow
 } from '../../../models/shows';
 
-// get all shows
 const showRoutes = [
     {
         path: '/api/shows',
         method: 'GET',
         config: {
+            validate: {
+                query: {
+                    isActive: Joi.boolean(),
+                    users: Joi.string()
+                }
+            },
             auth: {
                 strategy: 'jwt',
-                scope: ['admin']
+                scope: ['admin', 'dj'],
+                mode: 'optional'
             },
             handler: getShows
         }

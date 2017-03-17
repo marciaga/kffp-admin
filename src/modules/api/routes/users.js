@@ -6,7 +6,9 @@ import {
     verifyToken,
     getUsers,
     updateUser,
-    deleteUser
+    deleteUser,
+    updateUserField,
+    verifyPassword
 } from '../../../models/user';
 
 const userRoutes = [
@@ -44,6 +46,20 @@ const userRoutes = [
                 scope: ['admin']
             },
             handler: updateUser
+        }
+    },
+    {
+        path: '/api/users/{id}',
+        method: 'PATCH',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            pre: [
+                { method: verifyPassword, assign: 'result' }
+            ],
+            handler: updateUserField
         }
     },
     {

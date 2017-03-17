@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import cuid from 'cuid';
-import FormFields from './fields';
 import RaisedButton from 'material-ui/RaisedButton';
 import { prepareFormSubmit, deleteForm } from '../../actions/formActions';
+import FormFields from './fields';
 
-const mapStateToProps = (state) => {
-    return {
-        form: state.form,
-        model: state.model
-    }
-};
+const mapStateToProps = state => ({
+    form: state.form,
+    model: state.model
+});
 
 class Form extends Component {
     constructor (props) {
@@ -23,10 +20,43 @@ class Form extends Component {
         this.deleteHandler = this.deleteHandler.bind(this);
     }
 
+    submitHandler (e) {
+        e.preventDefault();
+        const { formType, modelName } = this.props.form;
+        // TODO perform validation
+        this.props.dispatch(prepareFormSubmit(formType, modelName));
+    }
+
+    deleteHandler (id) {
+        if (!window.confirm('Are you sure you want to delete this show?')) {
+            return;
+        }
+
+        const { modelName } = this.props.form;
+
+        this.props.dispatch(deleteForm(id, modelName));
+    }
+
+    renderFormFields (fields) {
+        return Object.keys(fields).map((field, i) => (
+            <div key={i}>
+                {this.renderField(fields[field], field)}
+            </div>
+        ));
+    }
+
     renderField (fieldData, fieldName) {
         const { dispatch } = this.props;
-
-        const { fieldType, hintText, label, name, items, value, searchResults } = fieldData;
+        const {
+            fieldType,
+            hintText,
+            label,
+            name,
+            items,
+            value,
+            searchResults,
+            disabled
+        } = fieldData;
         const FormField = FormFields[fieldType];
 
         if (FormField) {
@@ -41,48 +71,21 @@ class Form extends Component {
                     items={items}
                     searchResults={searchResults}
                     dispatch={dispatch}
+                    disabled={disabled}
                 />
             );
-        } else {
-            return (
-                <div>No matching field.</div>
-            );
         }
-    }
 
-    renderFormFields (fields) {
-        return Object.keys(fields).map((field, i) => {
-            return (
-                <div key={i}>
-                    {this.renderField(fields[field], field)}
-                </div>
-            )
-        });
-    }
-
-    submitHandler (e) {
-        e.preventDefault();
-        const { formType, modelName } = this.props.form
-        // TODO perform validation
-        this.props.dispatch(prepareFormSubmit(formType, modelName));
-    }
-
-    deleteHandler (id) {
-        if (!window.confirm('Are you sure you want to delete this show?')) {
-            return;
-        }
-        const { modelName } = this.props.form;
-
-        this.props.dispatch(deleteForm(id, modelName));
+        return (
+            <div>No matching field.</div>
+        );
     }
 
     renderErrors (errors) {
         if (errors.length) {
-            return errors.map((err, i) => {
-                return (
-                    <p key={i}>{err}</p>
-                )
-            });
+            return errors.map((err, i) => (
+                <p key={i}>{err}</p>
+            ));
         }
     }
 
@@ -114,6 +117,6 @@ class Form extends Component {
             </div>
         );
     }
-};
+}
 
 export default connect(mapStateToProps)(Form);

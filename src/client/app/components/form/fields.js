@@ -24,8 +24,14 @@ class Text extends Component {
     }
 
     render () {
-        const { id, name, label, value, hintText, fieldName } = this.props;
-        const fieldType = fieldName === 'password' ? 'password' : 'text';
+        const {
+            id,
+            name,
+            label,
+            value,
+            hintText,
+            disabled
+        } = this.props;
 
         return (
             <TextField
@@ -35,17 +41,16 @@ class Text extends Component {
                 value={value || ''}
                 hintText={hintText}
                 onChange={this.handleTextFieldChange}
-                type={fieldType}
+                type={name}
+                disabled={disabled}
             />
-        )
+        );
     }
 }
 
-const Hidden = ({ value }) => {
-    return (
-        <input type="hidden" value={value} />
-    )
-};
+const Hidden = ({ value }) => (
+    <input type="hidden" value={value} />
+);
 
 const ToggleField = ({ dispatch, fieldName, label, value }) => {
     const styles = {
@@ -56,16 +61,16 @@ const ToggleField = ({ dispatch, fieldName, label, value }) => {
     const handleToggle = () => {
         const toggledValue = !value;
 
-        dispatch(updateFormField(fieldName, toggledValue ));
+        dispatch(updateFormField(fieldName, toggledValue));
     };
 
     return (
         <div style={styles.block}>
             <Toggle
-              label={label}
-              defaultToggled={value}
-              onToggle={handleToggle}
-              style={{}}
+                label={label}
+                defaultToggled={value}
+                onToggle={handleToggle}
+                style={{}}
             />
         </div>
     );
@@ -76,14 +81,14 @@ const Time = ({ dispatch, fieldName, hintText, value }) => {
         const selectedHours = date.getHours();
 
         dispatch(updateFormField(fieldName, selectedHours));
-    }
+    };
 
-    value = hoursToDateObj(value);
+    const val = hoursToDateObj(value);
     return (
         <TimePicker
             format="ampm"
             hintText={hintText}
-            value={value}
+            value={val}
             onChange={handleTimePickerChange}
         />
     );
@@ -92,16 +97,14 @@ const Time = ({ dispatch, fieldName, hintText, value }) => {
 const Select = ({ dispatch, fieldName, label, value, items }) => {
     const renderItems = (list) => {
         if (list) {
-            return list.map((item, i) => {
-                return (
-                    <MenuItem key={i} value={item.value} primaryText={item.label} />
-                );
-            });
+            return list.map((item, i) => (
+                <MenuItem key={i} value={item.value} primaryText={item.label} />
+            ));
         }
     };
 
-    const selectChangeHandler = (event, index, value) => {
-        dispatch(updateFormField(fieldName, value));
+    const selectChangeHandler = (event, index, val) => {
+        dispatch(updateFormField(fieldName, val));
     };
 
     return (
@@ -132,7 +135,6 @@ class AutoCompleteField extends Component {
 
     handleInputUpdate (text) {
         this.debounceInputField(text);
-
     }
 
     handleSelection (selected) {
@@ -146,17 +148,15 @@ class AutoCompleteField extends Component {
             return [];
         }
 
-        return results.map(r => {
+        return results.map((r) => {
             const itemText = `${r.displayName} | ${r.email}`;
 
             return {
                 text: r.displayName,
                 value: (
-                  <MenuItem
-                    primaryText={itemText}
-                  />
+                    <MenuItem primaryText={itemText} />
                 )
-            }
+            };
         });
     }
 
@@ -165,15 +165,13 @@ class AutoCompleteField extends Component {
             return [];
         }
 
-        return items.map((item, i) => {
-            return (
-                <ListItem
-                    key={i}
-                    primaryText={item}
-                    leftIcon={<Album />}
-                />
-            )
-        });
+        return items.map((item, i) => (
+            <ListItem
+                key={i}
+                primaryText={item}
+                leftIcon={<Album />}
+            />
+        ));
     }
 
     render () {
@@ -194,13 +192,13 @@ class AutoCompleteField extends Component {
                     />
                 </div>
                 <div>
-                    <p style={{marginBottom:0}}>DJ(s) Assigned to This Show:</p>
+                    <p style={{ marginBottom: 0 }}>DJ(s) Assigned to This Show:</p>
                     <List>
                         {this.renderListItems(value)}
                     </List>
                 </div>
             </div>
-        )
+        );
     }
 }
 

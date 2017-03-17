@@ -6,24 +6,39 @@ import {
     FORM_SUCCESS,
     SUBMIT_ERROR,
     TOGGLE_MODAL,
-    DELETE_MODEL
+    DELETE_MODEL,
+    SET_SONG_FORM,
+    UPDATE_SONG_FORM,
+    UPDATE_USER_SETTINGS_FIELD,
+    SNACKBAR_MESSAGE,
+    CLEAR_INPUT_FIELDS
 } from '../constants';
 import { updateModelData } from './modelActions';
 import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
+import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 import Models from '../data';
 
-const updateFormField = (fieldName, value) => {
-    return {
-        type: UPDATE_FORM_FIELD,
-        data: {
-            fieldName,
-            value
-        }
+const updateFormField = (fieldName, value) => ({
+    type: UPDATE_FORM_FIELD,
+    data: {
+        fieldName,
+        value
     }
-};
+});
+
+const receiveFormData = data => ({
+    type: SET_FORM_FIELDS,
+    data
+});
+
+const updateSongForm = data => ({
+    type: UPDATE_SONG_FORM,
+    data
+});
+
 
 const setUpdateFormData = (formType, modelName, data) => {
-    const fields = Models[modelName][formType]['fields'];
+    const fields = Models[modelName][formType].fields;
 
     const newFields = Object.keys(fields).reduce((memo, v) => {
         memo[v] = fields[v];
@@ -41,29 +56,29 @@ const setUpdateFormData = (formType, modelName, data) => {
 };
 
 const setFormData = (formType, modelName) => {
-    const fields = Models[modelName][formType]['fields'];
+    const fields = Models[modelName][formType].fields;
     const formMetadata = {
         fields,
         modelName,
         formType
     };
-
+    // TODO see if we can live without this
     if (formType === 'new') {
-
         return receiveFormData(formMetadata);
     }
 };
 
-const receiveFormData = (data) => {
-    return {
-        type: SET_FORM_FIELDS,
-        data
+const receiveUserAutocomplete = data => ({
+    type: SET_USER_AUTOCOMPLETE,
+    data: {
+        autocompleteResults: data
     }
-};
+});
+
 
 const getUserAutoComplete = (text) => {
     const url = `${API_ENDPOINT}/search/users?text=${text}`;
-    const idToken = localStorage.getItem('idToken');
+    const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {
         try {
@@ -80,34 +95,37 @@ const getUserAutoComplete = (text) => {
     };
 };
 
-const receiveUserAutocomplete = (data) => {
-    return {
-        type: SET_USER_AUTOCOMPLETE,
-        data: {
-            autocompleteResults: data
-        }
-    }
-};
 // write a test for this!
-const addUsersToShow = (data) => {
-    return (dispatch, getState) => {
-        const { form } = getState();
-        const { fields } = form;
-        const { users } = fields;
-        const { value } = users;
+const addUsersToShow = data => (dispatch, getState) => {
+    const { form } = getState();
+    const { fields } = form;
+    const { users } = fields;
+    const { value } = users;
 
-        if (value && Array.isArray(value)) {
-            const nextValue = [...value, data];
-            return dispatch(updateFormField('users', nextValue));
-        }
-
-        const firstValue = [data];
-        dispatch(updateFormField('users', firstValue));
+    if (value && Array.isArray(value)) {
+        const nextValue = [...value, data];
+        return dispatch(updateFormField('users', nextValue));
     }
+
+    const firstValue = [data];
+    dispatch(updateFormField('users', firstValue));
 };
+
+
+const formSubmitError = message => ({
+    type: SUBMIT_ERROR,
+    data: {
+        message
+    }
+});
+
+const receiveFormResult = data => ({
+    type: FORM_SUCCESS,
+    data
+});
 
 const prepareFormSubmit = (type, modelName) => {
-    const idToken = localStorage.getItem('idToken');
+    const idToken = getTokenFromLocalStorage();
     const method = formTypesToHttpVerbs[type];
     const formUrl = `${API_ENDPOINT}/${modelName}`;
 
@@ -127,7 +145,6 @@ const prepareFormSubmit = (type, modelName) => {
             });
 
             if (data.code === 401) {
-                console.log(data.message)
                 return dispatch(formSubmitError(data.message));
             }
 
@@ -146,36 +163,22 @@ const prepareFormSubmit = (type, modelName) => {
         } catch (err) {
             console.log(err);
         }
-    }
-};
-
-const receiveFormResult = (data) => {
-    return {
-        type: FORM_SUCCESS,
-        data: data
-    };
-};
-
-const formSubmitError = (message) => {
-    return {
-        type: SUBMIT_ERROR,
-        data: {
-            message: message
-        }
     };
 };
 
 const deleteForm = (id, modelName) => {
     const url = `${API_ENDPOINT}/${modelName}?id=${id}`;
-    const idToken = localStorage.getItem('idToken');
+    const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {
         try {
-            const { data } = await axios.delete(url, {
+            const { data } = await axios.delete(url, { // TODO data is not used
                 headers: {
                     Authorization: `Bearer ${idToken}`
                 }
             });
+
+            console.log(data);
 
             dispatch({
                 type: DELETE_MODEL,
@@ -183,9 +186,6 @@ const deleteForm = (id, modelName) => {
                     id
                 }
             });
-
-
-
         } catch (err) {
             console.log(err);
         }
@@ -196,15 +196,57 @@ const deleteForm = (id, modelName) => {
                 showModal: false
             }
         });
-    }
+    };
 };
+
+const clearInputFields = () => ({ type: CLEAR_INPUT_FIELDS });
+
+const updateUserPassword = (obj) => {
+    const { name, fields, id } = obj;
+    const url = `${API_ENDPOINT}/users/${id}`;
+    const idToken = getTokenFromLocalStorage();
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.patch(url, { name, fields }, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+            const message = data.success ? 'Update was successful!' : 'Update Failed.';
+
+            dispatch(clearInputFields());
+
+            dispatch({
+                type: SNACKBAR_MESSAGE,
+                data: { message }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    };
+};
+
+const updateUserSettingsInput = data => ({
+    type: UPDATE_USER_SETTINGS_FIELD,
+    data
+});
+
+const setSongForm = songs => ({
+    type: SET_SONG_FORM,
+    data: songs
+});
 
 export {
     prepareFormSubmit,
     setFormData,
+    setSongForm,
+    updateSongForm,
     updateFormField,
     getUserAutoComplete,
     addUsersToShow,
     setUpdateFormData,
-    deleteForm
+    deleteForm,
+    updateUserSettingsInput,
+    updateUserPassword
 };

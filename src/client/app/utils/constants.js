@@ -1,4 +1,4 @@
-export const API_URL = 'https://api.spotify.com/v1/search';
+export const API_URL = 'https://api.spotify.com/v1';
 export const API_OFFSET = 0;
 export const API_LIMIT = 20;
 export const API_RESULT_TYPE = 'track';
@@ -13,3 +13,9 @@ export const formTypesToHttpVerbs = {
     new: 'post',
     edit: 'put'
 };
+
+export const NOW_PLAYING_ACTIVE = '#1DE9B6';
+export const NOW_PLAYING_COLOR = '#111111';
+export const NOW_PLAYING_PLAYED = '#E0E0E0';
+
+export const SHOWS_AUTOCOMPLETE_FILTER_LIMIT = 5;

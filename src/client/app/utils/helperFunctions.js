@@ -1,13 +1,13 @@
 const debounce = (func, wait, immediate) => {
     let timeout;
 
-    return function () {
-        const args = arguments;
+    return function debouncify (...args) {
+        const params = args;
         const later = () => {
             timeout = null;
 
             if (!immediate) {
-                func.apply(this, args);
+                func.apply(this, params);
             }
         };
         const callNow = immediate && !timeout;
@@ -16,7 +16,7 @@ const debounce = (func, wait, immediate) => {
         timeout = setTimeout(later, wait);
 
         if (callNow) {
-            func.apply(this, args);
+            func.apply(this, params);
         }
     };
 };
@@ -33,6 +33,10 @@ const hoursToDateObj = (hours) => {
     return date;
 };
 
+const getTokenFromLocalStorage = () => (
+    window.localStorage ? localStorage.getItem('idToken') : null
+);
+
 // sorts objects by object keys ; data is an object
 const sortObjectsByKey = (data) => {
     if (!data) {
@@ -45,4 +49,26 @@ const sortObjectsByKey = (data) => {
     }, {});
 };
 
-export { debounce, hoursToDateObj, sortObjectsByKey };
+const generateBlankSongData = () => ({
+    album: '',
+    artist: '',
+    images: [],
+    releaseDate: '',
+    track: ''
+});
+// returns slug from pathname
+const cleanPathname = (pathname) => {
+    const blacklist = ['edit']; // words you don't want to return
+    const splitPath = pathname.split('/').filter(item => blacklist.indexOf(item) === -1);
+
+    return splitPath.join('/');
+};
+
+export {
+    debounce,
+    hoursToDateObj,
+    sortObjectsByKey,
+    getTokenFromLocalStorage,
+    generateBlankSongData,
+    cleanPathname
+};
