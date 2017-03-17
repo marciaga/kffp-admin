@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
     nowPlaying: state.nowPlaying
 });
 
-const showCurrentPlaylist = (obj) => {
+const shouldShowCurrentPlaylist = (obj) => {
     return obj ? Object.keys(obj).length > 1 : false;
 };
 
@@ -21,7 +21,7 @@ const PlaylistForm = (props) => {
     const { currentPlaylist } = playlist;
     const { searchResults, currentSearch } = search;
 
-    if (showCurrentPlaylist(currentPlaylist)) {
+    if (shouldShowCurrentPlaylist(currentPlaylist)) {
         return (
             <div className="playlist-wrapper row">
                 <h1 className="col col-md-12 flex-horizontal-center">{currentPlaylist.dateSlug}</h1>

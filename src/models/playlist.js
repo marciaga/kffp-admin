@@ -23,10 +23,16 @@ const playlistSchema = Joi.object().keys({
 const getPlaylists = async (db, show) => {
     const showId = show._id.toString();
 
-    return await db.collection('playlists').find({
-        showId
-    })
-    .toArray();
+    try {
+        const result = await db.collection('playlists').find({
+            showId
+        })
+        .toArray();
+
+        return result;
+    } catch (e) {
+        console.log(e);
+    }
 };
 
 const getShow = async (db, slug) => (
