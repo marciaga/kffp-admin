@@ -1,6 +1,12 @@
 .playlist-main {
     .song-wrapper {
         display: flex;
+        justify-content: center;
+
+        .song-item {
+            min-width: 550px;
+            max-width: 550px;
+        }
     }
 
     .playlist-action {

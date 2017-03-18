@@ -84,7 +84,9 @@ class SongForm extends Component {
                 <Divider />
                 <form onSubmit={this.submitHandler}>
                     {this.renderFormFields(currentSong)}
-                    <RaisedButton type="submit" label="Submit Track Info" />
+                    <div>
+                        <RaisedButton type="submit" label="Submit Track Info" />
+                    </div>
                 </form>
                 <IconButton
                     onClick={() => this.deleteSong(currentSong, playlistId)}
