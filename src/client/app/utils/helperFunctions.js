@@ -64,11 +64,28 @@ const cleanPathname = (pathname) => {
     return splitPath.join('/');
 };
 
+const pathHasPlaylistDate = (path) => {
+    const re = /[a-z]/i;
+    const lastSegment = path.split('/').pop();
+
+    return !re.test(lastSegment);
+};
+
+const removeDateFromPath = (path) => {
+    const pathParts = path.split('/');
+
+    pathParts.pop();
+
+    return pathParts.join('/');
+};
+
 export {
     debounce,
     hoursToDateObj,
     sortObjectsByKey,
     getTokenFromLocalStorage,
     generateBlankSongData,
-    cleanPathname
+    cleanPathname,
+    pathHasPlaylistDate,
+    removeDateFromPath
 };

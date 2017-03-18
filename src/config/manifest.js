@@ -1,5 +1,4 @@
-import path from 'path';
-import webpackConfig from '../../webpack.config.js';
+import webpackConfig from '../../webpack.config';
 
 const DB_URL = `${process.env.DB_CONNECTION}/${process.env.DB_NAME}`;
 const webpackHotMiddleware = {

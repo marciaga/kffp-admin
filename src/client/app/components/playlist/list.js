@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Paper from 'material-ui/Paper';
+import { push } from 'react-router-redux';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
-import { List, ListItem } from 'material-ui/List';
 import AvQueueMusic from 'material-ui/svg-icons/av/queue-music';
 import { receivePlaylist } from '../../actions/playlistActions';
 import { setSongForm } from '../../actions/formActions';
 import { togglePlaylistDrawer } from '../../actions/uiActions';
+import {
+    pathHasPlaylistDate,
+    removeDateFromPath
+} from '../../utils/helperFunctions';
 
-const mapStateToProps = (state) => ({
-    ui: state.ui
+const mapStateToProps = state => ({
+    ui: state.ui,
+    routing: state.routing,
+    playlist: state.playlist
 });
 
 class PlaylistHistory extends Component {
@@ -22,9 +27,18 @@ class PlaylistHistory extends Component {
     }
 
     clickHandler (p, dispatch) {
-        const { playlistDrawer } = this.props;
-        const { songs } = p;
+        const { playlistDrawer, routing } = this.props;
+        const { songs, dateSlug } = p;
+        const {
+            locationBeforeTransitions: {
+                pathname = '/'
+            }
+        } = routing;
+        const path = pathHasPlaylistDate(pathname) ?
+            `${removeDateFromPath(pathname)}/${dateSlug}` :
+            `${pathname}/${dateSlug}`;
 
+        dispatch(push(path));
         dispatch(togglePlaylistDrawer(!playlistDrawer));
         dispatch(setSongForm(songs));
         dispatch(receivePlaylist(p));

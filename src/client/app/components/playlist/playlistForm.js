@@ -12,12 +12,10 @@ const mapStateToProps = state => ({
     nowPlaying: state.nowPlaying
 });
 
-const shouldShowCurrentPlaylist = (obj) => {
-    return obj ? Object.keys(obj).length > 1 : false;
-};
+const shouldShowCurrentPlaylist = obj => (obj ? Object.keys(obj).length > 1 : false);
 
 const PlaylistForm = (props) => {
-    const { playlist, search, nowPlaying, dispatch, isEditPath } = props;
+    const { playlist, search, nowPlaying, dispatch } = props;
     const { currentPlaylist } = playlist;
     const { searchResults, currentSearch } = search;
 
@@ -47,7 +45,7 @@ const PlaylistForm = (props) => {
 
     return (
         <div>
-            {/*<h2 className="h2">No Currently Selected Playlist</h2>*/}
+            {/* <h2 className="h2">No Currently Selected Playlist</h2> */}
         </div>
     );
 };

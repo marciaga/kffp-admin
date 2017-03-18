@@ -44,6 +44,7 @@ const getShow = async (db, slug) => (
 // TODO this needs to be limited so we don't fetch everything at once
 const getPlaylistsByShow = async (request, reply) => {
     const { db } = request.server.plugins.mongodb;
+    // dateSlug is sometimes available on request.params
     const { slug } = request.params;
 
     try {

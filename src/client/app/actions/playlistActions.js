@@ -1,7 +1,8 @@
 import axios from 'axios';
 import {
     getTokenFromLocalStorage,
-    cleanPathname
+    cleanPathname,
+    pathHasPlaylistDate
 } from '../utils/helperFunctions';
 import { API_ENDPOINT } from '../utils/constants';
 import { getShow } from './showActions';
@@ -62,6 +63,13 @@ const getShowPlaylists = pathname => async (dispatch) => {
 
         dispatch(getShow(show));
         dispatch(receivePlaylists(playlists));
+        // if there's a date slug, set the current Playlist
+        if (pathHasPlaylistDate(path)) {
+            const date = path.split('/').pop();
+            const playlist = playlists.find(p => p.dateSlug === date);
+
+            dispatch(receivePlaylist(playlist));
+        }
     } catch (err) {
         console.log(err);
     }

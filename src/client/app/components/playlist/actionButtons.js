@@ -2,7 +2,6 @@ import React from 'react';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import RaisedButton from 'material-ui/RaisedButton';
-import { push } from 'react-router-redux';
 import { addNewPlaylist } from '../../actions/playlistActions';
 import { togglePlaylistDrawer } from '../../actions/uiActions';
 

@@ -21,10 +21,6 @@ import {
 import { setSongForm } from '../../actions/formActions';
 import { updateNowPlaying } from '../../actions/nowPlayingActions';
 
-const style = {
-    width: 500
-};
-
 class SongList extends Component {
     constructor (props) {
         super(props);
@@ -128,10 +124,7 @@ class SongList extends Component {
 
         return (
             <div className="col col-md-12">
-                <div
-                    className="col col-md-12 flex-horizontal-center"
-                    style={{}}
-                >
+                <div className="col col-md-12 flex-horizontal-center">
                     <RaisedButton
                         type="button"
                         label="Add New Track"
