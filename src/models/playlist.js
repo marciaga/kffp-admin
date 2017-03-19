@@ -126,17 +126,16 @@ const createPlaylist = async (request, reply) => {
 };
 
 const addTrack = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { db } = request.server.plugins.mongodb;
 
     try {
         const track = request.payload;
         const { playlistId } = request.params;
-        const id = new ObjectID(playlistId);
 
         track.id = cuid();
 
         const result = await db.collection('playlists').update(
-            { _id: id },
+            { playlistId },
             {
                 $push: {
                     songs: {
@@ -165,13 +164,16 @@ const addTrack = async (request, reply) => {
 };
 
 const updateTracks = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { db } = request.server.plugins.mongodb;
 
     try {
         const track = request.payload;
         const { playlistId } = request.params;
         const result = await db.collection('playlists').update(
-            { _id: ObjectID(playlistId), 'songs.id': track.id },
+            {
+                playlistId,
+                'songs.id': track.id
+            },
             { $set: { 'songs.$': track } }
         );
 
@@ -193,18 +195,47 @@ const updateTracks = async (request, reply) => {
     }
 };
 
+const updatePlaylistField = async (request, reply) => {
+    const { db } = request.server.plugins.mongodb;
+
+    try {
+        const data = request.payload;
+        const field = data ? Object.keys(data).shift() : '';
+        const { playlistId } = request.params;
+        const result = await db.collection('playlists').update(
+            { playlistId },
+            { $set: { [field]: data[field] } }
+        );
+
+        const response = result.toJSON();
+        const { ok, nModified, n } = response;
+
+        if (ok && nModified) {
+            return reply({ success: true, message: `${field} was updated` });
+        }
+
+        if (ok && n) {
+            return reply({ success: false, message: 'Document was unchanged' });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    } catch (err) {
+        console.log(err);
+        return reply(err);
+    }
+};
+
 const updateTrackOrder = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { db } = request.server.plugins.mongodb;
 
     try {
         const payload = request.payload;
         // don't save any airbreaks
         const tracks = payload.filter(o => !o.airBreak);
         const { playlistId } = request.params;
-        const id = new ObjectID(playlistId);
 
         const result = await db.collection('playlists').update(
-            { _id: id },
+            { playlistId },
             { $set: { songs: tracks } }
         );
 
@@ -223,14 +254,13 @@ const updateTrackOrder = async (request, reply) => {
 };
 
 const deleteTrackFromPlaylist = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { db } = request.server.plugins.mongodb;
 
     try {
         const { playlistId, trackId } = request.params;
-        const pid = new ObjectID(playlistId);
 
         const result = await db.collection('playlists').update(
-            { _id: pid }, { $pull: { songs: { id: trackId } } });
+            { playlistId }, { $pull: { songs: { id: trackId } } });
 
         const response = result.toJSON();
         // { ok: 1, nModified: 1, n: 1 }
@@ -252,6 +282,7 @@ export {
     createPlaylist,
     addTrack,
     updateTracks,
+    updatePlaylistField,
     updateTrackOrder,
     deleteTrackFromPlaylist
 };

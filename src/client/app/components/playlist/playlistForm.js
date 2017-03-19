@@ -1,9 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import DatePicker from 'material-ui/DatePicker';
 import Search from '../search';
 import SearchResults from '../search/searchResults';
 import SongList from './songList';
+import { updatePlaylistDate } from '../../actions/playlistActions';
 
 const mapStateToProps = state => ({
     auth: state.auth,
@@ -15,19 +17,31 @@ const mapStateToProps = state => ({
 
 const shouldShowCurrentPlaylist = obj => (obj ? Object.keys(obj).length > 1 : false);
 
+const handleDateChange = (u, { date, playlistId }, dispatch) =>
+    dispatch(updatePlaylistDate(date, playlistId));
+
 const PlaylistForm = (props) => {
     const { playlist, search, nowPlaying, dispatch } = props;
     const { currentPlaylist } = playlist;
     const { searchResults, currentSearch } = search;
 
     if (shouldShowCurrentPlaylist(currentPlaylist)) {
-        const { playlistDate } = currentPlaylist;
-        const formattedDate = moment.utc(playlistDate).format('MMMM Do, YYYY');
+        const { playlistDate, playlistId } = currentPlaylist;
+        const dateObj = moment.utc(playlistDate);
+        const formattedDate = dateObj.format('MMMM Do, YYYY');
 
         return (
             <div className="playlist-wrapper row">
-                <h1 className="col col-md-12 flex-horizontal-center">{formattedDate}</h1>
+                <DatePicker
+                    className="col col-md-12 flex-horizontal-center date-input"
+                    id="playlist-date"
+                    value={dateObj.toDate()}
+                    formatDate={() => formattedDate}
+                    onChange={(u, date) => handleDateChange(u, { date, playlistId }, dispatch)}
+                />
+
                 <Search />
+
                 {!!searchResults.length &&
                     <SearchResults
                         searchResults={searchResults}
@@ -35,6 +49,7 @@ const PlaylistForm = (props) => {
                         dispatch={dispatch}
                     />
                 }
+
                 {!searchResults.length &&
                     <SongList
                         currentPlaylist={currentPlaylist}

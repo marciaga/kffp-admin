@@ -120,7 +120,7 @@ class SongList extends Component {
         const { songs } = this.state;
         const { nowPlaying, currentPlaylist } = this.props;
         const currentlyPlayingSong = nowPlaying.song;
-        const { _id } = currentPlaylist;
+        const { playlistId } = currentPlaylist;
 
         return (
             <div className="col col-md-12">
@@ -166,12 +166,12 @@ class SongList extends Component {
                                 <SongFormWrapper
                                     index={i}
                                     moveSong={this.moveSong}
-                                    playlistId={_id}
+                                    playlistId={playlistId}
                                     {...song}
                                 />
                                 <IconButton
                                     tooltip="Click to set as Now Playing"
-                                    onClick={() => this.addToNowPlaying(song, _id)}
+                                    onClick={() => this.addToNowPlaying(song, playlistId)}
                                 >
                                     <AvPlayCircleFilled color={nowPlayingColor} />
                                 </IconButton>

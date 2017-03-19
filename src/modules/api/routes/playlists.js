@@ -4,6 +4,7 @@ import {
     addTrack,
     updateTracks,
     updateTrackOrder,
+    updatePlaylistField,
     deleteTrackFromPlaylist
 } from '../../../models/playlist';
 
@@ -46,6 +47,17 @@ const playlistRoutes = [
     },
     {
         path: '/api/playlists/{playlistId}',
+        method: 'PATCH',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin', 'dj']
+            },
+            handler: updatePlaylistField
+        }
+    },
+    {
+        path: '/api/playlists/{playlistId}/tracks',
         method: 'PATCH',
         config: {
             auth: {

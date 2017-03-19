@@ -16,6 +16,7 @@ import {
     CLEAR_SEARCH_RESULTS,
     REORDER_SONGS,
     UPDATE_PLAYLIST_SONGS,
+    UPDATE_PLAYLIST_FIELD,
     RESET_CURRENT_PLAYLIST
 } from '../constants';
 
@@ -80,9 +81,43 @@ const receiveSongs = data => ({
     data
 });
 
-const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
+const receivePlaylistFieldUpdate = data => ({
+    type: UPDATE_PLAYLIST_FIELD,
+    data
+});
+
+const updatePlaylistDate = (date, playlistId) => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
     const url = `${API_ENDPOINT}/playlists/${playlistId}`;
+    const isoDate = date.toISOString();
+    const payload = { playlistDate: isoDate };
+
+    try {
+        const { data } = await axios.patch(url, payload, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        const { success, message } = data;
+
+        if (success) {
+            dispatch(snackbarMessage(message));
+
+            return dispatch(receivePlaylistFieldUpdate({ playlistId,
+                playlistDate: isoDate
+            }));
+        }
+
+        dispatch(snackbarMessage(message));
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
+    const idToken = getTokenFromLocalStorage();
+    const url = `${API_ENDPOINT}/playlists/${playlistId}/tracks`;
     const songData = song;
 
     try {
@@ -224,5 +259,6 @@ export {
     updatePlaylistSong,
     deleteSongFromPlaylist,
     receiveSongs,
-    resetCurrentPlaylist
+    resetCurrentPlaylist,
+    updatePlaylistDate
 };

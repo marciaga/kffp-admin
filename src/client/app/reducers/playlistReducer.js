@@ -6,7 +6,8 @@ import {
     ADD_TRACK,
     DELETE_TRACK,
     REORDER_SONGS,
-    RESET_CURRENT_PLAYLIST
+    RESET_CURRENT_PLAYLIST,
+    UPDATE_PLAYLIST_FIELD
 } from '../constants';
 
 const initialState = {
@@ -71,6 +72,24 @@ export default function playlistReducer (state = initialState, action) {
     case UPDATE_PLAYLIST_SONGS:
         return {
             ...state // TODO @ma: this should actually replace the old song
+        };
+
+    case UPDATE_PLAYLIST_FIELD:
+        const { playlistDate, playlistId } = action.data;
+
+        return {
+            ...state,
+            currentPlaylist: {
+                ...state.currentPlaylist,
+                playlistDate
+            },
+            playlists: state.playlists.map((p) => {
+                if (p.playlistId === playlistId) {
+                    p.playlistDate = playlistDate;
+                }
+
+                return p;
+            })
         };
 
     case REORDER_SONGS:
