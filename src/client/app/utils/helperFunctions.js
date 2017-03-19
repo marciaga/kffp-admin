@@ -64,14 +64,9 @@ const cleanPathname = (pathname) => {
     return splitPath.join('/');
 };
 
-const pathHasPlaylistDate = (path) => {
-    const re = /[a-z]/i;
-    const lastSegment = path.split('/').pop();
+const pathHasPlaylistId = path => path.split('/').length === 4;
 
-    return !re.test(lastSegment);
-};
-
-const removeDateFromPath = (path) => {
+const removePlaylistIdFromPath = (path) => {
     const pathParts = path.split('/');
 
     pathParts.pop();
@@ -86,6 +81,6 @@ export {
     getTokenFromLocalStorage,
     generateBlankSongData,
     cleanPathname,
-    pathHasPlaylistDate,
-    removeDateFromPath
+    pathHasPlaylistId,
+    removePlaylistIdFromPath
 };

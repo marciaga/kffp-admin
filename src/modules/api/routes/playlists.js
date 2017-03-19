@@ -9,7 +9,7 @@ import {
 
 const playlistRoutes = [
     {
-        path: '/api/playlists/{slug}/{dateSlug?}',
+        path: '/api/playlists/{slug}/{playlistId?}',
         method: 'GET',
         config: {
             validate: {

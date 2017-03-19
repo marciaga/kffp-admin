@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import moment from 'moment';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import AvQueueMusic from 'material-ui/svg-icons/av/queue-music';
@@ -8,8 +9,8 @@ import { receivePlaylist } from '../../actions/playlistActions';
 import { setSongForm } from '../../actions/formActions';
 import { togglePlaylistDrawer } from '../../actions/uiActions';
 import {
-    pathHasPlaylistDate,
-    removeDateFromPath
+    pathHasPlaylistId,
+    removePlaylistIdFromPath
 } from '../../utils/helperFunctions';
 
 const mapStateToProps = state => ({
@@ -28,15 +29,15 @@ class PlaylistHistory extends Component {
 
     clickHandler (p, dispatch) {
         const { playlistDrawer, routing } = this.props;
-        const { songs, dateSlug } = p;
+        const { songs, playlistId } = p;
         const {
             locationBeforeTransitions: {
                 pathname = '/'
             }
         } = routing;
-        const path = pathHasPlaylistDate(pathname) ?
-            `${removeDateFromPath(pathname)}/${dateSlug}` :
-            `${pathname}/${dateSlug}`;
+        const path = pathHasPlaylistId(pathname) ?
+            `${removePlaylistIdFromPath(pathname)}/${playlistId}` :
+            `${pathname}/${playlistId}`;
 
         dispatch(push(path));
         dispatch(togglePlaylistDrawer(!playlistDrawer));
@@ -50,14 +51,19 @@ class PlaylistHistory extends Component {
         }
 
         return (
-            playlists.map((p, i) => (
-                <MenuItem
-                    key={i}
-                    primaryText={p.dateSlug}
-                    leftIcon={<AvQueueMusic />}
-                    onClick={() => this.clickHandler(p, dispatch)}
-                />
-            ))
+            playlists.map((p, i) => {
+                const { playlistDate } = p;
+                const formattedDate = moment.utc(playlistDate).format('MM-DD-YYYY');
+
+                return (
+                    <MenuItem
+                        key={i}
+                        primaryText={formattedDate}
+                        leftIcon={<AvQueueMusic />}
+                        onClick={() => this.clickHandler(p, dispatch)}
+                    />
+                );
+            })
         );
     }
 

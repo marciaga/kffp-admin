@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import Search from '../search';
 import SearchResults from '../search/searchResults';
 import SongList from './songList';
@@ -20,9 +21,12 @@ const PlaylistForm = (props) => {
     const { searchResults, currentSearch } = search;
 
     if (shouldShowCurrentPlaylist(currentPlaylist)) {
+        const { playlistDate } = currentPlaylist;
+        const formattedDate = moment.utc(playlistDate).format('MMMM Do, YYYY');
+
         return (
             <div className="playlist-wrapper row">
-                <h1 className="col col-md-12 flex-horizontal-center">{currentPlaylist.dateSlug}</h1>
+                <h1 className="col col-md-12 flex-horizontal-center">{formattedDate}</h1>
                 <Search />
                 {!!searchResults.length &&
                     <SearchResults

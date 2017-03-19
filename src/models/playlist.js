@@ -2,6 +2,7 @@ import Joi from 'joi';
 import Boom from 'boom';
 import moment from 'moment';
 import cuid from 'cuid';
+import shortid from 'shortid';
 
 const songSchema = {
     id: Joi.string(),
@@ -15,8 +16,8 @@ const songSchema = {
 const playlistSchema = Joi.object().keys({
     _id: Joi.string(),
     showId: Joi.string().required(),
-    showDateTime: Joi.date().iso().required(),
-    dateSlug: Joi.string().required(),
+    playlistDate: Joi.date().iso().required(),
+    playlistId: Joi.string().required(),
     songs: Joi.array().items(Joi.object(songSchema))
 });
 
@@ -44,7 +45,7 @@ const getShow = async (db, slug) => (
 // TODO this needs to be limited so we don't fetch everything at once
 const getPlaylistsByShow = async (request, reply) => {
     const { db } = request.server.plugins.mongodb;
-    // dateSlug is sometimes available on request.params
+    // playlistId is sometimes available on request.params
     const { slug } = request.params;
 
     try {
@@ -65,20 +66,20 @@ const getPlaylistsByShow = async (request, reply) => {
 const createPlaylist = async (request, reply) => {
     const { db } = request.server.plugins.mongodb;
     const now = moment();
-    const showDateTime = now.toISOString();
-    const dateSlug = now.format('Y[-]MM[-]DD');
+    const playlistDate = now.toISOString();
+    const playlistId = shortid.generate();
     const { showId } = request.payload;
 
     const newPlaylist = {
         showId,
-        showDateTime,
-        dateSlug,
+        playlistDate,
+        playlistId,
         songs: []
     };
 
     try {
         const result = await db.collection('playlists').find({
-            dateSlug,
+            playlistId,
             showId
         }).toArray();
 
