@@ -169,7 +169,10 @@ class SongList extends Component {
                                     playlistId={_id}
                                     {...song}
                                 />
-                                <IconButton onClick={() => this.addToNowPlaying(song, _id)}>
+                                <IconButton
+                                    tooltip="Click to set as Now Playing"
+                                    onClick={() => this.addToNowPlaying(song, _id)}
+                                >
                                     <AvPlayCircleFilled color={nowPlayingColor} />
                                 </IconButton>
                             </div>

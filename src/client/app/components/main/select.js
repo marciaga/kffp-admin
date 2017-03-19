@@ -25,7 +25,7 @@ const ShowSelect = ({ dispatch, userShows }) => {
 
     return (
         <SelectField
-            floatingLabelText={'DJ Playlist'}
+            floatingLabelText={'My Shows'}
             onChange={selectChangeHandler}
         >
             { renderItems(userShows) }
