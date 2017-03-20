@@ -14,6 +14,7 @@
     "docker:production": "docker-compose -f docker-compose.prod.yml up --build -d",
     "docker:stop": "docker-compose down --remove-orphans",
     "lint": "./node_modules/.bin/eslint ./src",
+    "import:legacy": "babel-node bin/import",
     "start": "pm2 start --no-daemon ecosystem.config.js --env production",
     "test": "jest",
     "test:coverage": "jest --coverage",
@@ -36,7 +37,7 @@
   "homepage": "https://github.com/marciaga/playlist-v2#readme",
   "dependencies": {
     "axios": "^0.13.1",
-    "babel": "^6.5.2",
+    "babel-cli": "^6.24.0",
     "babel-core": "^6.13.2",
     "babel-loader": "^6.3.2",
     "babel-plugin-syntax-async-functions": "^6.13.0",
