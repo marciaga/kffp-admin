@@ -110,6 +110,7 @@ const loginUser = (creds) => {
             dispatch(getAllShows());
             dispatch(getUserShows(displayName));
             dispatch(receiveLogin(data));
+            dispatch(push('/'));
         } catch (err) {
             const error = { ...err };
             const message = error.response.data.message;

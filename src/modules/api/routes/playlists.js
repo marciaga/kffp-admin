@@ -4,12 +4,14 @@ import {
     addTrack,
     updateTracks,
     updateTrackOrder,
-    deleteTrackFromPlaylist
+    updatePlaylistField,
+    deleteTrackFromPlaylist,
+    deletePlaylist
 } from '../../../models/playlist';
 
 const playlistRoutes = [
     {
-        path: '/api/playlists/{slug}',
+        path: '/api/playlists/{slug}/{playlistId?}',
         method: 'GET',
         config: {
             validate: {
@@ -46,6 +48,28 @@ const playlistRoutes = [
     },
     {
         path: '/api/playlists/{playlistId}',
+        method: 'PATCH',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin', 'dj']
+            },
+            handler: updatePlaylistField
+        }
+    },
+    {
+        path: '/api/playlists/{playlistId}',
+        method: 'DELETE',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin', 'dj']
+            },
+            handler: deletePlaylist
+        }
+    },
+    {
+        path: '/api/playlists/{playlistId}/tracks',
         method: 'PATCH',
         config: {
             auth: {

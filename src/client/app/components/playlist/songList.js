@@ -21,10 +21,6 @@ import {
 import { setSongForm } from '../../actions/formActions';
 import { updateNowPlaying } from '../../actions/nowPlayingActions';
 
-const style = {
-    width: 500
-};
-
 class SongList extends Component {
     constructor (props) {
         super(props);
@@ -124,14 +120,11 @@ class SongList extends Component {
         const { songs } = this.state;
         const { nowPlaying, currentPlaylist } = this.props;
         const currentlyPlayingSong = nowPlaying.song;
-        const { _id } = currentPlaylist;
+        const { playlistId } = currentPlaylist;
 
         return (
             <div className="col col-md-12">
-                <div
-                    className="col col-md-12 flex-horizontal-center"
-                    style={{}}
-                >
+                <div className="col col-md-12 flex-horizontal-center">
                     <RaisedButton
                         type="button"
                         label="Add New Track"
@@ -173,10 +166,13 @@ class SongList extends Component {
                                 <SongFormWrapper
                                     index={i}
                                     moveSong={this.moveSong}
-                                    playlistId={_id}
+                                    playlistId={playlistId}
                                     {...song}
                                 />
-                                <IconButton onClick={() => this.addToNowPlaying(song, _id)}>
+                                <IconButton
+                                    tooltip="Click to set as Now Playing"
+                                    onClick={() => this.addToNowPlaying(song, playlistId)}
+                                >
                                     <AvPlayCircleFilled color={nowPlayingColor} />
                                 </IconButton>
                             </div>

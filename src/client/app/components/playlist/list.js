@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Paper from 'material-ui/Paper';
+import { push } from 'react-router-redux';
+import moment from 'moment';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
-import { List, ListItem } from 'material-ui/List';
 import AvQueueMusic from 'material-ui/svg-icons/av/queue-music';
 import { receivePlaylist } from '../../actions/playlistActions';
 import { setSongForm } from '../../actions/formActions';
 import { togglePlaylistDrawer } from '../../actions/uiActions';
+import {
+    pathHasPlaylistId,
+    removePlaylistIdFromPath
+} from '../../utils/helperFunctions';
 
-const mapStateToProps = (state) => ({
-    ui: state.ui
+const mapStateToProps = state => ({
+    ui: state.ui,
+    routing: state.routing,
+    playlist: state.playlist
 });
 
 class PlaylistHistory extends Component {
@@ -22,9 +28,18 @@ class PlaylistHistory extends Component {
     }
 
     clickHandler (p, dispatch) {
-        const { playlistDrawer } = this.props;
-        const { songs } = p;
+        const { playlistDrawer, routing } = this.props;
+        const { songs, playlistId } = p;
+        const {
+            locationBeforeTransitions: {
+                pathname = '/'
+            }
+        } = routing;
+        const path = pathHasPlaylistId(pathname) ?
+            `${removePlaylistIdFromPath(pathname)}/${playlistId}` :
+            `${pathname}/${playlistId}`;
 
+        dispatch(push(path));
         dispatch(togglePlaylistDrawer(!playlistDrawer));
         dispatch(setSongForm(songs));
         dispatch(receivePlaylist(p));
@@ -36,14 +51,19 @@ class PlaylistHistory extends Component {
         }
 
         return (
-            playlists.map((p, i) => (
-                <MenuItem
-                    key={i}
-                    primaryText={p.dateSlug}
-                    leftIcon={<AvQueueMusic />}
-                    onClick={() => this.clickHandler(p, dispatch)}
-                />
-            ))
+            playlists.map((p, i) => {
+                const { playlistDate } = p;
+                const formattedDate = moment.utc(playlistDate).format('MM-DD-YYYY');
+
+                return (
+                    <MenuItem
+                        key={i}
+                        primaryText={formattedDate}
+                        leftIcon={<AvQueueMusic />}
+                        onClick={() => this.clickHandler(p, dispatch)}
+                    />
+                );
+            })
         );
     }
 

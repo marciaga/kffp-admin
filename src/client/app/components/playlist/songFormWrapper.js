@@ -105,7 +105,10 @@ class SongFormWrapper extends Component {
         const opacity = isDragging ? 0 : 1;
 
         return connectDragSource(connectDropTarget(
-            <div style={{ ...style, opacity }}>
+            <div
+                className="song-item"
+                style={{ ...style, opacity }}
+            >
                 <SongCard {...this.props} />
             </div>
         ));

@@ -9,7 +9,8 @@ const showSchema = Joi.object().keys({
     startTime: Joi.number().integer().required(),
     endTime: Joi.number().integer().required(),
     isActive: Joi.boolean().required(),
-    slug: Joi.string().required()
+    slug: Joi.string().required(),
+    description: Joi.string()
 });
 
 const getShows = (request, reply) => {

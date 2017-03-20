@@ -52,6 +52,20 @@ const Hidden = ({ value }) => (
     <input type="hidden" value={value} />
 );
 
+const TextArea = (props) => {
+    const { name, id, fieldName, value, hintText, dispatch } = props;
+
+    return (
+        <TextField
+            name={name}
+            hintText={hintText}
+            multiLine={true}
+            value={value}
+            onChange={e => dispatch(updateFormField(fieldName, e.target.value))}
+        />
+    );
+};
+
 const ToggleField = ({ dispatch, fieldName, label, value }) => {
     const styles = {
         block: {
@@ -204,6 +218,7 @@ class AutoCompleteField extends Component {
 
 export default {
     Text,
+    TextArea,
     ToggleField,
     Time,
     Select,
