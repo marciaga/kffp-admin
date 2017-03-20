@@ -218,7 +218,7 @@ const updateUser = (request, reply) => {
     const { _id, ...fieldsToUpdate } = user;
 
     db.collection('users').update({ _id: userId },
-        fieldsToUpdate,
+        { $set: fieldsToUpdate },
         (err, result) => {
             if (err) {
                 return reply(Boom.internal('Internal MongoDB error', err));
