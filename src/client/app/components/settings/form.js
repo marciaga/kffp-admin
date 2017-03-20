@@ -37,8 +37,11 @@ const UserSettingsForm = ({ fields, user, dispatch }) => {
         <div className="row">
             <h1 className="page-heading">User Settings</h1>
             <div className="col col-md-12 flex-horizontal-center">
-                <Card style={{minWidth: 600}} containerStyle={{minWidth: 600}}>
-                    <CardHeader title="Change Password"/>
+                <Card
+                    style={{ minWidth: 600 }}
+                    containerStyle={{ minWidth: 600 }}
+                >
+                    <CardHeader title="Change Password" />
                     <form
                         onSubmit={submitHandler}
                         name="changePassword"
