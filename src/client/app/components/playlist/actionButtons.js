@@ -5,10 +5,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { addNewPlaylist } from '../../actions/playlistActions';
 import { togglePlaylistDrawer } from '../../actions/uiActions';
 
-const ActionButtons = ({ dispatch, showId }) => (
+const ActionButtons = ({ dispatch, showId, slug }) => (
     <div className="flex-horizontal-center col col-md-12 col-sm-12">
         <RaisedButton
-            onClick={() => dispatch(addNewPlaylist(showId))}
+            onClick={() => dispatch(addNewPlaylist(showId, slug))}
             label="Make Playlist"
             secondary={true}
             icon={<ContentAdd />}

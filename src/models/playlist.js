@@ -125,6 +125,27 @@ const createPlaylist = async (request, reply) => {
     }
 };
 
+const deletePlaylist = async (request, reply) => {
+    const { db } = request.server.plugins.mongodb;
+    const { playlistId } = request.params;
+
+    try {
+        const result = await db.collection('playlists').deleteOne({
+            playlistId
+        });
+        const response = result.toJSON();
+        const { ok } = response;
+
+        if (ok) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Playlist delete was not successful' });
+    } catch (e) {
+        console.log(e);
+    }
+};
+
 const addTrack = async (request, reply) => {
     const { db } = request.server.plugins.mongodb;
 
@@ -284,5 +305,6 @@ export {
     updateTracks,
     updatePlaylistField,
     updateTrackOrder,
-    deleteTrackFromPlaylist
+    deleteTrackFromPlaylist,
+    deletePlaylist
 };

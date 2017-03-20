@@ -40,6 +40,7 @@ class Playlist extends Component {
                 <div className="row">
                     <ActionButtons
                         showId={currentShow._id}
+                        slug={currentShow.slug}
                         dispatch={dispatch}
                     />
 

@@ -5,7 +5,8 @@ import {
     updateTracks,
     updateTrackOrder,
     updatePlaylistField,
-    deleteTrackFromPlaylist
+    deleteTrackFromPlaylist,
+    deletePlaylist
 } from '../../../models/playlist';
 
 const playlistRoutes = [
@@ -54,6 +55,17 @@ const playlistRoutes = [
                 scope: ['admin', 'dj']
             },
             handler: updatePlaylistField
+        }
+    },
+    {
+        path: '/api/playlists/{playlistId}',
+        method: 'DELETE',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin', 'dj']
+            },
+            handler: deletePlaylist
         }
     },
     {

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { push } from 'react-router-redux';
 import {
     getTokenFromLocalStorage,
     cleanPathname,
@@ -17,7 +18,8 @@ import {
     REORDER_SONGS,
     UPDATE_PLAYLIST_SONGS,
     UPDATE_PLAYLIST_FIELD,
-    RESET_CURRENT_PLAYLIST
+    RESET_CURRENT_PLAYLIST,
+    DELETE_PLAYLIST
 } from '../constants';
 
 const receiveTrack = data => ({
@@ -48,6 +50,40 @@ const addNewPlaylistToSidebar = data => ({
     type: ADD_PLAYLIST_TO_SIDEBAR,
     data
 });
+
+const deletePlaylist = (playlistId, slug) => async (dispatch) => {
+    const idToken = getTokenFromLocalStorage();
+    const url = `${API_ENDPOINT}/playlists/${playlistId}`;
+
+    try {
+        const { data } = await axios.delete(url, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        if (data.success) {
+            const message = 'Playlist deleted successfully!';
+
+            dispatch(snackbarMessage(message));
+
+            dispatch({
+                type: DELETE_PLAYLIST,
+                data: {
+                    playlistId
+                }
+            });
+
+            dispatch(push(`/playlists/${slug}`));
+        } else {
+            const errorMessage = 'Playlist delete failed';
+
+            dispatch(snackbarMessage(errorMessage));
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 const getShowPlaylists = pathname => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
@@ -140,7 +176,7 @@ const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
     }
 };
 
-const addNewPlaylist = showId => async (dispatch) => {
+const addNewPlaylist = (showId, slug) => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
     const url = `${API_ENDPOINT}/playlists`;
     const showData = {
@@ -154,7 +190,12 @@ const addNewPlaylist = showId => async (dispatch) => {
             }
         });
 
+        const { playlistId } = data;
+
         dispatch(receivePlaylist(data));
+
+        dispatch(push(`/playlists/${slug}/${playlistId}`));
+
         dispatch(addNewPlaylistToSidebar(data));
     } catch (err) {
         console.log(err);
@@ -260,5 +301,6 @@ export {
     deleteSongFromPlaylist,
     receiveSongs,
     resetCurrentPlaylist,
-    updatePlaylistDate
+    updatePlaylistDate,
+    deletePlaylist
 };

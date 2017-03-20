@@ -7,7 +7,8 @@ import {
     DELETE_TRACK,
     REORDER_SONGS,
     RESET_CURRENT_PLAYLIST,
-    UPDATE_PLAYLIST_FIELD
+    UPDATE_PLAYLIST_FIELD,
+    DELETE_PLAYLIST
 } from '../constants';
 
 const initialState = {
@@ -90,6 +91,15 @@ export default function playlistReducer (state = initialState, action) {
 
                 return p;
             })
+        };
+
+    case DELETE_PLAYLIST:
+        const { playlistId: pid } = action.data;
+
+        return {
+            ...state,
+            currentPlaylist: {},
+            playlists: state.playlists.map(p => p.playlistId !== pid)
         };
 
     case REORDER_SONGS:
