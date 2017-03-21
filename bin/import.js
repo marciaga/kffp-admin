@@ -1,45 +1,16 @@
 import MongoClient, { ObjectId } from 'mongodb';
 import config from 'dotenv';
+import moment from 'moment';
+import shortid from 'shortid';
 import * as legacyShows from './legacyShows';
+import slugify from '../src/client/app/utils/stringParsing';
 
 config.load(); // load environment vars
 
-const DB_NAME = 'kffp-admin';
-const DB_URL = `mongodb://localhost:27017/${DB_NAME}`;
+const WRITE_DB_NAME = 'kffp-admin';
+const READ_DB_NAME = 'legacy-playlist';
+const DB_URL = 'mongodb://localhost:27017/';
 const { TEMPORARY_USER_PASSWORD } = process.env;
-
-/**
-legacyShows schema
-
-"showID":"[KFFP99997]",
-"title":"Making Pyramids",
-"djName":"DJ KIttybot",
-"description":"Please enjoy this mix of music to make pyramids to. While eclectic, your record Selectrix, DJ Kittybot, leans towards minimal electronics, ambient, noise, and noisy rock.",
-"startDay":"5",
-"startHour":"2",
-"endDay":"5",
-"endHour":"4"
-*/
-
-const showMapping = {
-    title: 'showName',
-    djName: 'users',
-    startDay: 'dayOfWeek',
-    startHour: 'startTime',
-    endHour: 'endTime',
-    description: 'description'
-};
-/*
-    _id: Joi.string(),
-    showName: Joi.string().required(),
-    users: Joi.array().items(Joi.string()).required(),
-    dayOfWeek: Joi.string().required(),
-    startTime: Joi.number().integer().required(),
-    endTime: Joi.number().integer().required(),
-    isActive: Joi.boolean().required(),
-    slug: Joi.string().required(),
-    description: Joi.string()
-*/
 
 const dayOfWeekMapping = {
     0: 'Sunday',
@@ -76,25 +47,17 @@ const transformShows = () => {
             startTime: Number(startHour),
             endTime: Number(endHour),
             isActive,
+            slug: slugify(title),
             description: description
         }
     });
 
-    console.log(transformedShows)
-    // write transformedShows to shows collection
     return transformedShows;
 };
 
 const transformUsers = () => {
-    console.log('Transforming users...')
+    console.log('Transforming users...');
 
-/*
-_id: Joi.string(),
-email: Joi.string().email().required(),
-password: Joi.string(),
-displayName: Joi.string().required(),
-role: Joi.string().required()
-*/
     return {
         _id: ObjectId(),
         email: '',
@@ -105,16 +68,85 @@ role: Joi.string().required()
 
 };
 
-const transformPlaylists = () => {
+const readLegacyPlaylists = async (db) => {
+    try {
+        const result = await db.collection('shows').find({});
+
+        return result.toArray();
+    } catch (e) {
+        console.log('Failed in Read Legacy Playlists', e);
+    }
+};
+
+const transformPlaylists = (legacyPlaylists, shows) => {
     console.log('Transforming Playlists...');
+
+    let newPlaylists = [];
+
+    legacyPlaylists.forEach((p) => {
+        // p is a show
+        const { playlists } = p;
+
+        // each show has a playlists array that contains its playlist objects
+        // result is an array of transformed playlist objects for a particular show
+        const result = playlists.map((plist) => {
+            const date = moment(plist.date, 'MMMM DD, YYYY').toISOString();
+            const songs = plist.playlist.map(song => {
+                if (!song) {
+                    return;
+                }
+
+                const timestamp = moment
+                    .utc(song.timestamp, 'ddd MMM DD YYYY HH:mm:ss')
+                    .utcOffset(8)
+                    .toISOString();
+
+                return {
+                    id: ObjectId(),
+                    title: song.title,
+                    artist: song.artist,
+                    album: song.album,
+                    label: song.label,
+                    releaseYear: '',
+                    playedAt: timestamp
+                };
+            });
+
+            const foundShow = shows.find(show => show.showName === p.showName);
+
+            return {
+                _id: ObjectId(),
+                showId: foundShow._id,
+                playlistDate: date,
+                playlistId: shortid.generate(),
+                songs
+            };
+        });
+
+        newPlaylists.push(...result);
+    });
+
+    return newPlaylists;
 };
 
 const main = () => {
-    MongoClient.connect(DB_URL, async (err, db) => {
+    MongoClient.connect(`${DB_URL}${READ_DB_NAME}`, async (err, db) => {
         if (err) {
             throw new Error(`Error connecting to Mongo: ${err}`);
         }
 
         console.log('Connected to MongoDB');
+
+        const shows = transformShows();
+        const legacyPlaylists = await readLegacyPlaylists(db);
+        const transformedPlaylists = transformPlaylists(legacyPlaylists, shows);
+
+        // const users = transformUsers();
+
+        // connect to WRITE DB and write all the things
+
+        process.exit();
     });
 };
+
+main();

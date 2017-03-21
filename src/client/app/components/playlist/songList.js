@@ -57,9 +57,9 @@ class SongList extends Component {
     }
 
     onSaveOrder () {
-        const { songs, _id } = this.props.currentPlaylist;
+        const { songs, playlistId } = this.props.currentPlaylist;
 
-        this.props.dispatch(reorderSongsSave(songs, _id));
+        this.props.dispatch(reorderSongsSave(songs, playlistId));
     }
 
     setNowPlayingColor (currentSongId, song) {
@@ -75,14 +75,14 @@ class SongList extends Component {
     }
 
     addNewSong () {
-        const { _id } = this.props.currentPlaylist;
+        const { playlistId } = this.props.currentPlaylist;
         const blankSong = generateBlankSongData();
 
         this.setState(update(this.state, {
             songs: { $unshift: [blankSong] }
         }));
 
-        this.props.dispatch(addTrack(blankSong, _id));
+        this.props.dispatch(addTrack(blankSong, playlistId));
     }
 
     addToNowPlaying (song, playlistId) {

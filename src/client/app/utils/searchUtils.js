@@ -23,12 +23,13 @@ const parseSearchResults = (results, albums) => {
         const artist = artists.length > 0 ? artists.shift().name : 'Artist Not Found';
         const albumName = album.name || 'Album Not Found';
         const { images, id } = album;
-        const { release_date } = albums.find(a => a.id === id);
+        const { release_date, label } = albums.find(a => a.id === id);
 
         return {
             artist,
             track: name || '',
             album: albumName,
+            label,
             releaseDate: release_date,
             images
         };

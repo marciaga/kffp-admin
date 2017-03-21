@@ -58,7 +58,7 @@ const PlaylistForm = (props) => {
                 {!!searchResults.length &&
                     <SearchResults
                         searchResults={searchResults}
-                        playlistId={currentPlaylist._id}
+                        playlistId={currentPlaylist.playlistId}
                         dispatch={dispatch}
                     />
                 }
