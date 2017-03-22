@@ -3,6 +3,7 @@ import config from 'dotenv';
 import moment from 'moment';
 import shortid from 'shortid';
 import * as legacyShows from './legacyShows';
+import * as scheduleData from './winter-schedule';
 import slugify from '../src/client/app/utils/stringParsing';
 
 config.load(); // load environment vars
@@ -22,16 +23,48 @@ const dayOfWeekMapping = {
     6: 'Saturday'
 };
 
-const transformShows = () => {
+const mapDJsToShows = (schedule) => {
+    return schedule.reduce((memo, obj) => {
+        if (!obj) {
+            return memo;
+        }
+        // at first, there won't be a memo[obj.showName], so it'll end up an empty array
+        // into which we push the dj name
+        // but if there is a memo[obj.showName], then we just push in the next name
+        memo[obj.showName] = memo[obj.showName] || [];
+        memo[obj.showName].push(obj.djName);
+
+        return memo;
+    }, {});
+};
+
+const dedupeNames = (showDJMapping) => (Object.keys(showDJMapping)
+    .reduce((memo, obj) => {
+        if (!obj) {
+            return memo;
+        }
+
+        memo[obj] = [ ...new Set(showDJMapping[obj]) ];
+
+        return memo;
+    }, {})
+);
+
+const parseJson = (obj) => (Object.keys(obj).reduce((arr, val, i) => {
+   arr.push(obj[i]);
+
+   return arr;
+}, []));
+
+
+
+const transformShows = (parsedSchedule) => {
     console.log('Transforming shows...')
     const isActive = true;
 
-    const parsedLegacyShows = Object.keys(legacyShows).reduce((arr, val, i) => {
-       arr.push(legacyShows[i]);
-
-       return arr;
-    }, []);
-
+    const parsedLegacyShows = parseJson(legacyShows);
+    const mappedDJsToShows = mapDJsToShows(parsedSchedule);
+    const showNamesToDJNames = dedupeNames(mappedDJsToShows);
     const transformedShows = parsedLegacyShows.map((show, index) => {
         if (!show) {
             return;
@@ -42,7 +75,7 @@ const transformShows = () => {
         return {
             _id: ObjectId(),
             showName: title,
-            users: [djName],
+            users: showNamesToDJNames[title],
             dayOfWeek: dayOfWeekMapping[Number(startDay)],
             startTime: Number(startHour),
             endTime: Number(endHour),
@@ -55,17 +88,22 @@ const transformShows = () => {
     return transformedShows;
 };
 
-const transformUsers = () => {
+const transformUsers = (parsedSchedule) => {
     console.log('Transforming users...');
 
-    return {
-        _id: ObjectId(),
-        email: '',
-        password: TEMPORARY_USER_PASSWORD,
-        displayName: '',
-        role: 'DJ'
-    };
+    return parsedSchedule.map(s => {
+        if (!s) {
+            return;
+        }
 
+        return {
+            _id: ObjectId(),
+            email: s.email,
+            password: TEMPORARY_USER_PASSWORD,
+            displayName: s.djName,
+            role: 'dj' // @TODO need a mapping of displayNames of people who should have admin roles
+        };
+    });
 };
 
 const readLegacyPlaylists = async (db) => {
@@ -137,11 +175,12 @@ const main = () => {
 
         console.log('Connected to MongoDB');
 
-        const shows = transformShows();
+        const parsedSchedule = parseJson(scheduleData);
+
+        const shows = transformShows(parsedSchedule);
+        const users = transformUsers(parsedSchedule);
         const legacyPlaylists = await readLegacyPlaylists(db);
         const transformedPlaylists = transformPlaylists(legacyPlaylists, shows);
-
-        // const users = transformUsers();
 
         // connect to WRITE DB and write all the things
 
