@@ -8,6 +8,8 @@ const userSchema = Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string(),
     displayName: Joi.string().required(),
+    firstName: Joi.string(),
+    lastName: Joi.string(),
     role: Joi.string().required()
 });
 

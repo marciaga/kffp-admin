@@ -13,6 +13,8 @@ const READ_DB_NAME = 'legacy-playlist';
 const DB_URL = 'mongodb://localhost:27017/';
 const { TEMPORARY_USER_PASSWORD } = process.env;
 
+const whitelistedAdmins = ['mark.arciaga@gmail.com', 'gilliflower@gmail.com', 'hk.clone@gmail.com', 'amy.zimmerman@gmail.com', 'fenton.felicity@gmail.com'];
+
 const dayOfWeekMapping = {
     0: 'Sunday',
     1: 'Monday',
@@ -96,12 +98,17 @@ const transformUsers = (parsedSchedule) => {
             return;
         }
 
+        const role = whitelistedAdmins.indexOf(s.email) > -1 ? 'admin' : 'dj';
+        const { email, djName, firstName, lastName } = s;
+
         return {
             _id: ObjectId(),
-            email: s.email,
+            email: email,
             password: TEMPORARY_USER_PASSWORD,
-            displayName: s.djName,
-            role: 'dj' // @TODO need a mapping of displayNames of people who should have admin roles
+            displayName: djName,
+            firstName,
+            lastName,
+            role
         };
     });
 };
@@ -133,7 +140,7 @@ const transformPlaylists = (legacyPlaylists, shows) => {
                 if (!song) {
                     return;
                 }
-
+                const { title, artist, album, label } = song;
                 const timestamp = moment
                     .utc(song.timestamp, 'ddd MMM DD YYYY HH:mm:ss')
                     .utcOffset(8)
@@ -141,10 +148,10 @@ const transformPlaylists = (legacyPlaylists, shows) => {
 
                 return {
                     id: ObjectId(),
-                    title: song.title,
-                    artist: song.artist,
-                    album: song.album,
-                    label: song.label,
+                    title,
+                    artist,
+                    album,
+                    label,
                     releaseYear: '',
                     playedAt: timestamp
                 };
