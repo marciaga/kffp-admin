@@ -87,13 +87,13 @@ const transformShows = (parsedSchedule) => {
         }
     });
 
-    return transformedShows;
+    return transformedShows.filter(s => s !== undefined);
 };
 
 const transformUsers = (parsedSchedule) => {
     console.log('Transforming users...');
 
-    return parsedSchedule.map(s => {
+    const schedule = parsedSchedule.map(s => {
         if (!s) {
             return;
         }
@@ -111,6 +111,8 @@ const transformUsers = (parsedSchedule) => {
             role
         };
     });
+
+    return schedule.filter(s => s !== undefined);
 };
 
 const readLegacyPlaylists = async (db) => {
@@ -180,18 +182,34 @@ const main = () => {
             throw new Error(`Error connecting to Mongo: ${err}`);
         }
 
-        console.log('Connected to MongoDB');
+        console.log(`Connected to ${READ_DB_NAME} database`);
 
-        const parsedSchedule = parseJson(scheduleData);
+        // @TODO drop WRITE_DB_NAME first...
 
-        const shows = transformShows(parsedSchedule);
-        const users = transformUsers(parsedSchedule);
-        const legacyPlaylists = await readLegacyPlaylists(db);
-        const transformedPlaylists = transformPlaylists(legacyPlaylists, shows);
+        try {
+            const newAdminDb = await MongoClient.connect(`${DB_URL}${WRITE_DB_NAME}`);
+            const parsedSchedule = parseJson(scheduleData);
+            const shows = transformShows(parsedSchedule);
+            const users = transformUsers(parsedSchedule);
+            const legacyPlaylists = await readLegacyPlaylists(db);
+            const transformedPlaylists = transformPlaylists(legacyPlaylists, shows);
 
-        // connect to WRITE DB and write all the things
+            const userResult = await newAdminDb.collection('users').insertMany(users);
+            const showResult = await newAdminDb.collection('shows').insertMany(shows);
+            const playlistResult = await newAdminDb.collection('playlists').insertMany(transformedPlaylists);
 
-        process.exit();
+            if (userResult.result.ok && showResult.result.ok && playlistResult.result.ok) {
+                console.log('Import success!');
+
+                process.exit();
+            }
+
+            console.log('Something went wrong with the import');
+
+            process.exit(1);
+        } catch (e) {
+            console.log(e);
+        }
     });
 };
 
