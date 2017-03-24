@@ -112,6 +112,15 @@ or to add to `devDependencies`, use
 $ yarn add -D <package>
 ```
 
+## Git Workflow
+We use Gitflow, which you can read about [here](https://www.atlassian.com/git/tutorials/comparing-workflows#gitflow-workflow)
+
+Feature branches should be named as follows:
+```
+$ git checkout -b feature/my-feature
+```
+
+Pull requests should always be from your feature branch to the develop branch.
 
 ### Coming soon:
 * CI integration

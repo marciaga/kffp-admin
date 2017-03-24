@@ -184,10 +184,22 @@ const main = () => {
 
         console.log(`Connected to ${READ_DB_NAME} database`);
 
-        // @TODO drop WRITE_DB_NAME first...
-
         try {
             const newAdminDb = await MongoClient.connect(`${DB_URL}${WRITE_DB_NAME}`);
+            const collectionNames = await newAdminDb.listCollections().toArray();
+
+            collectionNames.forEach(async (collectionName) => {
+                const { name } = collectionName;
+
+                if (!name.startsWith('system.')) {
+                    const result = await newAdminDb.collection(name).drop();
+
+                    if (result) {
+                        console.log(`Dropping ${WRITE_DB_NAME}: ${name}`);
+                    }
+                }
+            });
+
             const parsedSchedule = parseJson(scheduleData);
             const shows = transformShows(parsedSchedule);
             const users = transformUsers(parsedSchedule);
