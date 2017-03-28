@@ -2,12 +2,14 @@ import Joi from 'joi';
 import Boom from 'boom';
 import moment from 'moment';
 import cuid from 'cuid';
+import shortid from 'shortid';
 
 const songSchema = {
     id: Joi.string(),
     title: Joi.string().required(),
     artist: Joi.string().required(),
     album: Joi.string(),
+    label: Joi.string(),
     releaseYear: Joi.string(),
     playedAt: Joi.date().iso()
 };
@@ -15,8 +17,8 @@ const songSchema = {
 const playlistSchema = Joi.object().keys({
     _id: Joi.string(),
     showId: Joi.string().required(),
-    showDateTime: Joi.date().iso().required(),
-    dateSlug: Joi.string().required(),
+    playlistDate: Joi.date().iso().required(),
+    playlistId: Joi.string().required(),
     songs: Joi.array().items(Joi.object(songSchema))
 });
 
@@ -44,6 +46,7 @@ const getShow = async (db, slug) => (
 // TODO this needs to be limited so we don't fetch everything at once
 const getPlaylistsByShow = async (request, reply) => {
     const { db } = request.server.plugins.mongodb;
+    // playlistId is sometimes available on request.params
     const { slug } = request.params;
 
     try {
@@ -64,20 +67,20 @@ const getPlaylistsByShow = async (request, reply) => {
 const createPlaylist = async (request, reply) => {
     const { db } = request.server.plugins.mongodb;
     const now = moment();
-    const showDateTime = now.toISOString();
-    const dateSlug = now.format('Y[-]MM[-]DD');
+    const playlistDate = now.toISOString();
+    const playlistId = shortid.generate();
     const { showId } = request.payload;
 
     const newPlaylist = {
         showId,
-        showDateTime,
-        dateSlug,
+        playlistDate,
+        playlistId,
         songs: []
     };
 
     try {
         const result = await db.collection('playlists').find({
-            dateSlug,
+            playlistId,
             showId
         }).toArray();
 
@@ -123,18 +126,38 @@ const createPlaylist = async (request, reply) => {
     }
 };
 
+const deletePlaylist = async (request, reply) => {
+    const { db } = request.server.plugins.mongodb;
+    const { playlistId } = request.params;
+
+    try {
+        const result = await db.collection('playlists').deleteOne({
+            playlistId
+        });
+        const response = result.toJSON();
+        const { ok } = response;
+
+        if (ok) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Playlist delete was not successful' });
+    } catch (e) {
+        console.log(e);
+    }
+};
+
 const addTrack = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { db } = request.server.plugins.mongodb;
 
     try {
         const track = request.payload;
         const { playlistId } = request.params;
-        const id = new ObjectID(playlistId);
 
         track.id = cuid();
 
         const result = await db.collection('playlists').update(
-            { _id: id },
+            { playlistId },
             {
                 $push: {
                     songs: {
@@ -163,13 +186,16 @@ const addTrack = async (request, reply) => {
 };
 
 const updateTracks = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { db } = request.server.plugins.mongodb;
 
     try {
         const track = request.payload;
         const { playlistId } = request.params;
         const result = await db.collection('playlists').update(
-            { _id: ObjectID(playlistId), 'songs.id': track.id },
+            {
+                playlistId,
+                'songs.id': track.id
+            },
             { $set: { 'songs.$': track } }
         );
 
@@ -191,18 +217,47 @@ const updateTracks = async (request, reply) => {
     }
 };
 
+const updatePlaylistField = async (request, reply) => {
+    const { db } = request.server.plugins.mongodb;
+
+    try {
+        const data = request.payload;
+        const field = data ? Object.keys(data).shift() : '';
+        const { playlistId } = request.params;
+        const result = await db.collection('playlists').update(
+            { playlistId },
+            { $set: { [field]: data[field] } }
+        );
+
+        const response = result.toJSON();
+        const { ok, nModified, n } = response;
+
+        if (ok && nModified) {
+            return reply({ success: true, message: `${field} was updated` });
+        }
+
+        if (ok && n) {
+            return reply({ success: false, message: 'Document was unchanged' });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    } catch (err) {
+        console.log(err);
+        return reply(err);
+    }
+};
+
 const updateTrackOrder = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { db } = request.server.plugins.mongodb;
 
     try {
         const payload = request.payload;
         // don't save any airbreaks
         const tracks = payload.filter(o => !o.airBreak);
         const { playlistId } = request.params;
-        const id = new ObjectID(playlistId);
 
         const result = await db.collection('playlists').update(
-            { _id: id },
+            { playlistId },
             { $set: { songs: tracks } }
         );
 
@@ -221,14 +276,13 @@ const updateTrackOrder = async (request, reply) => {
 };
 
 const deleteTrackFromPlaylist = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { db } = request.server.plugins.mongodb;
 
     try {
         const { playlistId, trackId } = request.params;
-        const pid = new ObjectID(playlistId);
 
         const result = await db.collection('playlists').update(
-            { _id: pid }, { $pull: { songs: { id: trackId } } });
+            { playlistId }, { $pull: { songs: { id: trackId } } });
 
         const response = result.toJSON();
         // { ok: 1, nModified: 1, n: 1 }
@@ -250,6 +304,8 @@ export {
     createPlaylist,
     addTrack,
     updateTracks,
+    updatePlaylistField,
     updateTrackOrder,
-    deleteTrackFromPlaylist
+    deleteTrackFromPlaylist,
+    deletePlaylist
 };

@@ -8,6 +8,8 @@ const userSchema = Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string(),
     displayName: Joi.string().required(),
+    firstName: Joi.string(),
+    lastName: Joi.string(),
     role: Joi.string().required()
 });
 
@@ -218,7 +220,7 @@ const updateUser = (request, reply) => {
     const { _id, ...fieldsToUpdate } = user;
 
     db.collection('users').update({ _id: userId },
-        fieldsToUpdate,
+        { $set: fieldsToUpdate },
         (err, result) => {
             if (err) {
                 return reply(Boom.internal('Internal MongoDB error', err));

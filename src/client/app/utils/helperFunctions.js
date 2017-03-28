@@ -64,11 +64,23 @@ const cleanPathname = (pathname) => {
     return splitPath.join('/');
 };
 
+const pathHasPlaylistId = path => path.split('/').length === 4;
+
+const removePlaylistIdFromPath = (path) => {
+    const pathParts = path.split('/');
+
+    pathParts.pop();
+
+    return pathParts.join('/');
+};
+
 export {
     debounce,
     hoursToDateObj,
     sortObjectsByKey,
     getTokenFromLocalStorage,
     generateBlankSongData,
-    cleanPathname
+    cleanPathname,
+    pathHasPlaylistId,
+    removePlaylistIdFromPath
 };

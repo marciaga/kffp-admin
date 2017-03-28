@@ -7,7 +7,7 @@ import formReducer from './formReducer';
 import showReducer from './showReducer';
 import feedbackReducer from './feedbackReducer';
 import nowPlayingReducer from './nowPlayingReducer';
-import uiReducer  from './uiReducer';
+import uiReducer from './uiReducer';
 
 export default {
     search: searchReducer,

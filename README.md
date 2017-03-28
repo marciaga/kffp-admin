@@ -1,5 +1,3 @@
-[![Build Status](https://semaphoreci.com/api/v1/freeformportland/kffp-admin/branches/master/badge.svg)](https://semaphoreci.com/freeformportland/kffp-admin)
-
 # Freeform Portland Admin Application and API
 
 ### Set Up Local Development Environment on OSX:
@@ -60,26 +58,20 @@ $ cp .env.example .env
 ```
 then fill in the values.
 
-Now you can run the app:
-```
-$ yarn dev
-```
-
-The app is available in your browser at `localhost:3000`.
-
-You'll also, at first, want to build the CSS files, which can be done with:
+Before starting the app for the first time, you'll need to build the main CSS file, which can be done with (this step need be done only the first time):
 ```
 $ yarn build:css
 ```
 
-If you're doing a lot of styling, you can run the watcher which will rebuild the CSS whenever you change a `.scss` file:
+Now you can run the app:
 ```
-$ yarn watch:css
+$ yarn dev
 ```
-
 Note that the command `$ yarn dev` also runs the CSS watcher.
 
-### Alternative (recommended) Local Environment
+The app is available in your browser at `localhost:3000`.
+
+### Alternative Local Environment Using Docker
 First, install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
 
 Next, clone the repository
@@ -87,10 +79,8 @@ Next, clone the repository
 $ git clone git@github.com:marciaga/playlist-v2.git
 ```
 
-> env vars
-
-> mongo connection: 'mongodb://localhost:27017/playlist-dev'
-
+You'll need to change your `.env` file to connect to the MongoDB container properly
+`DB_CONNECTION=mongodb://db:27017`
 
 Next, run:
 ```
@@ -122,6 +112,15 @@ or to add to `devDependencies`, use
 $ yarn add -D <package>
 ```
 
+## Git Workflow
+We use Gitflow, which you can read about [here](https://www.atlassian.com/git/tutorials/comparing-workflows#gitflow-workflow)
+
+Feature branches should be named as follows:
+```
+$ git checkout -b feature/my-feature
+```
+
+Pull requests should always be from your feature branch to the develop branch.
 
 ### Coming soon:
 * CI integration

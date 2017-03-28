@@ -47,7 +47,7 @@ class Users extends Component {
 
         return (
             <div>
-                <p>Add New User</p>
+                <h2>Add New User</h2>
                 <FloatingActionButton onClick={() => this.handleClick('new', 'users')} secondary={true} style={{}}>
                     <ContentAdd />
                 </FloatingActionButton>

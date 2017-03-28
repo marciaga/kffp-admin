@@ -8,10 +8,10 @@ const SearchResults = ({ searchResults, playlistId, dispatch }) => {
     };
 
     return (
-        <div className="search-results">
+        <div className="search-results col col-md-12">
             <GridList
-                cellHeight={'auto'}
-                cols={3}
+                cellHeight={200}
+                cols={4}
                 className="search-results__grid-wrapper"
             >
                 {searchResults && searchResults.map((tile, i) => {

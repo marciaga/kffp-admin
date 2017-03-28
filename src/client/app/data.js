@@ -45,6 +45,12 @@ const shows = {
                 name: 'text',
                 label: 'Slug',
                 hintText: 'Enter the show slug'
+            },
+            description: {
+                fieldType: 'TextArea',
+                name: 'text-area',
+                label: 'Description',
+                hintText: 'Enter the show\'s description here'
             }
         }
     },
@@ -120,6 +126,12 @@ const shows = {
                 name: 'text',
                 label: 'Slug',
                 disabled: true
+            },
+            description: {
+                fieldType: 'TextArea',
+                name: 'text-area',
+                label: 'Description',
+                hintText: 'Enter the show\'s description here'
             }
         }
     }
@@ -237,6 +249,11 @@ export const playlistFields = {
             label: 'Album Name',
             name: 'album',
             hintText: 'Enter the album name'
+        },
+        label: {
+            label: 'Record Label',
+            name: 'label',
+            hintText: 'Enter the Record Label'
         },
         releaseDate: {
             label: 'Release Date',
