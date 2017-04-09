@@ -1,0 +1,22 @@
+machine:
+  node:
+    version: 6.9.1
+  environment:
+    PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
+
+dependencies:
+  pre:
+  override:
+    - yarn
+  cache_directories:
+    - ~/.cache/yarn
+
+test:
+  override:
+    - yarn test
+
+deployment:
+  production:
+    branch: develop
+    commands:
+      - sh ./bin/prod_deploy.sh
