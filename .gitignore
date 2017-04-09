@@ -4,3 +4,9 @@ node_modules
 coverage
 public/*
 !public/.gitkeep
+
+# Elastic Beanstalk Files
+# .elasticbeanstalk/*
+# !.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.config.yml
+# !.elasticbeanstalk/*.global.yml
