@@ -21,4 +21,4 @@ deployment:
     branch: develop
     commands:
       - yarn build:production
-      - eb deploy --profile kffpadmin-stage
+      - eb deploy
