@@ -26,7 +26,7 @@ const manifest = {
     },
     connections: [
         {
-            port: 3000,
+            port: 8081,
             labels: ['web']
         }
     ],
