@@ -20,6 +20,6 @@ deployment:
   production:
     branch: develop
     commands:
-      - openssl aes-256-cbc -d -in secrets -k $KEY >> .env
+      - openssl aes-256-cbc -d -in secrets -k $KEY -out .env
       - yarn build:production
       - eb deploy
