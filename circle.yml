@@ -20,4 +20,5 @@ deployment:
   production:
     branch: develop
     commands:
-      - eb deploy --profile default
+      - yarn build:production
+      - eb deploy --profile kffpadmin
