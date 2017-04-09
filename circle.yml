@@ -6,7 +6,7 @@ machine:
 
 dependencies:
   pre:
-    - pip sudo install awsebcli
+    - sudo pip install awsebcli
   override:
     - yarn
   cache_directories:
