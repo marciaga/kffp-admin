@@ -4,7 +4,7 @@ branch-defaults:
 global:
   application_name: kffp-admin
   branch: null
-  default_ec2_keyname: kffpadmin
+  default_ec2_keyname: KFFP_DEPLOY
   default_platform: Node.js
   default_region: us-west-2
   instance_profile: kffpadmin
