@@ -6,6 +6,7 @@ machine:
 
 dependencies:
   pre:
+    - pip sudo install awsebcli
   override:
     - yarn
   cache_directories:
@@ -19,4 +20,4 @@ deployment:
   production:
     branch: develop
     commands:
-      - sh ./bin/prod_deploy.sh
+      - eb deploy --profile default
