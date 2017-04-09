@@ -1,4 +1,5 @@
 # Freeform Portland Admin Application and API
+[![CircleCI](https://circleci.com/gh/marciaga/kffp-admin.svg?style=svg)](https://circleci.com/gh/marciaga/kffp-admin)
 
 ### Set Up Local Development Environment on OSX:
 

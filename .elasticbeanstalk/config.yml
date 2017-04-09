@@ -1,6 +1,6 @@
 branch-defaults:
   develop:
-    environment: null
+    environment: kffpadmin
 global:
   application_name: kffp-admin
   branch: null
