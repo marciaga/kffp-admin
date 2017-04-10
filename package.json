@@ -15,7 +15,7 @@
     "docker:stop": "docker-compose down --remove-orphans",
     "lint": "./node_modules/.bin/eslint ./src",
     "import:legacy": "babel-node bin/import",
-    "start": "yarn build:production && node ./node_modules/.bin/pm2 start --no-daemon ecosystem.config.js --env production",
+    "start": "node ./node_modules/.bin/pm2 start --no-daemon ecosystem.config.js --env production",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "watch:css": "./node_modules/.bin/node-sass -w src/client/css -o public/css & postcss -w -c ./postcss.config.js"
