@@ -17,4 +17,4 @@ global:
   workspace_type: Application
 
 deploy:
-  artifact: path/to/buildartifact.zip
+  artifact: kffpadmin.zip

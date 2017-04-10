@@ -22,6 +22,5 @@ deployment:
     commands:
       - openssl aes-256-cbc -d -in secrets -k $KEY -out .env
       - yarn build:production
-      - echo $PATH
-      - ls -al
-#      - eb deploy
+      - zip -r kffpadmin.zip .
+      - eb deploy
