@@ -23,5 +23,5 @@ deployment:
       - touch .env
       - openssl aes-256-cbc -d -in secrets -k $KEY -out .env
       - yarn build:production
-      - ls -al
-      # - eb deploy
+      - cat .env
+      - eb deploy
