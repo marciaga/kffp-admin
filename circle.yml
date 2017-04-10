@@ -18,9 +18,9 @@ test:
 
 deployment:
   production:
-    branch: develop
+    branch: master
     commands:
       - openssl aes-256-cbc -d -in secrets -k $KEY -out .env
       - yarn build:production
       - zip -r kffpadmin.zip .
-      - eb deploy
+#      - eb deploy uncomment to deploy 

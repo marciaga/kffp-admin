@@ -26,7 +26,7 @@ const manifest = {
     },
     connections: [
         {
-            port: 8081,
+            port: process.env.PORT || 3000,
             labels: ['web']
         }
     ],
