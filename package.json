@@ -15,7 +15,7 @@
     "docker:stop": "docker-compose down --remove-orphans",
     "lint": "./node_modules/.bin/eslint ./src",
     "import:legacy": "babel-node bin/import",
-    "start": "node ./node_modules/.bin/pm2 start --no-daemon ecosystem.config.js --env production",
+    "start": "pm2 start --no-daemon ecosystem.config.js --env production",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "watch:css": "./node_modules/.bin/node-sass -w src/client/css -o public/css & postcss -w -c ./postcss.config.js"
@@ -72,7 +72,6 @@
     "mongodb": "^2.2.24",
     "node-sass": "^4.1.1",
     "normalize-scss": "^6.0.0",
-    "pm2": "^2.4.4",
     "postcss-cli": "^2.6.0",
     "react": "^15.3.0",
     "react-dnd": "^2.1.4",
