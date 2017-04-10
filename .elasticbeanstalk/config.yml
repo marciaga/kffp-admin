@@ -1,6 +1,7 @@
 branch-defaults:
   develop:
     environment: kffpadmin-stage
+
 global:
   application_name: kffp-admin
   branch: null
@@ -14,3 +15,6 @@ global:
   repository: null
   sc: git
   workspace_type: Application
+
+deploy:
+  artifact: path/to/buildartifact.zip
