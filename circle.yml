@@ -20,7 +20,7 @@ deployment:
   production:
     branch: develop
     commands:
-      - touch env
-      - openssl aes-256-cbc -d -in secrets -k $KEY -out env
+      - openssl aes-256-cbc -d -in secrets -k $KEY -out .env.example
+      - cat .env.example
       - yarn build:production
       - eb deploy
