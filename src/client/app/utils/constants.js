@@ -17,3 +17,5 @@ export const formTypesToHttpVerbs = {
 export const NOW_PLAYING_ACTIVE = '#1DE9B6';
 export const NOW_PLAYING_COLOR = '#111111';
 export const NOW_PLAYING_PLAYED = '#E0E0E0';
+
+export const SHOWS_AUTOCOMPLETE_FILTER_LIMIT = 5;

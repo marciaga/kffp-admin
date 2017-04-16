@@ -1,0 +1,26 @@
+machine:
+  node:
+    version: 6.9.1
+  environment:
+    PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
+
+dependencies:
+  pre:
+    - pip install awsebcli --upgrade
+  override:
+    - yarn
+  cache_directories:
+    - ~/.cache/yarn
+
+test:
+  override:
+    - yarn test
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - openssl aes-256-cbc -d -in secrets -k $KEY -out .env
+      - yarn build:production
+      - zip -r kffpadmin.zip .
+#      - eb deploy uncomment to deploy 

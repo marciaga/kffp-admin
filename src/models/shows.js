@@ -9,11 +9,12 @@ const showSchema = Joi.object().keys({
     startTime: Joi.number().integer().required(),
     endTime: Joi.number().integer().required(),
     isActive: Joi.boolean().required(),
-    slug: Joi.string().required()
+    slug: Joi.string().required(),
+    description: Joi.string()
 });
 
 const getShows = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const params = request.query || {};
 
     db.collection('shows').find(params, async (err, cursor) => {
@@ -28,7 +29,7 @@ const getShows = (request, reply) => {
 };
 
 const updateShow = (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const show = request.payload;
 
     try {
@@ -67,7 +68,7 @@ const updateShow = (request, reply) => {
 };
 
 const upsertShow = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const newShow = request.payload;
 
     db.collection('shows').find({ showName: newShow.showName },
@@ -121,7 +122,7 @@ const upsertShow = (request, reply) => {
 };
 
 const removeShow = (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const { id } = request.query;
     const showId = new ObjectID(id);
 

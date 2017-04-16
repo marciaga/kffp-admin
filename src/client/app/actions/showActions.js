@@ -1,15 +1,41 @@
 import axios from 'axios';
 import { push } from 'react-router-redux';
-import { SHOW_SELECT, GET_SHOW } from '../constants';
+import { SHOW_SELECT, USER_SHOW_SELECT, GET_SHOW } from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
+import { API_ENDPOINT } from '../utils/constants';
 
-const receiveActiveShows = data => ({
+const receiveUserShows = data => ({
+    type: USER_SHOW_SELECT,
+    data
+});
+
+const receiveAllShows = data => ({
     type: SHOW_SELECT,
     data
 });
 
-const getActiveShows = () => {
-    const url = '/api/shows?isActive=true';
+const getAllShows = () => {
+    const url = `${API_ENDPOINT}/shows`;
+    const idToken = getTokenFromLocalStorage();
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+
+            dispatch(receiveAllShows(data));
+        } catch (e) {
+            console.log(e);
+        }
+    };
+};
+
+const getUserShows = (userName) => {
+    const user = encodeURIComponent(userName);
+    const url = `/api/shows?isActive=true&users=${user}`;
     const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {
@@ -29,7 +55,7 @@ const getActiveShows = () => {
                 };
             });
 
-            dispatch(receiveActiveShows(result));
+            dispatch(receiveUserShows(result));
         } catch (err) {
             console.log(err);
         }
@@ -51,4 +77,4 @@ const receiveShow = data => ({
 
 const getShow = show => dispatch => dispatch(receiveShow(show));
 
-export { getActiveShows, getShow, navigateToPlaylists };
+export { getUserShows, getAllShows, getShow, navigateToPlaylists };

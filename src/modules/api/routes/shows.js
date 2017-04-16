@@ -13,12 +13,14 @@ const showRoutes = [
         config: {
             validate: {
                 query: {
-                    isActive: Joi.boolean()
+                    isActive: Joi.boolean(),
+                    users: Joi.string()
                 }
             },
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj']
+                scope: ['admin', 'dj'],
+                mode: 'optional'
             },
             handler: getShows
         }

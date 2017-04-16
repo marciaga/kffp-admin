@@ -1,6 +1,7 @@
 # Freeform Portland Admin Application and API
+[![CircleCI](https://circleci.com/gh/marciaga/kffp-admin.svg?style=svg)](https://circleci.com/gh/marciaga/kffp-admin)
 
-### Set Up Local Development Environment:
+### Set Up Local Development Environment on OSX:
 
 Clone the repository
 ```
@@ -15,14 +16,25 @@ $ npm -v
 ```
 We use Node `6.9.1` and NPM `3.10.9` and recommend globally installing [n](https://github.com/tj/n) to manage your Node versions.
 
-Next, install [Yarn](https://yarnpkg.com/) which we use form managing dependencies. If you're on a Mac you can use `Homebrew`, but we recommend using `npm` to globally install `yarn`:
+Next, install [Yarn](https://yarnpkg.com/) which we use for managing dependencies. If you're on a Mac you can use `Homebrew`:
+```
+$ brew install yarn
+```
+
+or `npm`:
+
 ```
 $ npm i yarn -g
+```
+or just install the binary!
+
+```
+$ curl -o- -L https://yarnpkg.com/install.sh | bash
 ```
 
 Now, install the dependencies with:
 ```
-$ yarn install
+$ yarn
 ```
 
 Next, you'll need a running instance of `MongoDB` version `>=3.2`. To install, we recommend using `Homebrew`:
@@ -47,34 +59,48 @@ $ cp .env.example .env
 ```
 then fill in the values.
 
+Before starting the app for the first time, you'll need to build the main CSS file, which can be done with (this step need be done only the first time):
+```
+$ yarn build:css
+```
+
 Now you can run the app:
 ```
-$ yarn run dev
+$ yarn dev
 ```
+Note that the command `$ yarn dev` also runs the CSS watcher.
 
 The app is available in your browser at `localhost:3000`.
 
-You'll also, at first, want to build the CSS files, which can be done with:
+### Alternative Local Environment Using Docker
+First, install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
+
+Next, clone the repository
 ```
-$ yarn run build:css
+$ git clone git@github.com:marciaga/playlist-v2.git
 ```
 
-If you're doing a lot of styling, you can run the watcher which will rebuild the CSS whenever you change a `.scss` file:
+You'll need to change your `.env` file to connect to the MongoDB container properly
+`DB_CONNECTION=mongodb://db:27017`
+
+Next, run:
 ```
-$ yarn run watch:css
+$ docker-compose up -d --build
 ```
+This command will build the images, install the dependencies, and start the application in development mode. The application will be accessible at `http://localhost:3000`
+
 
 ## Tests
 We use the `Jest` testing framework.
 To run the tests, use:
 ```
-$ yarn run test
+$ yarn test
 ```
 
 ## Code Style
 We use ESLint to ensure style consistency:
 ```
-$ yarn run lint
+$ yarn lint
 ```
 
 ## Adding New Dependencies
@@ -86,6 +112,16 @@ or to add to `devDependencies`, use
 ```
 $ yarn add -D <package>
 ```
+
+## Git Workflow
+We use Gitflow, which you can read about [here](https://www.atlassian.com/git/tutorials/comparing-workflows#gitflow-workflow)
+
+Feature branches should be named as follows:
+```
+$ git checkout -b feature/my-feature
+```
+
+Pull requests should always be from your feature branch to the develop branch.
 
 ### Coming soon:
 * CI integration

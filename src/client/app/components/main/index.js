@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getActiveShows } from '../../actions/showActions';
+import { getUserShows, getAllShows } from '../../actions/showActions';
 import ShowSelect from './select';
+import ShowsAutoCompleteFilter from '../form/fields/showsAutocompleteFilter';
 
 const mapStateToProps = state => ({
     auth: state.auth,
@@ -15,18 +16,26 @@ class Main extends Component {
         const { user } = auth;
 
         if (this.props.auth.user !== user) {
-            this.props.dispatch(getActiveShows());
+            const { displayName } = user;
+
+            this.props.dispatch(getUserShows(displayName));
+            this.props.dispatch(getAllShows());
         }
     }
 
     render () {
         const { show, dispatch } = this.props;
-        const { shows } = show;
+        const { shows, userShows } = show;
 
         return (
-            <div>
-                <h1>Select a show</h1>
-                <ShowSelect dispatch={dispatch} shows={shows} />
+            <div className="row">
+                <h1 className="flex-horizontal-center col col-md-12">Select a show</h1>
+                <div className="flex-horizontal-center user-shows col col-md-6">
+                    <ShowSelect dispatch={dispatch} userShows={userShows} />
+                </div>
+                <div className="flex-horizontal-center col col-md-6">
+                    <ShowsAutoCompleteFilter dispatch={dispatch} shows={shows} />
+                </div>
             </div>
         );
     }

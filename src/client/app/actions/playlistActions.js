@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { getTokenFromLocalStorage } from '../utils/helperFunctions';
+import { push } from 'react-router-redux';
+import {
+    getTokenFromLocalStorage,
+    cleanPathname,
+    pathHasPlaylistId
+} from '../utils/helperFunctions';
 import { API_ENDPOINT } from '../utils/constants';
 import { getShow } from './showActions';
 import { snackbarMessage } from './feedbackActions';
@@ -12,7 +17,9 @@ import {
     CLEAR_SEARCH_RESULTS,
     REORDER_SONGS,
     UPDATE_PLAYLIST_SONGS,
-    RESET_CURRENT_PLAYLIST
+    UPDATE_PLAYLIST_FIELD,
+    RESET_CURRENT_PLAYLIST,
+    DELETE_PLAYLIST
 } from '../constants';
 
 const receiveTrack = data => ({
@@ -44,9 +51,44 @@ const addNewPlaylistToSidebar = data => ({
     data
 });
 
+const deletePlaylist = (playlistId, slug) => async (dispatch) => {
+    const idToken = getTokenFromLocalStorage();
+    const url = `${API_ENDPOINT}/playlists/${playlistId}`;
+
+    try {
+        const { data } = await axios.delete(url, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        if (data.success) {
+            const message = 'Playlist deleted successfully!';
+
+            dispatch(snackbarMessage(message));
+
+            dispatch({
+                type: DELETE_PLAYLIST,
+                data: {
+                    playlistId
+                }
+            });
+
+            dispatch(push(`/playlists/${slug}`));
+        } else {
+            const errorMessage = 'Playlist delete failed';
+
+            dispatch(snackbarMessage(errorMessage));
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+
 const getShowPlaylists = pathname => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
-    const url = `${API_ENDPOINT}${pathname}`;
+    const path = cleanPathname(pathname);
+    const url = `${API_ENDPOINT}${path}`;
 
     try {
         const { data } = await axios.get(url, {
@@ -58,6 +100,13 @@ const getShowPlaylists = pathname => async (dispatch) => {
 
         dispatch(getShow(show));
         dispatch(receivePlaylists(playlists));
+        // if there's a date slug, set the current Playlist
+        if (pathHasPlaylistId(path)) {
+            const playlistId = path.split('/').pop();
+            const playlist = playlists.find(p => p.playlistId === playlistId);
+
+            dispatch(receivePlaylist(playlist));
+        }
     } catch (err) {
         console.log(err);
     }
@@ -68,9 +117,43 @@ const receiveSongs = data => ({
     data
 });
 
-const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
+const receivePlaylistFieldUpdate = data => ({
+    type: UPDATE_PLAYLIST_FIELD,
+    data
+});
+
+const updatePlaylistDate = (date, playlistId) => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
     const url = `${API_ENDPOINT}/playlists/${playlistId}`;
+    const isoDate = date.toISOString();
+    const payload = { playlistDate: isoDate };
+
+    try {
+        const { data } = await axios.patch(url, payload, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        const { success, message } = data;
+
+        if (success) {
+            dispatch(snackbarMessage(message));
+
+            return dispatch(receivePlaylistFieldUpdate({ playlistId,
+                playlistDate: isoDate
+            }));
+        }
+
+        dispatch(snackbarMessage(message));
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
+    const idToken = getTokenFromLocalStorage();
+    const url = `${API_ENDPOINT}/playlists/${playlistId}/tracks`;
     const songData = song;
 
     try {
@@ -93,7 +176,7 @@ const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
     }
 };
 
-const addNewPlaylist = showId => async (dispatch) => {
+const addNewPlaylist = (showId, slug) => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
     const url = `${API_ENDPOINT}/playlists`;
     const showData = {
@@ -107,7 +190,12 @@ const addNewPlaylist = showId => async (dispatch) => {
             }
         });
 
+        const { playlistId } = data;
+
         dispatch(receivePlaylist(data));
+
+        dispatch(push(`/playlists/${slug}/${playlistId}`));
+
         dispatch(addNewPlaylistToSidebar(data));
     } catch (err) {
         console.log(err);
@@ -212,5 +300,7 @@ export {
     updatePlaylistSong,
     deleteSongFromPlaylist,
     receiveSongs,
-    resetCurrentPlaylist
+    resetCurrentPlaylist,
+    updatePlaylistDate,
+    deletePlaylist
 };

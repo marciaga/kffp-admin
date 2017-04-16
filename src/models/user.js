@@ -8,8 +8,20 @@ const userSchema = Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string(),
     displayName: Joi.string().required(),
+    firstName: Joi.string(),
+    lastName: Joi.string(),
     role: Joi.string().required()
 });
+
+const getUserById = async (id, db) => {
+    try {
+        const result = await db.collection('users').findOne({ _id: id });
+
+        return result;
+    } catch (e) {
+        console.log(e);
+    }
+};
 
 const createToken = (user) => {
     const { _id, email, role, displayName } = user;
@@ -32,7 +44,7 @@ const createToken = (user) => {
 
 /* Route Handlers */
 const loginHandler = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const password = request.payload.password;
 
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
@@ -61,7 +73,7 @@ const loginHandler = (request, reply) => {
 
 // Fetch all users
 const getUsers = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
 
     db.collection('users').find({}, { password: 0 }, async (err, cursor) => {
         if (err) {
@@ -82,7 +94,7 @@ const hashPassword = (password, callback) => {
 
 // CREATE user method
 const createUser = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
 
     try {
         Joi.validate(request.payload, userSchema, (err, value) => {
@@ -151,7 +163,7 @@ const verifyToken = (request, reply) => {
 };
 
 const verifyCredentials = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const password = request.payload.password;
 
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
@@ -173,7 +185,7 @@ const verifyCredentials = (request, reply) => {
 };
 
 const verifyUniqueUser = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const { email } = request.payload;
 
     db.collection('users').findOne({ $or: [{ email }] }, (err, user) => {
@@ -186,7 +198,7 @@ const verifyUniqueUser = (request, reply) => {
 };
 
 const updateUser = (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const user = request.payload;
 
     try {
@@ -208,7 +220,7 @@ const updateUser = (request, reply) => {
     const { _id, ...fieldsToUpdate } = user;
 
     db.collection('users').update({ _id: userId },
-        fieldsToUpdate,
+        { $set: fieldsToUpdate },
         (err, result) => {
             if (err) {
                 return reply(Boom.internal('Internal MongoDB error', err));
@@ -227,7 +239,7 @@ const updateUser = (request, reply) => {
 };
 
 const deleteUser = (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const { id } = request.query;
     const userId = new ObjectID(id);
 
@@ -247,6 +259,129 @@ const deleteUser = (request, reply) => {
     });
 };
 
+const verifyPassword = async (request, reply) => {
+    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { id } = request.params;
+    const { name, fields } = request.payload;
+    // if it's not the changePassword request, continue
+    if (name !== 'changePassword') {
+        return reply.continue();
+    }
+
+    const { newPasswordFirst, newPasswordSecond } = fields;
+    // if it is the changePassword request, verify the relevant fields match
+    if (newPasswordFirst !== newPasswordSecond) {
+        return reply({
+            success: false,
+            message: 'New password entries do not match.'
+        });
+    }
+
+    const userId = new ObjectID(id);
+    try {
+        const user = await getUserById(userId, db);
+        const { currentPassword } = fields;
+
+        bcrypt.compare(currentPassword, user.password, (e, isValid) => {
+            if (e) {
+                return reply(Boom.internal('Something went wrong with encryption...', e));
+            }
+            if (isValid) {
+                // hash the password and return it to the route handler
+                return hashPassword(newPasswordFirst, (err, hash) => {
+                    if (err) {
+                        return reply({
+                            success: false,
+                            message: 'Something went wrong...'
+                        });
+                    }
+                    return reply({
+                        success: true,
+                        password: hash
+                    });
+                });
+            }
+
+            return reply({
+                success: false,
+                message: 'Current password is incorrect.'
+            });
+        });
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+const updateField = async (id, fieldName, value, db, ObjectID) => {
+    const userId = new ObjectID(id);
+
+    try {
+        const result = await db.collection('users').update(
+            { _id: userId },
+            { $set: {
+                [fieldName]: value
+            } }
+        );
+
+        return result.toJSON();
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+const updateUserField = async (request, reply) => {
+    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { result } = request.pre;
+    const { id } = request.params;
+    const { name, fields } = request.payload;
+
+    if (result && result.success) {
+        try {
+            const response = await updateField(
+                id,
+                'password',
+                result.password,
+                db,
+                ObjectID
+            );
+            const { ok, nModified } = response;
+
+            if (ok && nModified) {
+                return reply({ success: true });
+            }
+
+            return reply({ success: false, message: 'Update was not successful' });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    if (result && !result.success) {
+        return reply(result.message);
+    }
+    // @ma: currently, this block isn't being used, but it probably will later on
+    try {
+        const key = Object.keys(fields).find(f => fields[f]);
+        const value = fields[key];
+        const response = await updateField(
+            id,
+            name,
+            value,
+            db,
+            ObjectID
+        );
+        const { ok, nModified } = response;
+
+        if (ok && nModified) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    } catch (e) {
+        console.log(e);
+    }
+};
+
 export {
     getUsers,
     verifyToken,
@@ -255,5 +390,7 @@ export {
     deleteUser,
     loginHandler,
     verifyCredentials,
-    verifyUniqueUser
+    verifyUniqueUser,
+    verifyPassword,
+    updateUserField
 };

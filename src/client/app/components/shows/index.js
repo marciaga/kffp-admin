@@ -46,7 +46,7 @@ class Shows extends Component {
 
         return (
             <div>
-                <p>Add New Show</p>
+                <h2>Add New Show</h2>
                 <FloatingActionButton onClick={() => this.handleClick('new', 'shows')} secondary={true} style={{}}>
                     <ContentAdd />
                 </FloatingActionButton>

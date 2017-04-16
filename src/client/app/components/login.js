@@ -28,6 +28,11 @@ class Login extends Component {
 
         const { loginForm } = this.props.auth;
         const { email, password } = loginForm;
+
+        if (!email || !password) {
+            return;
+        }
+
         const credentials = {
             email: email.trim(),
             password: password.trim()

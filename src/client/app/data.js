@@ -42,8 +42,15 @@ const shows = {
             },
             slug: {
                 fieldType: 'Text',
+                name: 'text',
                 label: 'Slug',
                 hintText: 'Enter the show slug'
+            },
+            description: {
+                fieldType: 'TextArea',
+                name: 'text-area',
+                label: 'Description',
+                hintText: 'Enter the show\'s description here'
             }
         }
     },
@@ -116,8 +123,15 @@ const shows = {
             },
             slug: {
                 fieldType: 'Text',
+                name: 'text',
                 label: 'Slug',
                 disabled: true
+            },
+            description: {
+                fieldType: 'TextArea',
+                name: 'text-area',
+                label: 'Description',
+                hintText: 'Enter the show\'s description here'
             }
         }
     }
@@ -134,7 +148,7 @@ const users = {
             },
             email: {
                 fieldType: 'Text',
-                name: 'email_field',
+                name: 'text',
                 hintText: 'Enter Email Address',
                 label: 'Email'
             },
@@ -182,7 +196,7 @@ const users = {
             },
             email: {
                 fieldType: 'Text',
-                name: 'email_field',
+                name: 'text',
                 hintText: 'Enter Email Address',
                 label: 'Email'
             },
@@ -195,6 +209,25 @@ const users = {
                     label: r,
                     value: r
                 }))
+            }
+        }
+    },
+    settings: {
+        fields: {
+            oldPassword: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Enter your current password'
+            },
+            newPasswordFirst: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Enter your new password'
+            },
+            newPasswordSecond: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Enter your new password again'
             }
         }
     }
@@ -216,6 +249,11 @@ export const playlistFields = {
             label: 'Album Name',
             name: 'album',
             hintText: 'Enter the album name'
+        },
+        label: {
+            label: 'Record Label',
+            name: 'label',
+            hintText: 'Enter the Record Label'
         },
         releaseDate: {
             label: 'Release Date',

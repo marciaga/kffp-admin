@@ -1,11 +1,12 @@
 import { browserHistory } from 'react-router';
 import { verifyLogin } from '../actions/authActions';
 import { LOCATION_CHANGE } from '../constants';
+import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 
 const authMiddleware = store => next => (action) => {
     switch (action.type) {
     case LOCATION_CHANGE:
-        const hasToken = localStorage.getItem('idToken') !== null;
+        const hasToken = getTokenFromLocalStorage() !== null;
         const { pathname } = action.payload;
 
         if (!hasToken && pathname !== '/') {
