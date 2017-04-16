@@ -25,7 +25,7 @@ Time.propTypes = {
     dispatch: PropTypes.func,
     fieldName: PropTypes.string,
     hintText: PropTypes.string,
-    value: PropTypes.string
+    value: PropTypes.number
 };
 
 export default Time;

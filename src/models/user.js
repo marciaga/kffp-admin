@@ -176,6 +176,7 @@ const verifyCredentials = (request, reply) => {
                 if (isValid) {
                     return reply(user);
                 }
+
                 return reply(Boom.create(401, 'Incorrect username or email!'));
             });
         } else {

@@ -7,7 +7,8 @@ import {
     SET_SONG_FORM,
     UPDATE_SONG_FORM,
     UPDATE_USER_SETTINGS_FIELD,
-    CLEAR_INPUT_FIELDS
+    CLEAR_INPUT_FIELDS,
+    ADD_FILE
 } from '../constants';
 
 const initialState = {
@@ -102,6 +103,12 @@ export default function formReducer (state = initialState, action) {
             ...state,
             fields: {}
         };
+
+    case ADD_FILE:
+        return {
+            ...state,
+
+        }
 
     default:
         return state;
