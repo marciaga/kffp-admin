@@ -106,9 +106,8 @@ export default function formReducer (state = initialState, action) {
 
     case ADD_FILE:
         return {
-            ...state,
-
-        }
+            ...state
+        };
 
     default:
         return state;
