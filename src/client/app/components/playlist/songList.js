@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -184,4 +184,12 @@ class SongList extends Component {
         );
     }
 }
+
+SongList.propTypes = {
+    nowPlaying: PropTypes.object,
+    currentPlaylist: PropTypes.object,
+    currentSearch: PropTypes.string,
+    dispatch: PropTypes.func
+};
+
 export default DragDropContext(HTML5Backend)(SongList);

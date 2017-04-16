@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -97,5 +97,12 @@ class SongForm extends Component {
         );
     }
 }
+
+SongForm.propTypes = {
+    currentSong: PropTypes.object,
+    playlistId: PropTypes.string,
+    dispatch: PropTypes.func,
+    id: PropTypes.string
+};
 
 export default SongForm;

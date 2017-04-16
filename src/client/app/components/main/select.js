@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import { navigateToPlaylists } from '../../actions/showActions';
@@ -31,6 +31,11 @@ const ShowSelect = ({ dispatch, userShows }) => {
             { renderItems(userShows) }
         </SelectField>
     );
+};
+
+ShowSelect.propTypes = {
+    dispatch: PropTypes.func,
+    userShows: PropTypes.array
 };
 
 export default ShowSelect;

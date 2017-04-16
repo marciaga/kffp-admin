@@ -78,10 +78,16 @@ const Navbar = ({ dispatch, errorMessage, user, isAuthenticated }) => {
     );
 };
 
+Menu.propTypes = {
+    dispatch: PropTypes.func,
+    user: PropTypes.object
+};
+
 Navbar.propTypes = {
     dispatch: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
-    errorMessage: PropTypes.string
+    errorMessage: PropTypes.string,
+    user: PropTypes.object
 };
 
 export default Navbar;

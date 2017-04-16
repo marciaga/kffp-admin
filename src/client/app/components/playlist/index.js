@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import PlaylistHistory from './list';
 import ShowHeader from './header';
@@ -56,5 +56,13 @@ class Playlist extends Component {
         );
     }
 }
+
+Playlist.propTypes = {
+    dispatch: PropTypes.func,
+    auth: PropTypes.object,
+    routing: PropTypes.object,
+    show: PropTypes.object,
+    playlist: PropTypes.object
+};
 
 export default connect(mapStateToProps)(Playlist);

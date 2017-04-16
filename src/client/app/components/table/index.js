@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import {
     Table,
@@ -137,5 +137,11 @@ class MainTable extends Component {
         );
     }
 }
+
+MainTable.propTypes = {
+    model: PropTypes.object,
+    tableConfig: PropTypes.object,
+    dispatch: PropTypes.func
+};
 
 export default connect(mapStateToProps)(MainTable);

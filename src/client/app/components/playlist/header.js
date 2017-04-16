@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 const renderUsers = (users) => {
     if (!users) {
@@ -23,6 +23,10 @@ const ShowHeader = ({ currentShow }) => {
             </h1>
         </div>
     );
+};
+
+ShowHeader.propTypes = {
+    currentShow: PropTypes.object
 };
 
 export default ShowHeader;

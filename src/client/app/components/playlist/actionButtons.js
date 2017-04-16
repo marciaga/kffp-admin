@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -23,5 +23,11 @@ const ActionButtons = ({ dispatch, showId, slug }) => (
         />
     </div>
 );
+
+ActionButtons.propTypes = {
+    dispatch: PropTypes.func,
+    showId: PropTypes.string,
+    slug: PropTypes.string
+};
 
 export default ActionButtons;
