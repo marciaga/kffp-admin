@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 
@@ -26,6 +26,14 @@ const Select = ({ dispatch, fieldName, label, value, items }) => {
             { renderItems(items) }
         </SelectField>
     );
+};
+
+Select.propTypes = {
+    dispatch: PropTypes.func,
+    fieldName: PropTypes.string,
+    label: PropTypes.string,
+    value: PropTypes.string,
+    items: PropTypes.array
 };
 
 export default Select;

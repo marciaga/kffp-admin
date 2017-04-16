@@ -62,7 +62,9 @@ export class Search extends Component {
 }
 
 Search.propTypes = {
-    dispatch: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired,
+    currentSearch: PropTypes.string,
+    search: PropTypes.object
 };
 
 export default connect(mapStateToProps)(Search);

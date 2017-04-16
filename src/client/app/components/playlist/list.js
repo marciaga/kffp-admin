@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import moment from 'moment';
@@ -83,5 +83,13 @@ class PlaylistHistory extends Component {
         );
     }
 }
+
+PlaylistHistory.propTypes = {
+    dispatch: PropTypes.func,
+    ui: PropTypes.object,
+    playlists: PropTypes.array,
+    playlistDrawer: PropTypes.boolean,
+    routing: PropTypes.object
+};
 
 export default connect(mapStateToProps)(PlaylistHistory);

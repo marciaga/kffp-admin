@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import { SHOWS_AUTOCOMPLETE_FILTER_LIMIT } from '../../../utils/constants';
 import { navigateToPlaylists } from '../../../actions/showActions';
@@ -32,6 +32,11 @@ const ShowsAutoCompleteFilter = ({ dispatch, shows }) => {
             onNewRequest={handleSelection}
         />
     );
+};
+
+ShowsAutoCompleteFilter.propTypes = {
+    dispatch: PropTypes.func,
+    shows: PropTypes.array
 };
 
 export default ShowsAutoCompleteFilter;

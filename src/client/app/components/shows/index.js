@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -55,5 +55,14 @@ class Shows extends Component {
         );
     }
 }
+
+Shows.propTypes = {
+    dispatch: PropTypes.func,
+    auth: PropTypes.object,
+    model: PropTypes.object,
+    modal: PropTypes.object,
+    showModal: PropTypes.boolean
+};
+
 
 export default connect(mapStateToProps)(Shows);

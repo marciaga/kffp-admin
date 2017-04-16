@@ -100,6 +100,9 @@ class Login extends Component {
 }
 
 Login.propTypes = {
+    dispatch: PropTypes.func,
+    auth: PropTypes.object,
+    loginForm: PropTypes.object,
     onLoginClick: PropTypes.func.isRequired,
     errorMessage: PropTypes.string
 };

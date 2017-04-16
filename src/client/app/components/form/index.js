@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import { prepareFormSubmit, deleteForm } from '../../actions/formActions';
-import * as FormFields from './fields/index.js';
+import * as FormFields from './fields';
 
 const mapStateToProps = state => ({
     form: state.form,
@@ -118,5 +118,15 @@ class Form extends Component {
         );
     }
 }
+
+Form.propTypes = {
+    dispatch: PropTypes.func,
+    fields: PropTypes.array,
+    form: PropTypes.object,
+    modelName: PropTypes.string,
+    formType: PropTypes.string,
+    data: PropTypes.object,
+    errors: PropTypes.object
+};
 
 export default connect(mapStateToProps)(Form);

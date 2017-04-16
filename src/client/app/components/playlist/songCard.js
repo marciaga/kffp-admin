@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import SongForm from './songForm';
 
@@ -51,6 +51,18 @@ const SongCard = (props) => {
             </CardText>
         </Card>
     );
+};
+
+SongCard.propTypes = {
+    album: PropTypes.string,
+    airBreak: PropTypes.string,
+    artist: PropTypes.string,
+    track: PropTypes.string,
+    releaseDate: PropTypes.string,
+    id: PropTypes.string,
+    form: PropTypes.object,
+    playlistId: PropTypes.string,
+    dispatch: PropTypes.func
 };
 
 export default SongCard;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 import { updateFormField } from '../../../actions/formActions';
 
@@ -32,3 +32,14 @@ export default class Text extends Component {
         );
     }
 }
+
+Text.propTypes = {
+    dispatch: PropTypes.func,
+    id: PropTypes.string,
+    name: PropTypes.string,
+    label: PropTypes.string,
+    value: PropTypes.string,
+    hintText: PropTypes.string,
+    fieldName: PropTypes.string,
+    disabled: PropTypes.boolean
+};

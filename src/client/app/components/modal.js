@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Dialog from 'material-ui/Dialog';
 import { handleModal } from '../actions/modalActions';
 import Form from './form';
@@ -31,5 +31,10 @@ class Modal extends Component {
         );
     }
 }
+
+Modal.propTypes = {
+    dispatch: PropTypes.func,
+    showModal: PropTypes.boolean
+};
 
 export default Modal;

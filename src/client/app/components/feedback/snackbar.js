@@ -36,6 +36,8 @@ class SnackbarMessage extends Component {
 export default connect(mapStateToProps)(SnackbarMessage);
 
 SnackbarMessage.propTypes = {
-    feedback: PropTypes.shape({}),
+    feedback: PropTypes.shape({
+        snackbar: PropTypes.object
+    }),
     dispatch: PropTypes.func
 };

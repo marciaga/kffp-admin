@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { getUserShows, getAllShows } from '../../actions/showActions';
 import ShowSelect from './select';
@@ -40,5 +40,11 @@ class Main extends Component {
         );
     }
 }
+
+Main.propTypes = {
+    dispatch: PropTypes.func,
+    show: PropTypes.object,
+    auth: PropTypes.object
+};
 
 export default connect(mapStateToProps)(Main);

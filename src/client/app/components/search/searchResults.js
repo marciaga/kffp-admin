@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { GridList, GridTile } from 'material-ui/GridList';
 import { addTrack } from '../../actions/playlistActions';
 
@@ -34,6 +34,12 @@ const SearchResults = ({ searchResults, playlistId, dispatch }) => {
             </GridList>
         </div>
     );
+};
+
+SearchResults.propTypes = {
+    searchResults: PropTypes.array,
+    playlistId: PropTypes.string,
+    dispatch: PropTypes.func
 };
 
 export default SearchResults;

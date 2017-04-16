@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import DatePicker from 'material-ui/DatePicker';
@@ -91,6 +91,14 @@ const PlaylistForm = (props) => {
             <h2 className="h2">No Currently Selected Playlist</h2>
         </div>
     );
+};
+
+PlaylistForm.propTypes = {
+    dispatch: PropTypes.func,
+    playlist: PropTypes.object,
+    show: PropTypes.object,
+    nowPlaying: PropTypes.object,
+    search: PropTypes.object
 };
 
 export default connect(mapStateToProps)(PlaylistForm);

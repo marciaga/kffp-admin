@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import TimePicker from 'material-ui/TimePicker';
 import { updateFormField } from '../../../actions/formActions';
 import { hoursToDateObj } from '../../../utils/helperFunctions';
@@ -19,6 +19,13 @@ const Time = ({ dispatch, fieldName, hintText, value }) => {
             onChange={handleTimePickerChange}
         />
     );
+};
+
+Time.propTypes = {
+    dispatch: PropTypes.func,
+    fieldName: PropTypes.string,
+    hintText: PropTypes.string,
+    value: PropTypes.string
 };
 
 export default Time;

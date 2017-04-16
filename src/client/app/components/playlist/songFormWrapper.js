@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -114,6 +114,12 @@ class SongFormWrapper extends Component {
         ));
     }
 }
+
+SongFormWrapper.propTypes = {
+    isDragging: PropTypes.boolean,
+    connectDragSource: PropTypes.func,
+    connectDropTarget: PropTypes.func
+};
 
 SongFormWrapper = DropTarget(type.SONG, songTarget, collectDropTarget)(SongFormWrapper);
 export default compose(connect(mapStateToProps),

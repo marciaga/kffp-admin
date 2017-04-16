@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card';
@@ -84,6 +83,12 @@ const UserSettingsForm = ({ fields, user, dispatch }) => {
             </div>
         </div>
     );
+};
+
+UserSettingsForm.propTypes = {
+    fields: PropTypes.object,
+    user: PropTypes.object,
+    dispatch: PropTypes.func
 };
 
 export default UserSettingsForm;

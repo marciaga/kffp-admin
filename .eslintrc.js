@@ -18,6 +18,7 @@ module.exports = {
         'react/jsx-indent': [2, 4],
         'react/jsx-filename-extension': [1, { 'extensions': ['.js', '.jsx'] }],
         'react/prop-types': 1,
+        'react/forbid-prop-types': [1, { 'forbid': [] }],
         'react/jsx-indent-props': [2, 4],
         'react/no-multi-comp':[0],
         'react/jsx-boolean-value': [2, 'always'],

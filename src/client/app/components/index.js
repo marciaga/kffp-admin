@@ -36,7 +36,10 @@ const App = (props) => {
 };
 
 App.propTypes = {
-    dispatch: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired,
+    auth: PropTypes.object,
+    children: PropTypes.object,
+    modal: PropTypes.object
 };
 
 export default connect(mapStateToProps)(App);
