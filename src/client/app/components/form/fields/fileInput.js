@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import { fileUpload } from '../../../actions/formActions';
+import ThumbnailImage from './image';
 
 
-const FileInput = ({ label, dispatch }) => {
+const FileInput = ({ label, value, dispatch }) => {
     const handleInputChange = (e) => {
         const formData = new FormData();
 
@@ -13,22 +14,26 @@ const FileInput = ({ label, dispatch }) => {
     };
 
     return (
-        <RaisedButton
-            containerElement="label"
-            label={label}
-        >
-            <input
-                type="file"
-                style={{ display: 'none' }}
-                onChange={handleInputChange}
-            />
-        </RaisedButton>
+        <div>
+            <RaisedButton
+                containerElement="label"
+                label={label}
+            >
+                <input
+                    type="file"
+                    style={{ display: 'none' }}
+                    onChange={handleInputChange}
+                />
+            </RaisedButton>
+            <ThumbnailImage filePath={value} />
+        </div>
     );
 };
 
 FileInput.propTypes = {
     label: PropTypes.string,
-    dispatch: PropTypes.func
+    dispatch: PropTypes.func,
+    value: PropTypes.string
 };
 
 export default FileInput;

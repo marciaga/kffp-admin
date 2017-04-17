@@ -11,8 +11,7 @@ import {
     UPDATE_SONG_FORM,
     UPDATE_USER_SETTINGS_FIELD,
     SNACKBAR_MESSAGE,
-    CLEAR_INPUT_FIELDS,
-    ADD_FILE
+    CLEAR_INPUT_FIELDS
 } from '../constants';
 import { updateModelData } from './modelActions';
 import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
@@ -250,9 +249,14 @@ const fileUpload = (formData) => {
                 }
             });
 
+            const newData = {
+                fieldName: 'primaryImage',
+                value: data.filePath
+            };
+
             dispatch({
-                type: ADD_FILE,
-                data
+                type: UPDATE_FORM_FIELD,
+                data: newData
             });
         } catch (err) {
             console.log(err);

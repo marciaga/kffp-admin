@@ -28,7 +28,6 @@ export const SET_SONG_FORM = 'SET_SONG_FORM';
 export const UPDATE_SONG_FORM = 'UPDATE_SONG_FORM';
 export const UPDATE_USER_SETTINGS_FIELD = 'UPDATE_USER_SETTINGS_FIELD';
 export const CLEAR_INPUT_FIELDS = 'CLEAR_INPUT_FIELDS';
-export const ADD_FILE = 'ADD_FILE';
 
 // Model
 export const SET_MODEL = 'SET_MODEL';
