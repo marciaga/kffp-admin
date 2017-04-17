@@ -7,8 +7,7 @@ import {
     SET_SONG_FORM,
     UPDATE_SONG_FORM,
     UPDATE_USER_SETTINGS_FIELD,
-    CLEAR_INPUT_FIELDS,
-    ADD_FILE
+    CLEAR_INPUT_FIELDS
 } from '../constants';
 
 const initialState = {
@@ -102,17 +101,6 @@ export default function formReducer (state = initialState, action) {
         return {
             ...state,
             fields: {}
-        };
-
-    case ADD_FILE:
-        return {
-            ...state,
-            fields: {
-                ...state.fields,
-                primaryImage: {
-                    
-                }
-            }
         };
 
     default:
