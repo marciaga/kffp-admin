@@ -11,7 +11,7 @@ const showSchema = Joi.object().keys({
     isActive: Joi.boolean().required(),
     slug: Joi.string().required(),
     description: Joi.string(),
-    primayImage: Joi.string()
+    primaryImage: Joi.string()
 });
 
 const getShows = (request, reply) => {
