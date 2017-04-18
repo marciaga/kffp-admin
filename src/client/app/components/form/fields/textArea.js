@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 import { updateFormField } from '../../../actions/formActions';
 
-export default class Text extends Component {
+export default class TextArea extends Component {
     constructor (props) {
         super(props);
 
@@ -15,25 +15,25 @@ export default class Text extends Component {
     }
 
     render () {
-        const { id, name, label, value, hintText, fieldName, disabled } = this.props;
-        const fieldType = fieldName === 'password' ? 'password' : 'text';
+        const { id, name, label, value, hintText, disabled } = this.props;
 
         return (
             <TextField
                 id={id}
                 name={name}
+                multiLine={true}
                 floatingLabelText={label}
                 value={value || ''}
                 hintText={hintText}
                 onChange={this.handleTextFieldChange}
-                type={fieldType}
+                type="textarea"
                 disabled={disabled}
             />
         );
     }
 }
 
-Text.propTypes = {
+TextArea.propTypes = {
     dispatch: PropTypes.func,
     id: PropTypes.string,
     name: PropTypes.string,

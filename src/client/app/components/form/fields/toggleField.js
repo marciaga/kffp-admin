@@ -30,7 +30,7 @@ ToggleField.propTypes = {
     dispatch: PropTypes.func,
     fieldName: PropTypes.string,
     label: PropTypes.string,
-    value: PropTypes.string
+    value: PropTypes.bool
 };
 
 export default ToggleField;

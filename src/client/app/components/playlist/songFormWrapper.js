@@ -116,7 +116,7 @@ class SongFormWrapper extends Component {
 }
 
 SongFormWrapper.propTypes = {
-    isDragging: PropTypes.boolean,
+    isDragging: PropTypes.bool,
     connectDragSource: PropTypes.func,
     connectDropTarget: PropTypes.func
 };
