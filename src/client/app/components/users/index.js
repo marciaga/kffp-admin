@@ -59,7 +59,7 @@ class Users extends Component {
 
 Users.propTypes = {
     model: PropTypes.object,
-    showModal: PropTypes.boolean,
+    showModal: PropTypes.bool,
     dispatch: PropTypes.func,
     modal: PropTypes.object,
     auth: PropTypes.object

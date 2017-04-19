@@ -34,7 +34,7 @@ class Modal extends Component {
 
 Modal.propTypes = {
     dispatch: PropTypes.func,
-    showModal: PropTypes.boolean
+    showModal: PropTypes.bool
 };
 
 export default Modal;

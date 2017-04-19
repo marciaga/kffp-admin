@@ -61,7 +61,7 @@ Shows.propTypes = {
     auth: PropTypes.object,
     model: PropTypes.object,
     modal: PropTypes.object,
-    showModal: PropTypes.boolean
+    showModal: PropTypes.bool
 };
 
 

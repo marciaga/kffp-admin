@@ -88,7 +88,7 @@ PlaylistHistory.propTypes = {
     dispatch: PropTypes.func,
     ui: PropTypes.object,
     playlists: PropTypes.array,
-    playlistDrawer: PropTypes.boolean,
+    playlistDrawer: PropTypes.bool,
     routing: PropTypes.object
 };
 

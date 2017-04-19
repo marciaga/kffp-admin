@@ -41,5 +41,5 @@ Text.propTypes = {
     value: PropTypes.string,
     hintText: PropTypes.string,
     fieldName: PropTypes.string,
-    disabled: PropTypes.boolean
+    disabled: PropTypes.bool
 };
