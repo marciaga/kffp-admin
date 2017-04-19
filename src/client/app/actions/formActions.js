@@ -237,6 +237,33 @@ const setSongForm = songs => ({
     data: songs
 });
 
+const fileUpload = (formData) => {
+    const url = `${API_ENDPOINT}/upload`;
+    const idToken = getTokenFromLocalStorage();
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.post(url, formData, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+
+            const newData = {
+                fieldName: 'primaryImage',
+                value: data.filePath
+            };
+
+            dispatch({
+                type: UPDATE_FORM_FIELD,
+                data: newData
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    };
+};
+
 export {
     prepareFormSubmit,
     setFormData,
@@ -248,5 +275,6 @@ export {
     setUpdateFormData,
     deleteForm,
     updateUserSettingsInput,
-    updateUserPassword
+    updateUserPassword,
+    fileUpload
 };

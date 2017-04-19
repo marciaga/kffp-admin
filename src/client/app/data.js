@@ -48,9 +48,14 @@ const shows = {
             },
             description: {
                 fieldType: 'TextArea',
-                name: 'text-area',
+                name: 'textarea',
                 label: 'Description',
                 hintText: 'Enter the show\'s description here'
+            },
+            primaryImage: {
+                fieldType: 'FileInput',
+                name: 'file',
+                label: 'Main Image'
             }
         }
     },
@@ -129,9 +134,14 @@ const shows = {
             },
             description: {
                 fieldType: 'TextArea',
-                name: 'text-area',
+                name: 'textarea',
                 label: 'Description',
                 hintText: 'Enter the show\'s description here'
+            },
+            primaryImage: {
+                fieldType: 'FileInput',
+                name: 'file',
+                label: 'Main Image'
             }
         }
     }
