@@ -55,13 +55,18 @@ export default class AutoCompleteField extends Component {
             return [];
         }
 
-        return items.map((item, i) => (
-            <ListItem
-                key={i}
-                primaryText={item}
-                leftIcon={<Album />}
-            />
-        ));
+
+        return items.map((item, i) => {
+            const { displayName } = item;
+
+            return (
+                <ListItem
+                    key={i}
+                    primaryText={displayName}
+                    leftIcon={<Album />}
+                />
+            );
+        });
     }
 
     render () {
@@ -97,5 +102,5 @@ AutoCompleteField.propTypes = {
     hintText: PropTypes.string,
     label: PropTypes.string,
     searchResults: PropTypes.arrayOf(PropTypes.object),
-    value: PropTypes.arrayOf(PropTypes.string)
+    value: PropTypes.arrayOf(PropTypes.object)
 };
