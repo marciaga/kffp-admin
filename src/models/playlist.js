@@ -37,20 +37,37 @@ const getPlaylists = async (db, show) => {
     }
 };
 
-const getShow = async (db, slug) => (
-    await db.collection('shows').findOne({
-        slug
-    })
-);
+const getShow = async (db, ObjectID, slug) => {
+    try {
+        const show = await db.collection('shows').findOne({ slug });
+
+        const objectIds = show.users.map(id => new ObjectID(id));
+        const users = await db.collection('users').find({
+            _id: { $in: objectIds }
+        }, {
+            _id: 0,
+            displayName: 1
+        }).toArray();
+
+        show.users = users.map(user => user.displayName);
+
+        return show;
+    } catch (e) {
+        console.log(e);
+        return {};
+    }
+};
 
 // TODO this needs to be limited so we don't fetch everything at once
 const getPlaylistsByShow = async (request, reply) => {
-    const { db } = request.server.plugins.mongodb;
+    const { db, ObjectID } = request.server.plugins.mongodb;
     // playlistId is sometimes available on request.params
     const { slug } = request.params;
 
     try {
-        const show = await getShow(db, slug);
+        const show = await getShow(db, ObjectID, slug);
+
+        console.log(show);
         const playlists = await getPlaylists(db, show);
         const mergedData = {
             playlists,
