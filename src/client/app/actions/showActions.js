@@ -33,8 +33,8 @@ const getAllShows = () => {
     };
 };
 
-const getUserShows = (userName) => {
-    const user = encodeURIComponent(userName);
+const getUserShows = (userId) => {
+    const user = encodeURIComponent(userId);
     const url = `/api/shows?isActive=true&users=${user}`;
     const idToken = getTokenFromLocalStorage();
 

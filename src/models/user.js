@@ -55,9 +55,10 @@ const loginHandler = (request, reply) => {
         bcrypt.compare(password, user.password, (error, isValid) => {
             if (isValid) {
                 const idToken = createToken(user);
-                const { email, displayName, role } = user;
+                const { _id, email, displayName, role } = user;
 
                 return reply({
+                    id: _id,
                     email,
                     displayName,
                     idToken,
