@@ -276,6 +276,17 @@ const fileUpload = (formData) => {
     };
 };
 
+const removeUserFromShow = val => (dispatch, getState) => {
+    const { form } = getState();
+    const { fields } = form;
+    const { users } = fields;
+    const { value } = users;
+
+    const data = value.filter(item => item._id !== val);
+
+    return dispatch(updateFormField('users', data));
+};
+
 export {
     prepareFormSubmit,
     setFormData,
@@ -288,5 +299,6 @@ export {
     deleteForm,
     updateUserSettingsInput,
     updateUserPassword,
-    fileUpload
+    fileUpload,
+    removeUserFromShow
 };
