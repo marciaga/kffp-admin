@@ -91,7 +91,6 @@ export default class AutoCompleteField extends Component {
     render () {
         const { hintText, label, searchResults, value } = this.props;
         const dataSource = this.renderAutocompleteItems(searchResults);
-        console.log('all props', this.props)
 
         return (
             <div>

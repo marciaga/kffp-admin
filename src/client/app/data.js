@@ -93,7 +93,8 @@ const shows = {
                 fieldType: 'Text',
                 name: 'text',
                 hintText: 'Enter the show name',
-                label: 'Show Name'
+                label: 'Show Name',
+                validation: ['string', 'required']
             },
             users: {
                 fieldType: 'AutoCompleteField',

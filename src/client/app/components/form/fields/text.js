@@ -15,7 +15,7 @@ export default class Text extends Component {
     }
 
     render () {
-        const { id, name, label, value, hintText, fieldName, disabled } = this.props;
+        const { id, name, label, value, hintText, fieldName, disabled, error } = this.props;
         const fieldType = fieldName === 'password' ? 'password' : 'text';
 
         return (
@@ -28,6 +28,7 @@ export default class Text extends Component {
                 onChange={this.handleTextFieldChange}
                 type={fieldType}
                 disabled={disabled}
+                errorText={error}
             />
         );
     }
@@ -41,5 +42,6 @@ Text.propTypes = {
     value: PropTypes.string,
     hintText: PropTypes.string,
     fieldName: PropTypes.string,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    error: PropTypes.string
 };

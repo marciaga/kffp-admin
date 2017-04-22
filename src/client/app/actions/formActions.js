@@ -11,11 +11,13 @@ import {
     UPDATE_SONG_FORM,
     UPDATE_USER_SETTINGS_FIELD,
     SNACKBAR_MESSAGE,
-    CLEAR_INPUT_FIELDS
+    CLEAR_INPUT_FIELDS,
+    SHOW_VALIDATION_ERRORS
 } from '../constants';
 import { updateModelData } from './modelActions';
 import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
+import validateModelForm from '../utils/formValidation';
 import Models from '../data';
 
 const updateFormField = (fieldName, value) => ({
@@ -124,6 +126,11 @@ const receiveFormResult = data => ({
     data
 });
 
+const receiveValidationErrors = data => ({
+    type: SHOW_VALIDATION_ERRORS,
+    data
+});
+
 const prepareFormSubmit = (type, modelName) => {
     const idToken = getTokenFromLocalStorage();
     const method = formTypesToHttpVerbs[type];
@@ -147,7 +154,11 @@ const prepareFormSubmit = (type, modelName) => {
             users: formData.users.map(user => user._id)
         } : formData;
 
-        // perform some serious validations here
+        const validationErrors = validateModelForm(modelName, type, dataToSend);
+
+        if (validationErrors.length) {
+            return dispatch(receiveValidationErrors(validationErrors));
+        }
 
         try {
             const { data } = await axios[method](formUrl, dataToSend, {
