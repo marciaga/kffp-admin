@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import Boom from 'boom';
+import Promise from 'bluebird';
 
 const showSchema = Joi.object().keys({
     _id: Joi.string(),
@@ -14,19 +15,33 @@ const showSchema = Joi.object().keys({
     primaryImage: Joi.string()
 });
 
-const getShows = (request, reply) => {
-    const { db } = request.server.plugins.mongodb;
+const getShows = async (request, reply) => {
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const params = request.query || {};
 
-    db.collection('shows').find(params, async (err, cursor) => {
-        if (err) {
-            return reply(Boom.internal('Internal MongoDB error', err));
-        }
+    try {
+        const result = await db.collection('shows').find(params).toArray();
 
-        const shows = await cursor.toArray();
+        const transformedResult = result.map(async (doc) => {
+            const objectIds = doc.users.map(id => new ObjectID(id));
 
-        return reply(shows);
-    });
+            const users = await db.collection('users').find({
+                _id: { $in: objectIds }
+            }, {
+                _id: 1,
+                displayName: 1
+            }).toArray();
+
+            doc.users = users;
+
+            return new Promise(resolve => resolve(doc));
+        });
+
+        Promise.all(transformedResult).then(r => reply(r));
+    } catch (e) {
+        console.log(e);
+        return reply(Boom.internal('Internal MongoDB error', e));
+    }
 };
 
 const updateShow = (request, reply) => {

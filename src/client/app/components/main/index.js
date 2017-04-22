@@ -16,9 +16,9 @@ class Main extends Component {
         const { user } = auth;
 
         if (this.props.auth.user !== user) {
-            const { displayName } = user;
+            const { id } = user;
 
-            this.props.dispatch(getUserShows(displayName));
+            this.props.dispatch(getUserShows(id));
             this.props.dispatch(getAllShows());
         }
     }

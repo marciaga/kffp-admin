@@ -134,11 +134,23 @@ const prepareFormSubmit = (type, modelName) => {
         const { fields } = form;
         const formData = Object.keys(fields).reduce((memo, f) => {
             memo[f] = fields[f].value;
+
             return memo;
         }, {});
 
+        /* we only need one transofrm so far, but we need to extract this logic
+         * into a separate function should we have additional cases later.
+        */
+        const hasUserProperty = Object.prototype.hasOwnProperty.call(formData, 'users');
+        const dataToSend = hasUserProperty ? {
+            ...formData,
+            users: formData.users.map(user => user._id)
+        } : formData;
+
+        // perform some serious validations here
+
         try {
-            const { data } = await axios[method](formUrl, formData, {
+            const { data } = await axios[method](formUrl, dataToSend, {
                 headers: {
                     Authorization: `Bearer ${idToken}`
                 }
@@ -264,6 +276,17 @@ const fileUpload = (formData) => {
     };
 };
 
+const removeUserFromShow = val => (dispatch, getState) => {
+    const { form } = getState();
+    const { fields } = form;
+    const { users } = fields;
+    const { value } = users;
+
+    const data = value.filter(item => item._id !== val);
+
+    return dispatch(updateFormField('users', data));
+};
+
 export {
     prepareFormSubmit,
     setFormData,
@@ -276,5 +299,6 @@ export {
     deleteForm,
     updateUserSettingsInput,
     updateUserPassword,
-    fileUpload
+    fileUpload,
+    removeUserFromShow
 };

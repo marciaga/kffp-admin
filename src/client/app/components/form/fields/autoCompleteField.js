@@ -1,10 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import Album from 'material-ui/svg-icons/av/album';
+import ActionDelete from 'material-ui/svg-icons/action/delete';
 import AutoComplete from 'material-ui/AutoComplete';
 import { List, ListItem } from 'material-ui/List';
 
 import MenuItem from 'material-ui/MenuItem';
-import { getUserAutoComplete, addUsersToShow } from '../../../actions/formActions';
+import {
+    removeUserFromShow,
+    getUserAutoComplete,
+    addUsersToShow
+} from '../../../actions/formActions';
 import { FORM_FIELD_DEBOUNCE_TIME } from '../../../utils/constants';
 import { debounce } from '../../../utils/helperFunctions';
 
@@ -29,7 +34,9 @@ export default class AutoCompleteField extends Component {
 
     handleSelection (selected) {
         if (selected) {
-            this.props.dispatch(addUsersToShow(selected.text));
+            const { value } = selected.value.props;
+
+            this.props.dispatch(addUsersToShow(value._id));
         }
     }
 
@@ -39,12 +46,16 @@ export default class AutoCompleteField extends Component {
         }
 
         return results.map((r) => {
-            const itemText = `${r.displayName} | ${r.email}`;
+            const { displayName, email, _id } = r;
+            const itemText = `${displayName} | ${email}`;
 
             return {
-                text: r.displayName,
+                text: displayName,
                 value: (
-                    <MenuItem primaryText={itemText} />
+                    <MenuItem
+                        primaryText={itemText}
+                        value={_id}
+                    />
                 )
             };
         });
@@ -55,18 +66,32 @@ export default class AutoCompleteField extends Component {
             return [];
         }
 
-        return items.map((item, i) => (
-            <ListItem
-                key={i}
-                primaryText={item}
-                leftIcon={<Album />}
-            />
-        ));
+
+        return items.map((item, i) => {
+            const { displayName, _id } = item;
+            const DeleteIcon = (
+                <ActionDelete
+                    color={'red'}
+                    onClick={() =>
+                        this.props.dispatch(removeUserFromShow(_id))}
+                />
+            );
+
+            return (
+                <ListItem
+                    key={i}
+                    primaryText={displayName}
+                    leftIcon={<Album />}
+                    rightIcon={DeleteIcon}
+                />
+            );
+        });
     }
 
     render () {
         const { hintText, label, searchResults, value } = this.props;
         const dataSource = this.renderAutocompleteItems(searchResults);
+        console.log('all props', this.props)
 
         return (
             <div>
@@ -97,5 +122,5 @@ AutoCompleteField.propTypes = {
     hintText: PropTypes.string,
     label: PropTypes.string,
     searchResults: PropTypes.arrayOf(PropTypes.object),
-    value: PropTypes.arrayOf(PropTypes.string)
+    value: PropTypes.arrayOf(PropTypes.object)
 };

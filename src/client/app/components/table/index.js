@@ -88,7 +88,12 @@ class MainTable extends Component {
 
     renderTableRowCell (item) {
         return Object.keys(item).map((r, i) => {
-            const value = item[r];
+            let value = item[r];
+            // TODO @ma: if value is an array and contains objects, we need to return a string here
+            // this is so far only true of show.users, but we'll need a better solution
+            if (Array.isArray(value)) {
+                value = value.map(v => v.displayName).join(', ');
+            }
 
             return (
                 <TableRowColumn key={i}>
