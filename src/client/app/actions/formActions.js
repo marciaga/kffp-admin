@@ -134,11 +134,23 @@ const prepareFormSubmit = (type, modelName) => {
         const { fields } = form;
         const formData = Object.keys(fields).reduce((memo, f) => {
             memo[f] = fields[f].value;
+
             return memo;
         }, {});
 
+        /* we only need one transofrm so far, but we need to extract this logic
+         * into a separate function should we have additional cases later.
+        */
+        const hasUserProperty = Object.prototype.hasOwnProperty.call(formData, 'users');
+        const dataToSend = hasUserProperty ? {
+            ...formData,
+            users: formData.users.map(user => user._id)
+        } : formData;
+
+        // perform some serious validations here
+
         try {
-            const { data } = await axios[method](formUrl, formData, {
+            const { data } = await axios[method](formUrl, dataToSend, {
                 headers: {
                     Authorization: `Bearer ${idToken}`
                 }

@@ -29,7 +29,9 @@ export default class AutoCompleteField extends Component {
 
     handleSelection (selected) {
         if (selected) {
-            this.props.dispatch(addUsersToShow(selected.text));
+            const { value } = selected.value.props;
+
+            this.props.dispatch(addUsersToShow(value._id));
         }
     }
 
@@ -39,12 +41,16 @@ export default class AutoCompleteField extends Component {
         }
 
         return results.map((r) => {
-            const itemText = `${r.displayName} | ${r.email}`;
+            const { displayName, email, _id } = r;
+            const itemText = `${displayName} | ${email}`;
 
             return {
-                text: r.displayName,
+                text: displayName,
                 value: (
-                    <MenuItem primaryText={itemText} />
+                    <MenuItem
+                        primaryText={itemText}
+                        value={_id}
+                    />
                 )
             };
         });

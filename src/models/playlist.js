@@ -67,7 +67,6 @@ const getPlaylistsByShow = async (request, reply) => {
     try {
         const show = await getShow(db, ObjectID, slug);
 
-        console.log(show);
         const playlists = await getPlaylists(db, show);
         const mergedData = {
             playlists,
