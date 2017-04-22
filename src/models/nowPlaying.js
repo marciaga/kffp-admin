@@ -1,3 +1,5 @@
+import Boom from 'boom';
+
 const updateNowPlaying = async (request, reply) => {
     const { playlistId, song, playedAt } = request.payload;
     const { id, ...songData } = song;
@@ -39,6 +41,7 @@ const updateNowPlaying = async (request, reply) => {
         return reply({ success: false, message: 'Could not set as Now Playing' });
     } catch (e) {
         console.log(e);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 

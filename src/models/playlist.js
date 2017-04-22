@@ -34,6 +34,7 @@ const getPlaylists = async (db, show) => {
         return result;
     } catch (e) {
         console.log(e);
+        return false;
     }
 };
 
@@ -76,7 +77,7 @@ const getPlaylistsByShow = async (request, reply) => {
         return reply(mergedData);
     } catch (err) {
         console.log(err);
-        return err;
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -101,19 +102,16 @@ const createPlaylist = async (request, reply) => {
         }).toArray();
 
         if (result.length) {
-            const msg = {
-                code: 401,
-                message: 'That playlist already exists'
-            };
+            const msg = 'That playlist already exists';
 
-            return reply(msg);
+            return reply(Boom.unauthorized(msg));
         }
 
         try {
             Joi.validate(newPlaylist, playlistSchema, (err, value) => {
                 if (err) {
                     console.log(err);
-                    throw Boom.badRequest(err);
+                    return reply(Boom.badRequest());
                 }
                 // if value === null, object is valid
                 if (value === null) {
@@ -121,12 +119,14 @@ const createPlaylist = async (request, reply) => {
                 }
             });
         } catch (err) {
-            return reply(err);
+            console.log(err);
+            return reply(Boom.interval('Something went wrong'));
         }
 
         db.collection('playlists').insert(newPlaylist, (err, doc) => {
             if (err) {
-                return reply(Boom.internal('Internal MongoDB error', err));
+                console.log(err);
+                return reply(Boom.serverUnavailable());
             }
 
             const { ops } = doc;
@@ -134,11 +134,11 @@ const createPlaylist = async (request, reply) => {
                 i === 0
             ));
 
-            return reply(newDoc);
+            return reply(newDoc).code(201);
         });
     } catch (err) {
         console.log(err);
-        return reply(err);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -160,6 +160,7 @@ const deletePlaylist = async (request, reply) => {
         return reply({ success: false, message: 'Playlist delete was not successful' });
     } catch (e) {
         console.log(e);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -197,7 +198,7 @@ const addTrack = async (request, reply) => {
         return reply({ success: false, message: 'Update was not successful' });
     } catch (err) {
         console.log(err);
-        return reply(err);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -229,7 +230,7 @@ const updateTracks = async (request, reply) => {
         return reply({ success: false, message: 'Update was not successful' });
     } catch (err) {
         console.log(err);
-        return reply(err);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -259,7 +260,7 @@ const updatePlaylistField = async (request, reply) => {
         return reply({ success: false, message: 'Update was not successful' });
     } catch (err) {
         console.log(err);
-        return reply(err);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -287,7 +288,7 @@ const updateTrackOrder = async (request, reply) => {
         return reply({ success: false, message: 'Update was not successful' });
     } catch (err) {
         console.log(err);
-        return reply(err);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -311,7 +312,7 @@ const deleteTrackFromPlaylist = async (request, reply) => {
         return reply({ success: false, message: 'Update was not successful' });
     } catch (err) {
         console.log(err);
-        return reply(err);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 

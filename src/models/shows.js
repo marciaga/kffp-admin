@@ -40,7 +40,7 @@ const getShows = async (request, reply) => {
         Promise.all(transformedResult).then(r => reply(r));
     } catch (e) {
         console.log(e);
-        return reply(Boom.internal('Internal MongoDB error', e));
+        return reply(Boom.serverUnavailable());
     }
 };
 
@@ -52,7 +52,7 @@ const updateShow = (request, reply) => {
         Joi.validate(show, showSchema, (err, value) => {
             if (err) {
                 console.log(err);
-                throw Boom.badRequest(err);
+                return reply(Boom.serverUnavailable());
             }
             // if value === null, object is valid
             if (value === null) {
@@ -60,7 +60,8 @@ const updateShow = (request, reply) => {
             }
         });
     } catch (err) {
-        return reply(err);
+        console.log(err);
+        return reply(Boom.internal('Something went wrong'));
     }
 
     const showId = new ObjectID(show._id);
@@ -69,7 +70,8 @@ const updateShow = (request, reply) => {
 
     db.collection('shows').update({ _id: showId }, fieldsToUpdate, (error, result) => {
         if (error) {
-            return reply(Boom.internal('Internal MongoDB error', error));
+            console.log(error);
+            return reply(Boom.serverUnavailable());
         }
         // response, e.g. { ok: 1, nModified: 1, n: 1 }
         const response = result.toJSON();
@@ -91,25 +93,21 @@ const upsertShow = (request, reply) => {
         {}, { limit: 1 },
         async (err, cursor) => {
             if (err) {
-                return reply(Boom.internal('Internal MongoDB error', err));
+                console.log(err);
+                return reply(Boom.serverUnavailable());
             }
 
             const existingShow = await cursor.toArray();
 
             if (existingShow.length) {
-                const msg = {
-                    code: 401,
-                    message: 'A record with that show name already exists'
-                };
-
-                return reply(msg);
+                return reply(Boom.unauthorized('A record with that show name already exists'));
             }
             // Validate against the Show schema
             try {
                 Joi.validate(newShow, showSchema, (validationErr, value) => {
                     if (validationErr) {
                         console.log(validationErr);
-                        throw Boom.badRequest(validationErr);
+                        return reply(Boom.badRequest());
                     }
                     // if value === null, object is valid
                     if (value === null) {
@@ -117,13 +115,15 @@ const upsertShow = (request, reply) => {
                     }
                 });
             } catch (e) {
-                return reply(e);
+                console.log(e);
+                return reply(Boom.internal('Something went wrong'));
             }
 
             // insert the record
             db.collection('shows').insert(newShow, (error, doc) => {
                 if (error) {
-                    return reply(Boom.internal('Internal MongoDB error', error));
+                    console.log(error);
+                    return reply(Boom.serverUnavailable());
                 }
 
                 const { ops } = doc;
@@ -131,7 +131,7 @@ const upsertShow = (request, reply) => {
                     i === 0
                 ));
 
-                return reply(newDoc);
+                return reply(newDoc).code(201);
             });
         }
     );
@@ -144,7 +144,8 @@ const removeShow = (request, reply) => {
 
     db.collection('shows').remove({ _id: showId }, { justOne: true }, (err, result) => {
         if (err) {
-            return reply(Boom.internal('Internal MongoDB error', err));
+            console.log(err);
+            return reply(Boom.serverUnavailable());
         }
         // result, e.g. { ok: 1, n: 0 }
         const response = result.toJSON();
