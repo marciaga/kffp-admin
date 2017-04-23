@@ -7,7 +7,7 @@ import {
 } from '../utils/helperFunctions';
 import { API_ENDPOINT, GENERIC_ERROR_MESSAGE } from '../utils/constants';
 import { getShow } from './showActions';
-import { snackbarMessage } from './feedbackActions';
+import { snackbarMessage, confirmOpen } from './feedbackActions';
 import {
     GET_SHOW_PLAYLISTS,
     ADD_PLAYLIST,
@@ -253,6 +253,7 @@ const deleteSongFromPlaylist = (song, playlistId) => async (dispatch) => {
 
             dispatch(snackbarMessage(errorMessage));
         }
+        dispatch(confirmOpen(false, null));
     } catch (err) {
         dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
     }

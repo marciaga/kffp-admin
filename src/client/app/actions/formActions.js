@@ -200,13 +200,11 @@ const deleteForm = (id, modelName) => {
 
     return async (dispatch) => {
         try {
-            const { data } = await axios.delete(url, { // TODO data is not used
+            await axios.delete(url, {
                 headers: {
                     Authorization: `Bearer ${idToken}`
                 }
             });
-
-            console.log(data);
 
             dispatch({
                 type: DELETE_MODEL,

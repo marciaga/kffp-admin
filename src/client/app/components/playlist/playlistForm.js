@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import DatePicker from 'material-ui/DatePicker';
 import RaisedButton from 'material-ui/RaisedButton';
+import ConfirmationDialog from '../feedback/confirm';
 import Search from '../search';
 import SearchResults from '../search/searchResults';
 import SongList from './songList';
@@ -10,30 +11,24 @@ import {
     updatePlaylistDate,
     deletePlaylist
 } from '../../actions/playlistActions';
+import { confirmOpen } from '../../actions/feedbackActions';
 
 const mapStateToProps = state => ({
     auth: state.auth,
     show: state.show,
     playlist: state.playlist,
     search: state.search,
-    nowPlaying: state.nowPlaying
+    nowPlaying: state.nowPlaying,
+    feedback: state.feedback
 });
 
 const shouldShowCurrentPlaylist = obj => (obj ? Object.keys(obj).length > 1 : false);
-
-const handleDeleteClick = (dispatch, playlistId, showSlug) => {
-    if (!window.confirm('Are you sure you want to delete this playlist?')) {
-        return false;
-    }
-
-    dispatch(deletePlaylist(playlistId, showSlug));
-};
 
 const handleDateChange = (u, { date, playlistId }, dispatch) =>
     dispatch(updatePlaylistDate(date, playlistId));
 
 const PlaylistForm = (props) => {
-    const { playlist, show, search, nowPlaying, dispatch } = props;
+    const { playlist, show, search, nowPlaying, dispatch, feedback } = props;
     const { currentPlaylist } = playlist;
     const { searchResults, currentSearch } = search;
     const { currentShow: { slug = '' } } = show;
@@ -77,11 +72,15 @@ const PlaylistForm = (props) => {
                         label="Delete Playlist"
                         labelColor="white"
                         backgroundColor="red"
-                        onClick={() =>
-                            handleDeleteClick(dispatch, playlistId, slug)
-                        }
+                        onClick={() => dispatch(confirmOpen(true, null))}
                     />
                 </div>
+                <ConfirmationDialog
+                    title="Are you sure you want to delete this Playlist?"
+                    open={feedback.confirmDialog.open}
+                    cancelHandler={() => dispatch(confirmOpen(false, null))}
+                    okHandler={() => dispatch(deletePlaylist(playlistId, slug))}
+                />
             </div>
         );
     }
@@ -98,7 +97,8 @@ PlaylistForm.propTypes = {
     playlist: PropTypes.object,
     show: PropTypes.object,
     nowPlaying: PropTypes.object,
-    search: PropTypes.object
+    search: PropTypes.object,
+    feedback: PropTypes.object
 };
 
 export default connect(mapStateToProps)(PlaylistForm);

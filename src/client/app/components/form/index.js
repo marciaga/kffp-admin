@@ -1,12 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
+import ConfirmationDialog from '../feedback/confirm';
 import { prepareFormSubmit, deleteForm } from '../../actions/formActions';
+import { confirmOpen } from '../../actions/feedbackActions';
 import * as FormFields from './fields';
 
 const mapStateToProps = state => ({
     form: state.form,
-    model: state.model
+    model: state.model,
+    feedback: state.feedback
 });
 
 class Form extends Component {
@@ -28,13 +31,7 @@ class Form extends Component {
     }
 
     deleteHandler (id) {
-        if (!window.confirm('Are you sure you want to delete this show?')) {
-            return;
-        }
-
-        const { modelName } = this.props.form;
-
-        this.props.dispatch(deleteForm(id, modelName));
+        return this.props.dispatch(confirmOpen(true, id));
     }
 
     renderFormFields (fields, data, validationErrors) {
@@ -101,6 +98,7 @@ class Form extends Component {
     }
 
     render () {
+        const { dispatch, form, feedback } = this.props;
         const {
             fields,
             modelName,
@@ -108,7 +106,9 @@ class Form extends Component {
             data,
             errors,
             validationErrors
-        } = this.props.form;
+        } = form;
+        const { confirmDialog } = feedback;
+        const { open, info } = confirmDialog;
         const formTitle = `${formType} ${modelName} form`;
 
         return (
@@ -132,6 +132,12 @@ class Form extends Component {
                         type="submit"
                     />
                 </form>
+                <ConfirmationDialog
+                    title="Are you sure you want to delete this Show?"
+                    open={open}
+                    cancelHandler={() => dispatch(confirmOpen(false, null))}
+                    okHandler={() => dispatch(deleteForm(info, modelName))}
+                />
             </div>
         );
     }
@@ -139,12 +145,10 @@ class Form extends Component {
 
 Form.propTypes = {
     dispatch: PropTypes.func,
-    fields: PropTypes.array,
     form: PropTypes.object,
     modelName: PropTypes.string,
     formType: PropTypes.string,
-    data: PropTypes.object,
-    errors: PropTypes.object
+    feedback: PropTypes.object
 };
 
 export default connect(mapStateToProps)(Form);
