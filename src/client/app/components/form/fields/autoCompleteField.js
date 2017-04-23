@@ -36,12 +36,12 @@ export default class AutoCompleteField extends Component {
         if (selected) {
             const { value } = selected.value.props;
 
-            this.props.dispatch(addUsersToShow(value._id));
+            this.props.dispatch(addUsersToShow(value));
         }
     }
 
     renderAutocompleteItems (results) {
-        if (!results) {
+        if (!results || !results.length) {
             return [];
         }
 
@@ -54,7 +54,7 @@ export default class AutoCompleteField extends Component {
                 value: (
                     <MenuItem
                         primaryText={itemText}
-                        value={_id}
+                        value={r}
                     />
                 )
             };
@@ -62,10 +62,9 @@ export default class AutoCompleteField extends Component {
     }
 
     renderListItems (items) {
-        if (!items) {
+        if (!items || !items.length) {
             return [];
         }
-
 
         return items.map((item, i) => {
             const { displayName, _id } = item;

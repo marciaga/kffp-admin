@@ -7,7 +7,10 @@ import models from '../data';
 */
 const validationTypeToExpectation = {
     string: val => typeof val === 'string',
-    required: val => val !== ''
+    required: val => val !== '' || typeof val !== 'undefined',
+    array: val => Array.isArray(val),
+    number: val => Number.isInteger(val),
+    boolean: val => typeof val === 'boolean'
 };
 
 const validateModelForm = (modelName, type, formData) => {
