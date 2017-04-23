@@ -48,8 +48,12 @@ const loginHandler = (request, reply) => {
     const { db } = request.server.plugins.mongodb;
     const password = request.payload.password;
 
-    if (!request.pre.user.success) {
-        return reply({ success: false, message: 'User not found' });
+    if (!request.pre.user.email) {
+        return reply({
+            success: false,
+            code: 401,
+            message: 'User not found'
+        });
     }
 
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
@@ -183,6 +187,7 @@ const verifyCredentials = (request, reply) => {
             return reply(Boom.serverUnavailable());
         }
 
+        console.log('user', user)
         if (user) {
             bcrypt.compare(password, user.password, (error, isValid) => {
                 if (isValid) {

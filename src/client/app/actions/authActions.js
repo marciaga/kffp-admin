@@ -105,7 +105,7 @@ const loginUser = (creds) => {
                 password
             });
 
-            if (!data.success) {
+            if (data.code === 401) {
                 return dispatch(snackbarMessage('Login failed. Please try again.'));
             }
 
