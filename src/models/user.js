@@ -187,7 +187,6 @@ const verifyCredentials = (request, reply) => {
             return reply(Boom.serverUnavailable());
         }
 
-        console.log('user', user)
         if (user) {
             bcrypt.compare(password, user.password, (error, isValid) => {
                 if (isValid) {

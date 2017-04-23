@@ -11,6 +11,7 @@ import {
 import TableConfig from './tableConfig';
 import { setUpdateFormData } from '../../actions/formActions';
 import { showOrHideModal } from '../../actions/modalActions';
+import { humanReadableTime } from '../../utils/helperFunctions';
 
 const mapStateToProps = state => ({
     tableConfig: TableConfig,
@@ -93,6 +94,10 @@ class MainTable extends Component {
             // this is so far only true of show.users, but we'll need a better solution
             if (Array.isArray(value)) {
                 value = value.map(v => v.displayName).join(', ');
+            }
+
+            if (r === 'startTime' || r === 'endTime') {
+                value = humanReadableTime(value);
             }
 
             return (
