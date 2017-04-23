@@ -15,10 +15,15 @@ import {
     SHOW_VALIDATION_ERRORS
 } from '../constants';
 import { updateModelData } from './modelActions';
-import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
+import {
+    formTypesToHttpVerbs,
+    API_ENDPOINT,
+    GENERIC_ERROR_MESSAGE
+} from '../utils/constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 import validateModelForm from '../utils/formValidation';
 import Models from '../data';
+import { snackbarMessage } from './feedbackActions';
 
 const updateFormField = (fieldName, value) => ({
     type: UPDATE_FORM_FIELD,
@@ -92,7 +97,7 @@ const getUserAutoComplete = (text) => {
 
             dispatch(receiveUserAutocomplete(data));
         } catch (e) {
-            console.log(e);
+            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
         }
     };
 };
@@ -184,7 +189,7 @@ const prepareFormSubmit = (type, modelName) => {
                 }
             });
         } catch (err) {
-            console.log(err);
+            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
         }
     };
 };
@@ -210,7 +215,7 @@ const deleteForm = (id, modelName) => {
                 }
             });
         } catch (err) {
-            console.log(err);
+            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
         }
 
         dispatch({
@@ -245,7 +250,7 @@ const updateUserPassword = (obj) => {
                 data: { message }
             });
         } catch (e) {
-            console.log(e);
+            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
         }
     };
 };
@@ -282,7 +287,7 @@ const fileUpload = (formData) => {
                 data: newData
             });
         } catch (err) {
-            console.log(err);
+            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
         }
     };
 };

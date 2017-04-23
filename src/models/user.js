@@ -48,10 +48,18 @@ const loginHandler = (request, reply) => {
     const { db } = request.server.plugins.mongodb;
     const password = request.payload.password;
 
+    if (!request.pre.user.success) {
+        return reply({ success: false, message: 'User not found' });
+    }
+
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
         if (err) {
             console.log(err);
             return reply(Boom.create(503, 'Service Unavailble'));
+        }
+
+        if (!user) {
+            return reply({ success: false, message: 'Username/email not found' });
         }
 
         bcrypt.compare(password, user.password, (error, isValid) => {
@@ -69,7 +77,7 @@ const loginHandler = (request, reply) => {
                 });
             }
 
-            return reply(Boom.create(401, 'Incorrect username or email!'));
+            return reply({ success: false, message: 'Bad credentials' });
         });
     });
 };
@@ -181,10 +189,10 @@ const verifyCredentials = (request, reply) => {
                     return reply(user);
                 }
 
-                return reply(Boom.create(401, 'Incorrect username or email!'));
+                return reply({ success: false, message: 'Incorrect Password' });
             });
         } else {
-            return reply(Boom.create(401, 'Incorrect username or email!'));
+            return reply({ success: false, message: 'Username/email not found' });
         }
     });
 };

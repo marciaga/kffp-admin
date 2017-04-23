@@ -2,6 +2,8 @@ import axios from 'axios';
 import Models from '../data';
 import { SET_MODEL, UPDATE_MODEL } from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
+import { snackbarMessage } from './feedbackActions';
+import { GENERIC_ERROR_MESSAGE } from '../utils/constants';
 
 const receiveModelData = model => ({
     type: SET_MODEL,
@@ -34,7 +36,7 @@ const setModel = (user, modelName, type) => {
 
             dispatch(receiveModelData(model));
         } catch (err) {
-            console.log(err);
+            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
         }
     };
 };

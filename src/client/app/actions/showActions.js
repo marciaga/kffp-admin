@@ -2,7 +2,8 @@ import axios from 'axios';
 import { push } from 'react-router-redux';
 import { SHOW_SELECT, USER_SHOW_SELECT, GET_SHOW } from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
-import { API_ENDPOINT } from '../utils/constants';
+import { API_ENDPOINT, GENERIC_ERROR_MESSAGE } from '../utils/constants';
+import { snackbarMessage } from './feedbackActions';
 
 const receiveUserShows = data => ({
     type: USER_SHOW_SELECT,
@@ -28,7 +29,7 @@ const getAllShows = () => {
 
             dispatch(receiveAllShows(data));
         } catch (e) {
-            console.log(e);
+            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
         }
     };
 };
@@ -57,7 +58,7 @@ const getUserShows = (userId) => {
 
             dispatch(receiveUserShows(result));
         } catch (err) {
-            console.log(err);
+            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
         }
     };
 };
