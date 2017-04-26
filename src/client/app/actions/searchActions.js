@@ -6,10 +6,10 @@ import {
 } from '../constants';
 import {
     GENERIC_ERROR_MESSAGE,
-    API_URL,
-    API_OFFSET,
-    API_LIMIT,
-    API_RESULT_TYPE
+    SPOTIFY_API_URL,
+    SPOTIFY_API_OFFSET,
+    SPOTIFY_API_LIMIT,
+    SPOTIFY_API_RESULT_TYPE
 } from '../utils/constants';
 import { snackbarMessage } from './feedbackActions';
 import { parseSearchResults, getAlbumIds } from '../utils/searchUtils';
@@ -26,7 +26,7 @@ export const searchForm = (val) => {
         return snackbarMessage('Please enter a search!');
     }
     const encodedQuery = encodeURIComponent(val);
-    const searchUrl = `${API_URL}/search?query=${encodedQuery}&offset=${API_OFFSET}&limit=${API_LIMIT}&type=${API_RESULT_TYPE}`;
+    const searchUrl = `${SPOTIFY_API_URL}/search?query=${encodedQuery}&offset=${SPOTIFY_API_OFFSET}&limit=${SPOTIFY_API_LIMIT}&type=${SPOTIFY_API_RESULT_TYPE}`;
 
     return async (dispatch) => {
         try {
@@ -46,7 +46,7 @@ export const searchForm = (val) => {
 
             const albumIds = getAlbumIds(data);
             const queryString = albumIds.join();
-            const albumUrl = `${API_URL}/albums?ids=${queryString}`;
+            const albumUrl = `${SPOTIFY_API_URL}/albums?ids=${queryString}`;
             const albumResults = await axios.get(albumUrl);
 
             if (albumResults.status !== 200) {

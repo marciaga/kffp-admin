@@ -36,7 +36,7 @@ const getAllShows = () => {
 
 const getUserShows = (userId) => {
     const user = encodeURIComponent(userId);
-    const url = `/api/shows?isActive=true&users=${user}`;
+    const url = `${API_ENDPOINT}/shows?isActive=true&users=${user}`;
     const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {

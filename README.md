@@ -123,6 +123,164 @@ $ git checkout -b feature/my-feature
 
 Pull requests should always be from your feature branch to the develop branch.
 
-### Coming soon:
-* CI integration
-* Production and Staging builds
+## Public API Endpoints
+get all shows
+```
+GET /api/v1/shows and /api/v1/shows/:id
+Response: 200 SUCCESS
+[
+    {
+        "_id": "6j323kljfsdlk23tksdf23234",
+        "showName": "Bizarre Times",
+        "users": [
+            {
+                "_id": "23234lksdf23lkjfsdfsdf2112",
+                "displayName": "Judy Gloom"
+            }
+        ],
+        "dayOfWeek": "Monday",
+        "startTime": 18,
+        "endTime": 20,
+        "isActive": true,
+        "slug": "bizarre-times",
+        "description": "A great show for musics",
+        "primaryImage": "https://freeformpdx-images.s3-us-west-2.amazonaws.com/16128970_10154932748291057_770461833_n.jpg"
+    },
+    {
+    "_id": "234234234234jlsdfk23",
+    "showName": "Turtles Have Short Legs",
+    "users": [
+        {
+        "_id": "2342lk23409dfglkj28",
+        "displayName": "Eeronomicon"
+        },
+        {
+        "_id": "423kljs32340293023d",
+        "displayName": "Gilliflower"
+        }
+    ],
+    "dayOfWeek": "Sunday",
+    "startTime": 21,
+    "endTime": 17,
+    "isActive": true,
+    "slug": "turtles-have-short-legs"
+    }
+]
+
+ERROR 503
+{
+    "statusCode": 503,
+    "error": "Service Unavailable",
+    "message": "unavailable"
+}
+```
+
+get a playlist by show slug and optionally playlist ID
+```
+GET /api/v1/playlists/{slug}/{playlistId?}
+Response: 200 SUCCESS
+{
+    playlists: [
+        {
+            "_id": "232klj2342lk3j4kj4k",
+            "showId": "3j32kdlkj23vsc312",
+            "playlistDate": "2017-03-20T00:48:14.187Z",
+            "playlistId":"S1U0Ushsl",
+            "songs": [
+                {
+                    "artist": "This Mortal Coil",
+                    "track": "Song To The Siren (Remastered)",
+                    "album": "It'll End In Tears (Remastered)",
+                    "label":"4AD",
+                    "releaseDate":"1984",
+                    "images":[
+                        {
+                            "height":640,
+                            "url":"https://i.scdn.co/image/ff3f9101412755fe0f6f0ee0d95672a3cfc8d86b",
+                            "width":640
+                        },
+                        {
+                            "height":300,
+                            "url":"https://i.scdn.co/image/32db10b5140656390329537e51e83a34a844c2cd",
+                            "width":300
+                        },
+                        {
+                            "height":64,
+                            "url":"https://i.scdn.co/image/1b517635c80a09b50a59371d922e87eb60e9e1b2",
+                            "width":64
+                        }
+                    ],
+                    "id":"cj0k559bk0009w9p5ktkbg0wn"
+                }
+            ]
+        }
+    ],
+    "show": {
+        "_id": "2342309sdfkj230sdf",
+        "showName": "Bizarre Times",
+        "users": [
+            "Judy Gloom"
+        ],
+        "dayOfWeek": "Monday",
+        "startTime": 18,
+        "endTime": 20,
+        "isActive": true,
+        "slug": "bizarre-times",
+        "description": "A super cool show about stuff",
+        "primaryImage": "https://freeformpdx-images.s3-us-west-2.amazonaws.com/16128970_10154932748291057_770461833_n.jpg"
+    }
+}
+
+500 ERROR
+{
+    "statusCode": 500,
+    "error": "Internal Server Error",
+    "message": "An internal server error occurred"
+}
+```
+
+TODO
+get now playing
+```
+GET /api/v1/now-playing
+Response 200 SUCCESS:
+{
+    "_id": "587da4dd29403e59645ed740",
+    "artist": "Mirror Kisses",
+    "track": "Genius",
+    "album": "Heartbeats",
+    "releaseDate": "2013-05-03",
+    "images": [
+        {
+            "height": 640,
+            "url": "https://i.scdn.co/image/9a7dc0f6aa01b9af941f4c4c5db5495c7bfa4a43",
+            "width": 640
+        },
+        {
+            "height": 300,
+            "url": "https://i.scdn.co/image/6774e8125e1f5eb64dbe9c3ca80635818b08b762",
+            "width": 300
+        },
+        {
+            "height": 64,
+            "url": "https://i.scdn.co/image/efab2abfd774657cee354e17c195be82855385d0",
+            "width": 64
+        }
+    ],
+    "playedAt": "2017-03-19T01:09:47.645Z",
+    "songId": "cj0fwd4hp000079p5njg3h6xb"
+}
+
+Response 200 SUCCESS:
+{
+    "success": "false",
+    "message": "Nothing is playing"
+}
+
+Response 503 ERROR:
+{
+    "statusCode": 503,
+    "error": "Service Unavailable",
+    "message": "unavailable"
+}
+```
