@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const debounce = (func, wait, immediate) => {
     let timeout;
 
@@ -31,6 +33,14 @@ const hoursToDateObj = (hours) => {
     date.setMinutes(0);
 
     return date;
+};
+
+const humanReadableTime = (hour) => {
+    if (!hour || !Number.isInteger(hour)) {
+        return '';
+    }
+
+    return moment(hour, 'HH').format('h:mm a');
 };
 
 const getTokenFromLocalStorage = () => (
@@ -82,5 +92,6 @@ export {
     generateBlankSongData,
     cleanPathname,
     pathHasPlaylistId,
-    removePlaylistIdFromPath
+    removePlaylistIdFromPath,
+    humanReadableTime
 };

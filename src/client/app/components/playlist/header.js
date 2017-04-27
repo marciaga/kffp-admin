@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { humanReadableTime } from '../../utils/helperFunctions';
 
 const renderUsers = (users) => {
     if (!users) {
@@ -19,7 +20,7 @@ const ShowHeader = ({ currentShow }) => {
         <div>
             <h1 className="h1">
                 {showName} with {renderUsers(users)} {'\u00A0'}
-                ({dayOfWeek} from {startTime} to {endTime})
+                ({dayOfWeek} from {humanReadableTime(startTime)} to {humanReadableTime(endTime)})
             </h1>
         </div>
     );

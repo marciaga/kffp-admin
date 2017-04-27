@@ -7,7 +7,8 @@ const userSearchHandler = (request, reply) => {
     db.collection('users').find({ email: { $regex: `${text}`, $options: '$i' } },
         { password: 0 }, async (err, cursor) => {
             if (err) {
-                return reply(Boom.internal('internal mongodb error', err));
+                console.log(err);
+                return reply(Boom.serverUnavailable());
             }
 
             const users = await cursor.toArray();

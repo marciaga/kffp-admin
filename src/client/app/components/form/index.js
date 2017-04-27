@@ -1,12 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
+import ConfirmationDialog from '../feedback/confirm';
 import { prepareFormSubmit, deleteForm } from '../../actions/formActions';
+import { confirmOpen } from '../../actions/feedbackActions';
 import * as FormFields from './fields';
 
 const mapStateToProps = state => ({
     form: state.form,
-    model: state.model
+    model: state.model,
+    feedback: state.feedback
 });
 
 class Form extends Component {
@@ -28,24 +31,28 @@ class Form extends Component {
     }
 
     deleteHandler (id) {
-        if (!window.confirm('Are you sure you want to delete this show?')) {
-            return;
-        }
-
-        const { modelName } = this.props.form;
-
-        this.props.dispatch(deleteForm(id, modelName));
+        return this.props.dispatch(confirmOpen(true, id));
     }
 
-    renderFormFields (fields) {
-        return Object.keys(fields).map((field, i) => (
-            <div key={i}>
-                {this.renderField(fields[field], field)}
-            </div>
-        ));
+    renderFormFields (fields, data, validationErrors) {
+        return Object.keys(fields).map((field, i) => {
+            let error = '';
+
+            if (validationErrors && validationErrors.length) {
+                const errorFound = validationErrors.find(o => o[field]);
+
+                error = errorFound ? errorFound[field] : '';
+            }
+
+            return (
+                <div key={i}>
+                    {this.renderField(fields[field], field, error)}
+                </div>
+            );
+        });
     }
 
-    renderField (fieldData, fieldName) {
+    renderField (fieldData, fieldName, error) {
         const { dispatch } = this.props;
         const {
             fieldType,
@@ -72,6 +79,7 @@ class Form extends Component {
                     searchResults={searchResults}
                     dispatch={dispatch}
                     disabled={disabled}
+                    error={error}
                 />
             );
         }
@@ -90,7 +98,17 @@ class Form extends Component {
     }
 
     render () {
-        const { fields, modelName, formType, data, errors } = this.props.form;
+        const { dispatch, form, feedback } = this.props;
+        const {
+            fields,
+            modelName,
+            formType,
+            data,
+            errors,
+            validationErrors
+        } = form;
+        const { confirmDialog } = feedback;
+        const { open, info } = confirmDialog;
         const formTitle = `${formType} ${modelName} form`;
 
         return (
@@ -100,7 +118,7 @@ class Form extends Component {
                     {this.renderErrors(errors)}
                 </div>
                 <form onSubmit={this.submitHandler}>
-                    {this.renderFormFields(fields, data)}
+                    {this.renderFormFields(fields, data, validationErrors)}
                     <RaisedButton
                         label="delete"
                         type="button"
@@ -114,6 +132,12 @@ class Form extends Component {
                         type="submit"
                     />
                 </form>
+                <ConfirmationDialog
+                    title="Are you sure you want to delete this Show?"
+                    open={open}
+                    cancelHandler={() => dispatch(confirmOpen(false, null))}
+                    okHandler={() => dispatch(deleteForm(info, modelName))}
+                />
             </div>
         );
     }
@@ -121,12 +145,10 @@ class Form extends Component {
 
 Form.propTypes = {
     dispatch: PropTypes.func,
-    fields: PropTypes.array,
     form: PropTypes.object,
     modelName: PropTypes.string,
     formType: PropTypes.string,
-    data: PropTypes.object,
-    errors: PropTypes.object
+    feedback: PropTypes.object
 };
 
 export default connect(mapStateToProps)(Form);

@@ -20,6 +20,7 @@ const getUserById = async (id, db) => {
         return result;
     } catch (e) {
         console.log(e);
+        return Boom.create(503, 'Service Unavailble', e);
     }
 };
 
@@ -47,9 +48,22 @@ const loginHandler = (request, reply) => {
     const { db } = request.server.plugins.mongodb;
     const password = request.payload.password;
 
+    if (!request.pre.user.email) {
+        return reply({
+            success: false,
+            code: 401,
+            message: 'User not found'
+        });
+    }
+
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
         if (err) {
-            return reply(Boom.internal('Internal MongoDB error', err));
+            console.log(err);
+            return reply(Boom.create(503, 'Service Unavailble'));
+        }
+
+        if (!user) {
+            return reply({ success: false, message: 'Username/email not found' });
         }
 
         bcrypt.compare(password, user.password, (error, isValid) => {
@@ -67,7 +81,7 @@ const loginHandler = (request, reply) => {
                 });
             }
 
-            return reply(Boom.create(401, 'Incorrect username or email!'));
+            return reply({ success: false, message: 'Bad credentials' });
         });
     });
 };
@@ -78,7 +92,8 @@ const getUsers = (request, reply) => {
 
     db.collection('users').find({}, { password: 0 }, async (err, cursor) => {
         if (err) {
-            return reply(Boom.internal('Internal MongoDB error', err));
+            console.log(err);
+            return reply(Boom.create(503, 'Service Unavailble'));
         }
 
         const users = await cursor.toArray();
@@ -108,14 +123,16 @@ const createUser = (request, reply) => {
             }
         });
     } catch (e) {
-        return reply(e);
+        console.log(e);
+        return reply(Boom.create(500, 'Something went wrong'));
     }
 
     const { email, password, role, displayName } = request.payload;
 
     hashPassword(password, (error, hash) => {
         if (error) {
-            return reply(Boom.badRequest(error));
+            console.log(error);
+            return reply(Boom.badRequest());
         }
 
         db.collection('users').insert({
@@ -125,7 +142,7 @@ const createUser = (request, reply) => {
             role
         }, (mongoErr, user) => {
             if (mongoErr) {
-                return reply(Boom.internal('Internal MongoDB error', mongoErr));
+                return reply(Boom.serverUnavailable());
             }
 
             reply({ id_token: createToken(user) }).code(201);
@@ -149,17 +166,14 @@ const verifyToken = (request, reply) => {
                     expiredAt: 1408621000
                 }
                 */
-                const error = {
-                    ...err,
-                    code: 401
-                };
-                return reply(error);
+                console.log(err);
+                return reply(Boom.unauthorized(...err));
             }
 
             return reply({ ...decoded, verified: true }).code(201);
         });
     } else {
-        return reply({ verified: false });
+        return reply(Boom.unauthorized());
     }
 };
 
@@ -169,7 +183,8 @@ const verifyCredentials = (request, reply) => {
 
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
         if (err) {
-            return reply(Boom.internal('Internal MongoDB error', err));
+            console.log(err);
+            return reply(Boom.serverUnavailable());
         }
 
         if (user) {
@@ -178,10 +193,10 @@ const verifyCredentials = (request, reply) => {
                     return reply(user);
                 }
 
-                return reply(Boom.create(401, 'Incorrect username or email!'));
+                return reply({ success: false, message: 'Incorrect Password' });
             });
         } else {
-            return reply(Boom.create(401, 'Incorrect username or email!'));
+            return reply({ success: false, message: 'Username/email not found' });
         }
     });
 };
@@ -207,7 +222,7 @@ const updateUser = (request, reply) => {
         Joi.validate(user, userSchema, (err, value) => {
             if (err) {
                 console.log(err);
-                throw Boom.badRequest(err);
+                reply(Boom.badRequest());
             }
             // if value === null, object is valid
             if (value === null) {
@@ -215,7 +230,8 @@ const updateUser = (request, reply) => {
             }
         });
     } catch (err) {
-        return reply(err);
+        console.log(err);
+        return reply(Boom.serverUnavailable());
     }
 
     const userId = new ObjectID(user._id);
@@ -225,7 +241,8 @@ const updateUser = (request, reply) => {
         { $set: fieldsToUpdate },
         (err, result) => {
             if (err) {
-                return reply(Boom.internal('Internal MongoDB error', err));
+                console.log(err);
+                return reply(Boom.serverUnavailable());
             }
             // response, e.g. { ok: 1, nModified: 1, n: 1 }
             const response = result.toJSON();
@@ -247,7 +264,8 @@ const deleteUser = (request, reply) => {
 
     db.collection('users').remove({ _id: userId }, { justOne: true }, (err, result) => {
         if (err) {
-            return reply(Boom.internal('Internal MongoDB error', err));
+            console.log(err);
+            return reply(Boom.serverUnavailable());
         }
         // result, e.g. { ok: 1, n: 0 }
         const response = result.toJSON();
@@ -280,13 +298,15 @@ const verifyPassword = async (request, reply) => {
     }
 
     const userId = new ObjectID(id);
+
     try {
         const user = await getUserById(userId, db);
         const { currentPassword } = fields;
 
         bcrypt.compare(currentPassword, user.password, (e, isValid) => {
             if (e) {
-                return reply(Boom.internal('Something went wrong with encryption...', e));
+                console.log(e);
+                return reply(Boom.internal('Something went wrong with encryption...'));
             }
             if (isValid) {
                 // hash the password and return it to the route handler
@@ -311,6 +331,7 @@ const verifyPassword = async (request, reply) => {
         });
     } catch (e) {
         console.log(e);
+        return reply(Boom.internal('Something went wrong...'));
     }
 };
 
@@ -328,6 +349,7 @@ const updateField = async (id, fieldName, value, db, ObjectID) => {
         return result.toJSON();
     } catch (e) {
         console.log(e);
+        return false;
     }
 };
 
@@ -355,6 +377,7 @@ const updateUserField = async (request, reply) => {
             return reply({ success: false, message: 'Update was not successful' });
         } catch (e) {
             console.log(e);
+            return reply(Boom.internal('Something went wrong'));
         }
     }
 

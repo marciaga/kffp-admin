@@ -11,6 +11,8 @@ import {
     CLEAR_LOGIN_FORM
 } from '../constants';
 import { getUserShows, getAllShows } from './showActions';
+import { snackbarMessage } from './feedbackActions';
+import { GENERIC_ERROR_MESSAGE } from '../utils/constants';
 
 const loginInputChange = data => ({
     type: UPDATE_LOGIN_FORM,
@@ -83,7 +85,7 @@ const verifyLogin = (isAuthenticated) => {
                 data
             });
         } catch (err) {
-            console.log(err);
+            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
         }
     };
 };
@@ -102,6 +104,11 @@ const loginUser = (creds) => {
                 email,
                 password
             });
+
+            if (data.code === 401) {
+                return dispatch(snackbarMessage('Login failed. Please try again.'));
+            }
+
             const { idToken, displayName } = data;
 
             localStorage.setItem('idToken', idToken);
@@ -146,7 +153,7 @@ const logoutUser = () => (dispatch) => {
         dispatch(push('/'));
         return dispatch(receiveLogout());
     } catch (err) {
-        console.log(err);
+        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
     }
 };
 

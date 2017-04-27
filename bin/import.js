@@ -1,14 +1,15 @@
+/* eslint-disable */
 import MongoClient, { ObjectId } from 'mongodb';
 import config from 'dotenv';
 import moment from 'moment';
 import shortid from 'shortid';
-import * as legacyShows from './legacyShows';
-import * as scheduleData from './winter-schedule';
+import * as legacyShows from './legacyShows.json';
+import * as scheduleData from './winter-schedule.json';
 import slugify from '../src/client/app/utils/stringParsing';
 
 config.load(); // load environment vars
 
-const WRITE_DB_NAME = 'kffp-admin';
+const WRITE_DB_NAME = 'kffp-admin-prod';
 const READ_DB_NAME = 'legacy-playlist';
 const DB_URL = 'mongodb://localhost:27017/';
 const { TEMPORARY_USER_PASSWORD } = process.env;
@@ -87,7 +88,7 @@ const transformShows = (parsedSchedule) => {
         }
     });
 
-    return transformedShows.filter(s => s !== undefined);
+    return transformedShows.filter(s => s);
 };
 
 const transformUsers = (parsedSchedule) => {
@@ -210,6 +211,8 @@ const main = () => {
             const showResult = await newAdminDb.collection('shows').insertMany(shows);
             const playlistResult = await newAdminDb.collection('playlists').insertMany(transformedPlaylists);
 
+            // Lastly, we need to update the shows.users display name strings with the corresponding userIds
+
             if (userResult.result.ok && showResult.result.ok && playlistResult.result.ok) {
                 console.log('Import success!');
 
@@ -226,3 +229,4 @@ const main = () => {
 };
 
 main();
+/* eslint-enable */

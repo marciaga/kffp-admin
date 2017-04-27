@@ -5,9 +5,9 @@ import {
     cleanPathname,
     pathHasPlaylistId
 } from '../utils/helperFunctions';
-import { API_ENDPOINT } from '../utils/constants';
+import { API_ENDPOINT, GENERIC_ERROR_MESSAGE } from '../utils/constants';
 import { getShow } from './showActions';
-import { snackbarMessage } from './feedbackActions';
+import { snackbarMessage, confirmOpen } from './feedbackActions';
 import {
     GET_SHOW_PLAYLISTS,
     ADD_PLAYLIST,
@@ -81,7 +81,7 @@ const deletePlaylist = (playlistId, slug) => async (dispatch) => {
             dispatch(snackbarMessage(errorMessage));
         }
     } catch (err) {
-        console.log(err);
+        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
     }
 };
 
@@ -108,7 +108,7 @@ const getShowPlaylists = pathname => async (dispatch) => {
             dispatch(receivePlaylist(playlist));
         }
     } catch (err) {
-        console.log(err);
+        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
     }
 };
 
@@ -147,7 +147,7 @@ const updatePlaylistDate = (date, playlistId) => async (dispatch) => {
 
         dispatch(snackbarMessage(message));
     } catch (err) {
-        console.log(err);
+        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
     }
 };
 
@@ -172,7 +172,7 @@ const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
 
         dispatch(snackbarMessage(message));
     } catch (err) {
-        console.log(err);
+        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
     }
 };
 
@@ -198,7 +198,7 @@ const addNewPlaylist = (showId, slug) => async (dispatch) => {
 
         dispatch(addNewPlaylistToSidebar(data));
     } catch (err) {
-        console.log(err);
+        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
     }
 };
 
@@ -219,7 +219,7 @@ const addTrack = (track, playlistId) => async (dispatch) => {
             console.log('add was unsuccessful');
         }
     } catch (err) {
-        console.log(err);
+        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
     }
 
     dispatch({
@@ -253,8 +253,9 @@ const deleteSongFromPlaylist = (song, playlistId) => async (dispatch) => {
 
             dispatch(snackbarMessage(errorMessage));
         }
+        dispatch(confirmOpen(false, null));
     } catch (err) {
-        console.log(err);
+        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
     }
 };
 
@@ -280,7 +281,7 @@ const reorderSongsSave = (songs, id) => async (dispatch) => {
             dispatch(snackbarMessage(errorMessage));
         }
     } catch (err) {
-        console.log(err);
+        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
     }
 };
 

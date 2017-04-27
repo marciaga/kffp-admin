@@ -4,7 +4,13 @@ import {
     SEARCH_RESULTS,
     CLEAR_SEARCH_INPUT
 } from '../constants';
-import { API_URL, API_OFFSET, API_LIMIT, API_RESULT_TYPE } from '../utils/constants';
+import {
+    GENERIC_ERROR_MESSAGE,
+    API_URL,
+    API_OFFSET,
+    API_LIMIT,
+    API_RESULT_TYPE
+} from '../utils/constants';
 import { snackbarMessage } from './feedbackActions';
 import { parseSearchResults, getAlbumIds } from '../utils/searchUtils';
 
@@ -17,8 +23,7 @@ export const searchInput = val => ({
 
 export const searchForm = (val) => {
     if (val === '') {
-        // dispatch validation error
-        return;
+        return snackbarMessage('Please enter a search!');
     }
     const encodedQuery = encodeURIComponent(val);
     const searchUrl = `${API_URL}/search?query=${encodedQuery}&offset=${API_OFFSET}&limit=${API_LIMIT}&type=${API_RESULT_TYPE}`;
@@ -29,8 +34,7 @@ export const searchForm = (val) => {
             const { tracks } = data;
 
             if (status !== 200) {
-                console.log('Something went wrong...');
-                return;
+                return dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
             }
 
             if (!tracks.items.length) {
@@ -46,9 +50,7 @@ export const searchForm = (val) => {
             const albumResults = await axios.get(albumUrl);
 
             if (albumResults.status !== 200) {
-                console.log('Something went wrong...');
-                // dispatch error message
-                return;
+                return dispatch(snackbarMessage('No Album results... Please try again'));
             }
 
             const { albums } = albumResults.data;
@@ -63,7 +65,7 @@ export const searchForm = (val) => {
                 data: parsedSearchResults
             });
         } catch (err) {
-            console.log(err);
+            return dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
         }
     };
 };
