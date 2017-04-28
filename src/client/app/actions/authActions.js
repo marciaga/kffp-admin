@@ -12,7 +12,7 @@ import {
 } from '../constants';
 import { getUserShows, getAllShows } from './showActions';
 import { snackbarMessage } from './feedbackActions';
-import { GENERIC_ERROR_MESSAGE } from '../utils/constants';
+import { API_ENDPOINT, GENERIC_ERROR_MESSAGE } from '../utils/constants';
 
 const loginInputChange = data => ({
     type: UPDATE_LOGIN_FORM,
@@ -65,7 +65,7 @@ const verifyLogin = (isAuthenticated) => {
         };
     }
 
-    const url = '/api/users/verify';
+    const url = `${API_ENDPOINT}/users/verify`;
     const idToken = localStorage.getItem('idToken');
 
     return async (dispatch) => {
@@ -96,7 +96,7 @@ const clearLoginForm = () => ({
 
 const loginUser = (creds) => {
     const { email, password } = creds;
-    const url = '/api/users/authenticate';
+    const url = `${API_ENDPOINT}/users/authenticate`;
 
     return async (dispatch) => {
         try {

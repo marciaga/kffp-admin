@@ -1,5 +1,22 @@
 import Boom from 'boom';
 
+const getNowPlaying = async (request, reply) => {
+    const { db } = request.server.plugins.mongodb;
+
+    try {
+        const result = await db.collection('nowPlaying').findOne();
+
+        if (!result) {
+            return reply({ success: false, message: 'Nothing is playing' });
+        }
+
+        return reply(result);
+    } catch (e) {
+        console.log(e);
+        return reply(Boom.serverUnavailable());
+    }
+};
+
 const updateNowPlaying = async (request, reply) => {
     const { playlistId, song, playedAt } = request.payload;
     const { id, ...songData } = song;
@@ -45,4 +62,4 @@ const updateNowPlaying = async (request, reply) => {
     }
 };
 
-export default updateNowPlaying;
+export { updateNowPlaying, getNowPlaying };

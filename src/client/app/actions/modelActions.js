@@ -3,7 +3,7 @@ import Models from '../data';
 import { SET_MODEL, UPDATE_MODEL } from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 import { snackbarMessage } from './feedbackActions';
-import { GENERIC_ERROR_MESSAGE } from '../utils/constants';
+import { GENERIC_ERROR_MESSAGE, API_ENDPOINT } from '../utils/constants';
 
 const receiveModelData = model => ({
     type: SET_MODEL,
@@ -19,7 +19,7 @@ const setModel = (user, modelName, type) => {
         // redirect to root path
     }
 
-    const url = `/api/${modelName}`;
+    const url = `${API_ENDPOINT}/${modelName}`;
     const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {

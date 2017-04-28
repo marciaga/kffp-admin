@@ -17,13 +17,23 @@ const showSchema = Joi.object().keys({
 
 const getShows = async (request, reply) => {
     const { db, ObjectID } = request.server.plugins.mongodb;
-    const params = request.query || {};
+    const { id } = request.params;
+    const queryParams = request.query;
+    const query = {
+        ...queryParams
+    };
+
+    const objId = id ? new ObjectID(id) : null;
+
+    if (objId) {
+        query._id = objId;
+    }
 
     try {
-        const result = await db.collection('shows').find(params).toArray();
+        const result = await db.collection('shows').find(query).toArray();
 
         const transformedResult = result.map(async (doc) => {
-            const objectIds = doc.users.map(id => new ObjectID(id));
+            const objectIds = doc.users.map(showId => new ObjectID(showId));
 
             const users = await db.collection('users').find({
                 _id: { $in: objectIds }

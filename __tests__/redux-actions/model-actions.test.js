@@ -1,13 +1,13 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-const mock = new MockAdapter(axios);
-import configureMockStore from 'redux-mock-store'
-import thunk from 'redux-thunk'
-
-const middlewares = [ thunk ]
-const mockStore = configureMockStore(middlewares)
-
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import { setModel } from '../../src/client/app/actions/modelActions';
+import { API_ENDPOINT } from '../../src/client/app/utils/constants';
+
+const mock = new MockAdapter(axios);
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
 const returnValue = {
     model: {
@@ -30,8 +30,7 @@ const returnValue = {
 describe('Model actions', () => {
     describe('setModel', () => {
         it('should return a type of SET_MODEL', async () => {
-
-            mock.onGet('/api/users').reply(200);
+            mock.onGet(`${API_ENDPOINT}/users`).reply(200);
 
             const expectedActions = [{
                 data: returnValue, type: 'SET_MODEL'
@@ -39,7 +38,8 @@ describe('Model actions', () => {
 
             const store = mockStore({});
             const user = { role: 'admin' };
-            const response = await store.dispatch(setModel(user, 'users', 'show'));
+
+            await store.dispatch(setModel(user, 'users', 'show'));
 
             expect(store.getActions()).toEqual(expectedActions);
         });
