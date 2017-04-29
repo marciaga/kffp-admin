@@ -22,6 +22,11 @@ const getShows = async (request, reply) => {
     const query = {
         ...queryParams
     };
+    const userIds = queryParams.users ? queryParams.users.split(',') : null;
+
+    if (userIds) {
+        query.users = userIds.map(e => new ObjectID(e.trim()));
+    }
 
     const objId = id ? new ObjectID(id) : null;
 

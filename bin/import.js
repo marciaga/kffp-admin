@@ -4,7 +4,7 @@ import config from 'dotenv';
 import moment from 'moment';
 import shortid from 'shortid';
 import * as legacyShows from './legacyShows.json';
-import * as scheduleData from './winter-schedule.json';
+import * as scheduleData from './summer-schedule-2017.json';
 import slugify from '../src/client/app/utils/stringParsing';
 
 config.load(); // load environment vars
@@ -59,15 +59,26 @@ const parseJson = (obj) => (Object.keys(obj).reduce((arr, val, i) => {
    return arr;
 }, []));
 
+const getUserIdByName = () => {
 
+};
 
-const transformShows = (parsedSchedule) => {
+const transformShows = (parsedSchedule, users) => {
     console.log('Transforming shows...')
     const isActive = true;
-
     const parsedLegacyShows = parseJson(legacyShows);
     const mappedDJsToShows = mapDJsToShows(parsedSchedule);
     const showNamesToDJNames = dedupeNames(mappedDJsToShows);
+
+    const showNamesToDJIds = Object.keys(showNamesToDJNames).reduce((memo, key) => {
+        const userName = showNamesToDJNames[key][0];
+        const user = users.find(u => u.displayName === userName);
+
+        memo[key] = [user._id];
+
+        return memo;
+    }, {});
+
     const transformedShows = parsedLegacyShows.map((show, index) => {
         if (!show) {
             return;
@@ -78,7 +89,7 @@ const transformShows = (parsedSchedule) => {
         return {
             _id: ObjectId(),
             showName: title,
-            users: showNamesToDJNames[title],
+            users: showNamesToDJIds[title],
             dayOfWeek: dayOfWeekMapping[Number(startDay)],
             startTime: Number(startHour),
             endTime: Number(endHour),
@@ -202,8 +213,8 @@ const main = () => {
             });
 
             const parsedSchedule = parseJson(scheduleData);
-            const shows = transformShows(parsedSchedule);
             const users = transformUsers(parsedSchedule);
+            const shows = transformShows(parsedSchedule, users);
             const legacyPlaylists = await readLegacyPlaylists(db);
             const transformedPlaylists = transformPlaylists(legacyPlaylists, shows);
 
