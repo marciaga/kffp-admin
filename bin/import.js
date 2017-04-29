@@ -222,8 +222,6 @@ const main = () => {
             const showResult = await newAdminDb.collection('shows').insertMany(shows);
             const playlistResult = await newAdminDb.collection('playlists').insertMany(transformedPlaylists);
 
-            // Lastly, we need to update the shows.users display name strings with the corresponding userIds
-
             if (userResult.result.ok && showResult.result.ok && playlistResult.result.ok) {
                 console.log('Import success!');
 

@@ -22,8 +22,8 @@ const playlistSchema = Joi.object().keys({
     songs: Joi.array().items(Joi.object(songSchema))
 });
 
-const getPlaylists = async (db, show) => {
-    const showId = show._id.toString();
+const getPlaylists = async (db, show, ObjectID) => {
+    const showId = new ObjectID(show._id);
 
     try {
         const result = await db.collection('playlists').find({
@@ -68,7 +68,7 @@ const getPlaylistsByShow = async (request, reply) => {
     try {
         const show = await getShow(db, ObjectID, slug);
 
-        const playlists = await getPlaylists(db, show);
+        const playlists = await getPlaylists(db, show, ObjectID);
         const mergedData = {
             playlists,
             show
