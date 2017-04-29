@@ -269,7 +269,7 @@ export const playlistFields = {
     fields: {
         title: {
             label: 'Track Name',
-            name: 'track',
+            name: 'title',
             hintText: 'Enter the track name'
         },
         artist: {

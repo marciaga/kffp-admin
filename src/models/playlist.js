@@ -1,7 +1,6 @@
 import Joi from 'joi';
 import Boom from 'boom';
 import moment from 'moment';
-import cuid from 'cuid';
 import shortid from 'shortid';
 
 const songSchema = {
@@ -22,14 +21,12 @@ const playlistSchema = Joi.object().keys({
     songs: Joi.array().items(Joi.object(songSchema))
 });
 
-const getPlaylists = async (db, show, ObjectID) => {
+const getPlaylists = async (db, ObjectID, show, playlistId) => {
     const showId = new ObjectID(show._id);
+    const query = playlistId ? { playlistId } : { showId };
 
     try {
-        const result = await db.collection('playlists').find({
-            showId
-        })
-        .toArray();
+        const result = await db.collection('playlists').find(query).toArray();
 
         return result;
     } catch (e) {
@@ -59,16 +56,14 @@ const getShow = async (db, ObjectID, slug) => {
     }
 };
 
-// TODO this needs to be limited so we don't fetch everything at once
 const getPlaylistsByShow = async (request, reply) => {
     const { db, ObjectID } = request.server.plugins.mongodb;
-    // playlistId is sometimes available on request.params
-    const { slug } = request.params;
+    const { slug, playlistId } = request.params;
 
     try {
         const show = await getShow(db, ObjectID, slug);
 
-        const playlists = await getPlaylists(db, show, ObjectID);
+        const playlists = await getPlaylists(db, ObjectID, show, playlistId);
         const mergedData = {
             playlists,
             show
@@ -165,13 +160,13 @@ const deletePlaylist = async (request, reply) => {
 };
 
 const addTrack = async (request, reply) => {
-    const { db } = request.server.plugins.mongodb;
+    const { db, ObjectID } = request.server.plugins.mongodb;
 
     try {
         const track = request.payload;
         const { playlistId } = request.params;
 
-        track.id = cuid();
+        track.id = new ObjectID();
 
         const result = await db.collection('playlists').update(
             { playlistId },
@@ -203,17 +198,21 @@ const addTrack = async (request, reply) => {
 };
 
 const updateTracks = async (request, reply) => {
-    const { db } = request.server.plugins.mongodb;
+    const { db, ObjectID } = request.server.plugins.mongodb;
 
     try {
         const track = request.payload;
         const { playlistId } = request.params;
+
         const result = await db.collection('playlists').update(
             {
                 playlistId,
-                'songs.id': track.id
+                'songs.id': new ObjectID(track.id)
             },
-            { $set: { 'songs.$': track } }
+            { $set: { 'songs.$': {
+                ...track,
+                id: new ObjectID(track.id)
+            } } }
         );
 
         const response = result.toJSON();
@@ -293,13 +292,13 @@ const updateTrackOrder = async (request, reply) => {
 };
 
 const deleteTrackFromPlaylist = async (request, reply) => {
-    const { db } = request.server.plugins.mongodb;
+    const { db, ObjectID } = request.server.plugins.mongodb;
 
     try {
         const { playlistId, trackId } = request.params;
 
         const result = await db.collection('playlists').update(
-            { playlistId }, { $pull: { songs: { id: trackId } } });
+            { playlistId }, { $pull: { songs: { id: new ObjectID(trackId) } } });
 
         const response = result.toJSON();
         // { ok: 1, nModified: 1, n: 1 }
