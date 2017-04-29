@@ -112,19 +112,15 @@ const hashPassword = (password, callback) => {
 const createUser = (request, reply) => {
     const { db } = request.server.plugins.mongodb;
 
-    try {
-        Joi.validate(request.payload, userSchema, (err, value) => {
-            if (err) {
-                throw Boom.badRequest(err);
-            }
-            // if value === null, object is valid
-            if (value === null) {
-                return true;
-            }
+    const { err } = Joi.validate(request.payload, userSchema);
+
+    if (err) {
+        console.log(err);
+
+        return reply({
+            success: false,
+            message: 'Validation Error'
         });
-    } catch (e) {
-        console.log(e);
-        return reply(Boom.create(500, 'Something went wrong'));
     }
 
     const { email, password, role, displayName } = request.payload;
@@ -218,20 +214,13 @@ const updateUser = (request, reply) => {
     const { db, ObjectID } = request.server.plugins.mongodb;
     const user = request.payload;
 
-    try {
-        Joi.validate(user, userSchema, (err, value) => {
-            if (err) {
-                console.log(err);
-                reply(Boom.badRequest());
-            }
-            // if value === null, object is valid
-            if (value === null) {
-                return true;
-            }
+    const { err } = Joi.validate(user, userSchema);
+
+    if (err) {
+        return reply({
+            success: false,
+            message: 'Validation Failed'
         });
-    } catch (err) {
-        console.log(err);
-        return reply(Boom.serverUnavailable());
     }
 
     const userId = new ObjectID(user._id);
@@ -239,9 +228,9 @@ const updateUser = (request, reply) => {
 
     db.collection('users').update({ _id: userId },
         { $set: fieldsToUpdate },
-        (err, result) => {
-            if (err) {
-                console.log(err);
+        (e, result) => {
+            if (e) {
+                console.log('error in mongo', e);
                 return reply(Boom.serverUnavailable());
             }
             // response, e.g. { ok: 1, nModified: 1, n: 1 }
