@@ -11,6 +11,11 @@ const initialState = {};
 const store = storeFactory(initialState);
 const history = syncHistoryWithStore(browserHistory, store);
 const routes = createRoutes(rawRoutes);
+const { NODE_ENV } = process.env;
+
+if (window.Raven && (NODE_ENV === 'production' || NODE_ENV === 'staging')) {
+    window.Raven.config('https://95f24e80429249a79b2e844e0a21bf72@sentry.io/160847').install();
+}
 
 injectTapEventPlugin();
 

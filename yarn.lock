@@ -2568,6 +2568,14 @@ hapi-auth-jwt2@^7.2.0:
     cookie "^0.3.1"
     jsonwebtoken "^7.1.9"
 
+hapi-raven-boom@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/hapi-raven-boom/-/hapi-raven-boom-6.1.0.tgz#ae92ed3125c53655d4694e87c6425df6113db8fa"
+  dependencies:
+    hoek "^4.1.0"
+    lodash "^4.17.4"
+    raven "^1.1.1"
+
 hapi-react-views@^9.1.1:
   version "9.2.1"
   resolved "https://registry.yarnpkg.com/hapi-react-views/-/hapi-react-views-9.2.1.tgz#3f35aa685ca10174769253dc3276f7e3961cdd87"
@@ -2695,7 +2703,7 @@ hoek@2.x.x:
   version "2.16.3"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
 
-hoek@4.X.X, hoek@4.x.x:
+hoek@4.X.X, hoek@4.x.x, hoek@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-4.1.0.tgz#4a4557460f69842ed463aa00628cc26d2683afa7"
 
@@ -3464,7 +3472,7 @@ json-stable-stringify@^1.0.0, json-stable-stringify@^1.0.1:
   dependencies:
     jsonify "~0.0.0"
 
-json-stringify-safe@5.0.x, json-stringify-safe@~5.0.1:
+json-stringify-safe@5.0.1, json-stringify-safe@5.0.x, json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
 
@@ -3762,6 +3770,10 @@ lru-cache@4.0.x, lru-cache@^4.0.1:
   dependencies:
     pseudomap "^1.0.1"
     yallist "^2.0.0"
+
+lsmod@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/lsmod/-/lsmod-1.0.0.tgz#9a00f76dca36eb23fa05350afe1b585d4299e64b"
 
 macaddress@^0.2.8:
   version "0.2.8"
@@ -4826,6 +4838,16 @@ range-parser@^1.0.3:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
+raven@^1.1.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/raven/-/raven-1.2.1.tgz#949c134db028a190b7bbf8f790aae541b7c020bd"
+  dependencies:
+    cookie "0.3.1"
+    json-stringify-safe "5.0.1"
+    lsmod "1.0.0"
+    stack-trace "0.0.9"
+    uuid "3.0.0"
+
 rc@^1.0.1, rc@~1.1.6:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/rc/-/rc-1.1.7.tgz#c5ea564bb07aff9fd3a5b32e906c1d3a65940fea"
@@ -5457,6 +5479,10 @@ sshpk@^1.7.0:
     jsbn "~0.1.0"
     tweetnacl "~0.14.0"
 
+stack-trace@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.9.tgz#a8f6eaeca90674c333e7c43953f275b451510695"
+
 statehood@4.x.x:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/statehood/-/statehood-4.1.0.tgz#8a2877d13d9850aab6ce877a54b778df0f43acdb"
@@ -5871,6 +5897,10 @@ util@0.10.3, util@^0.10.3:
   resolved "https://registry.yarnpkg.com/util/-/util-0.10.3.tgz#7afb1afe50805246489e3db7fe0ed379336ac0f9"
   dependencies:
     inherits "2.0.1"
+
+uuid@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.0.tgz#6728fc0459c450d796a99c31837569bdf672d728"
 
 uuid@3.0.1, uuid@^3.0.0:
   version "3.0.1"
