@@ -13,6 +13,20 @@ exports.register = (server, options, next) => {
     playlistRoutes.map(r => server.route(r));
     nowPlayingRoutes.map(r => server.route(r));
 
+    server.route({
+        path: `${API_BASE_URL}/health`,
+        method: 'GET',
+        config: {
+            handler: (request, reply) => {
+                reply({ status: 'OK' });
+            },
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin'],
+                mode: 'optional'
+            }
+        }
+    });
     // generic upload route
     server.route({
         path: `${API_BASE_URL}/upload`,

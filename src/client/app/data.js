@@ -267,9 +267,9 @@ const users = {
 
 export const playlistFields = {
     fields: {
-        track: {
+        title: {
             label: 'Track Name',
-            name: 'track',
+            name: 'title',
             hintText: 'Enter the track name'
         },
         artist: {
@@ -287,7 +287,7 @@ export const playlistFields = {
             name: 'label',
             hintText: 'Enter the Record Label'
         },
-        releaseDate: {
+        releaseYear: {
             label: 'Release Date',
             name: 'releaseDate',
             hintText: 'Enter the release date'

@@ -19,16 +19,16 @@ const getNowPlaying = async (request, reply) => {
 
 const updateNowPlaying = async (request, reply) => {
     const { playlistId, song, playedAt } = request.payload;
-    const { id, ...songData } = song;
-    const nowPlayingData = {
-        ...songData,
-        playedAt,
-        songId: song.id
-    };
 
     try {
         const { db, ObjectID } = request.server.plugins.mongodb;
         const { socket } = request.server.plugins['web-sockets'];
+        const { id, ...songData } = song;
+        const nowPlayingData = {
+            ...songData,
+            playedAt,
+            songId: new ObjectID(song.id)
+        };
 
         socket.emit('now-playing', songData);
 
@@ -40,9 +40,10 @@ const updateNowPlaying = async (request, reply) => {
             }
         );
 
-        const pid = new ObjectID(playlistId);
+        const pid = playlistId;
+
         const res = await db.collection('playlists').update(
-            { _id: pid, 'songs.id': song.id },
+            { playlistId: pid, 'songs.id': nowPlayingData.songId },
             { $set: { 'songs.$.playedAt': playedAt } }
         );
         const playlistResult = res.toJSON();

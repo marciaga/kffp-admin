@@ -2,15 +2,20 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import Fuse from 'fuse.js';
 import { setModel } from '../../src/client/app/actions/modelActions';
 import { API_ENDPOINT } from '../../src/client/app/utils/constants';
 
+const fuse = new Fuse(undefined, {
+    keys: ['displayName', 'email', 'role']
+});
 const mock = new MockAdapter(axios);
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
 const returnValue = {
     model: {
+        data: undefined,
         fields: {
             displayName: {
                 label: 'Display Name'
@@ -23,7 +28,8 @@ const returnValue = {
             }
         },
         name: 'users',
-        type: 'show'
+        type: 'show',
+        fuse
     }
 };
 
@@ -33,7 +39,8 @@ describe('Model actions', () => {
             mock.onGet(`${API_ENDPOINT}/users`).reply(200);
 
             const expectedActions = [{
-                data: returnValue, type: 'SET_MODEL'
+                type: 'SET_MODEL',
+                data: returnValue
             }];
 
             const store = mockStore({});
@@ -41,7 +48,7 @@ describe('Model actions', () => {
 
             await store.dispatch(setModel(user, 'users', 'show'));
 
-            expect(store.getActions()).toEqual(expectedActions);
+            expect(JSON.stringify(store.getActions())).toEqual(JSON.stringify(expectedActions));
         });
     });
 });

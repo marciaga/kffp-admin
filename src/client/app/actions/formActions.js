@@ -23,7 +23,7 @@ import {
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 import validateModelForm from '../utils/formValidation';
 import Models from '../data';
-import { snackbarMessage } from './feedbackActions';
+import { snackbarMessage, confirmOpen } from './feedbackActions';
 
 const updateFormField = (fieldName, value) => ({
     type: UPDATE_FORM_FIELD,
@@ -222,6 +222,8 @@ const deleteForm = (id, modelName) => {
                 showModal: false
             }
         });
+
+        dispatch(confirmOpen(false));
     };
 };
 
