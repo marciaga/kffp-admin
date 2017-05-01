@@ -4,6 +4,7 @@ import showRoutes from './routes/shows';
 import userRoutes from './routes/users';
 import playlistRoutes from './routes/playlists';
 import nowPlayingRoutes from './routes/nowPlaying';
+import { API_BASE_URL } from './constants';
 
 exports.register = (server, options, next) => {
     // register routes
@@ -12,9 +13,23 @@ exports.register = (server, options, next) => {
     playlistRoutes.map(r => server.route(r));
     nowPlayingRoutes.map(r => server.route(r));
 
+    server.route({
+        path: `${API_BASE_URL}/health`,
+        method: 'GET',
+        config: {
+            handler: (request, reply) => {
+                reply({ status: 'OK' });
+            },
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin'],
+                mode: 'optional'
+            }
+        }
+    });
     // generic upload route
     server.route({
-        path: '/api/upload',
+        path: `${API_BASE_URL}/upload`,
         method: 'POST',
         config: {
             payload: {
@@ -32,7 +47,7 @@ exports.register = (server, options, next) => {
     });
     // users search endpoint for autocomplete
     server.route({
-        path: '/api/search/users',
+        path: `${API_BASE_URL}/search/users`,
         method: 'GET',
         config: {
             auth: {

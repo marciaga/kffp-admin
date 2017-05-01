@@ -69,7 +69,7 @@ const Navbar = ({ dispatch, errorMessage, user, isAuthenticated }) => {
 
     return (
         <AppBar
-            title={title}
+            title={<span style={{ cursor: 'pointer' }}>{title}</span>}
             showMenuIconButton={false}
             onTitleTouchTap={() => dispatch(push('/'))}
             iconElementRight={renderLoginElement(errorMessage, isAuthenticated, user, dispatch)}

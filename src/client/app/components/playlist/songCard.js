@@ -10,12 +10,34 @@ const AirBreakCard = () =>
     </Card>
 ;
 
+const generateHeading = ({ title, artist }) => {
+    let str = title || 'Missing Title';
+
+    str = artist ? `${str} by ${artist}` : str;
+
+    return str;
+};
+
+const generateSubtitle = ({ album, releaseYear }) => {
+    const subtitle = [];
+
+    if (album) {
+        subtitle.push('on ', album);
+    }
+
+    if (releaseYear) {
+        subtitle.push(' - released ', releaseYear);
+    }
+
+    return subtitle.join(' ');
+};
+
 const SongCard = (props) => {
     const {
         album,
         artist,
-        track,
-        releaseDate,
+        title,
+        releaseYear,
         id,
         form,
         playlistId,
@@ -24,8 +46,8 @@ const SongCard = (props) => {
 
     const { songs } = form;
     const currentSong = songs.find(s => id === s.id);
-    const title = `${track} by ${artist}`;
-    const subtitle = `on ${album} - released ${releaseDate}`;
+    const heading = generateHeading({ artist, title });
+    const subtitle = generateSubtitle({ album, releaseYear });
 
     if (props.airBreak) {
         return (
@@ -36,7 +58,7 @@ const SongCard = (props) => {
     return (
         <Card>
             <CardHeader
-                title={title}
+                title={heading}
                 subtitle={subtitle}
                 actAsExpander={true}
                 showExpandableButton={true}
@@ -57,8 +79,8 @@ SongCard.propTypes = {
     album: PropTypes.string,
     airBreak: PropTypes.string,
     artist: PropTypes.string,
-    track: PropTypes.string,
-    releaseDate: PropTypes.string,
+    title: PropTypes.string,
+    releaseYear: PropTypes.string,
     id: PropTypes.string,
     form: PropTypes.object,
     playlistId: PropTypes.string,

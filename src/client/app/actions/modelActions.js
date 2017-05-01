@@ -1,9 +1,10 @@
 import axios from 'axios';
+import Fuse from 'fuse.js';
 import Models from '../data';
-import { SET_MODEL, UPDATE_MODEL } from '../constants';
+import { SET_MODEL, UPDATE_MODEL, UPDATE_FILTER_RESULTS } from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 import { snackbarMessage } from './feedbackActions';
-import { GENERIC_ERROR_MESSAGE } from '../utils/constants';
+import { GENERIC_ERROR_MESSAGE, API_ENDPOINT } from '../utils/constants';
 
 const receiveModelData = model => ({
     type: SET_MODEL,
@@ -19,7 +20,7 @@ const setModel = (user, modelName, type) => {
         // redirect to root path
     }
 
-    const url = `/api/${modelName}`;
+    const url = `${API_ENDPOINT}/${modelName}`;
     const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {
@@ -29,10 +30,15 @@ const setModel = (user, modelName, type) => {
                     Authorization: `Bearer ${idToken}`
                 }
             });
+            const options = {
+                keys: Object.keys(model.fields)
+            };
+            const fuse = new Fuse(data, options);
 
             model.data = data;
             model.name = modelName;
             model.type = type;
+            model.fuse = fuse;
 
             dispatch(receiveModelData(model));
         } catch (err) {
@@ -46,4 +52,15 @@ const updateModelData = data => ({
     data
 });
 
-export { setModel, updateModelData };
+const filterResults = data => (dispatch, getState) => {
+    const { model } = getState();
+    const fuse = model.fuse;
+    const result = fuse.search(data);
+
+    dispatch({
+        type: UPDATE_FILTER_RESULTS,
+        data: result
+    });
+};
+
+export { setModel, updateModelData, filterResults };

@@ -34,6 +34,7 @@ export const SHOW_VALIDATION_ERRORS = 'SHOW_VALIDATION_ERRORS';
 export const SET_MODEL = 'SET_MODEL';
 export const UPDATE_MODEL = 'UPDATE_MODEL';
 export const DELETE_MODEL = 'DELETE_MODEL';
+export const UPDATE_FILTER_RESULTS = 'UPDATE_FILTER_RESULTS';
 
 // middleware
 export const LOCATION_CHANGE = '@@router/LOCATION_CHANGE';

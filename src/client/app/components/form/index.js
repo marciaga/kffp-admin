@@ -133,7 +133,7 @@ class Form extends Component {
                     />
                 </form>
                 <ConfirmationDialog
-                    title="Are you sure you want to delete this Show?"
+                    title="Are you sure you want to delete this?"
                     open={open}
                     cancelHandler={() => dispatch(confirmOpen(false, null))}
                     okHandler={() => dispatch(deleteForm(info, modelName))}

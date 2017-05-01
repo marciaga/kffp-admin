@@ -74,6 +74,8 @@ const deletePlaylist = (playlistId, slug) => async (dispatch) => {
                 }
             });
 
+            dispatch(confirmOpen(false));
+
             dispatch(push(`/playlists/${slug}`));
         } else {
             const errorMessage = 'Playlist delete failed';

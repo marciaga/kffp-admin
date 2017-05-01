@@ -1,20 +1,28 @@
-import { SET_MODEL, UPDATE_MODEL, DELETE_MODEL } from '../constants';
+import {
+    SET_MODEL,
+    UPDATE_MODEL,
+    DELETE_MODEL,
+    UPDATE_FILTER_RESULTS
+} from '../constants';
 
-const initialstate = {};
+const initialstate = {
+    filteredResults: []
+};
 
 export default function modelReducer (state = initialstate, action) {
     switch (action.type) {
 
     case SET_MODEL:
         const { model } = action.data;
-        const { fields, data, name, type } = model;
+        const { fields, data, name, type, fuse } = model;
 
         return {
             ...state,
             fields,
             data,
             name,
-            type
+            type,
+            fuse
         };
 
     case UPDATE_MODEL:
@@ -44,6 +52,12 @@ export default function modelReducer (state = initialstate, action) {
         return {
             ...state,
             data: filteredModelData
+        };
+
+    case UPDATE_FILTER_RESULTS:
+        return {
+            ...state,
+            filteredResults: action.data
         };
 
     default:

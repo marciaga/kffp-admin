@@ -1,17 +1,34 @@
 import Boom from 'boom';
 
+const getNowPlaying = async (request, reply) => {
+    const { db } = request.server.plugins.mongodb;
+
+    try {
+        const result = await db.collection('nowPlaying').findOne();
+
+        if (!result) {
+            return reply({ success: false, message: 'Nothing is playing' });
+        }
+
+        return reply(result);
+    } catch (e) {
+        console.log(e);
+        return reply(Boom.serverUnavailable());
+    }
+};
+
 const updateNowPlaying = async (request, reply) => {
     const { playlistId, song, playedAt } = request.payload;
-    const { id, ...songData } = song;
-    const nowPlayingData = {
-        ...songData,
-        playedAt,
-        songId: song.id
-    };
 
     try {
         const { db, ObjectID } = request.server.plugins.mongodb;
         const { socket } = request.server.plugins['web-sockets'];
+        const { id, ...songData } = song;
+        const nowPlayingData = {
+            ...songData,
+            playedAt,
+            songId: new ObjectID(song.id)
+        };
 
         socket.emit('now-playing', songData);
 
@@ -23,9 +40,10 @@ const updateNowPlaying = async (request, reply) => {
             }
         );
 
-        const pid = new ObjectID(playlistId);
+        const pid = playlistId;
+
         const res = await db.collection('playlists').update(
-            { _id: pid, 'songs.id': song.id },
+            { playlistId: pid, 'songs.id': nowPlayingData.songId },
             { $set: { 'songs.$.playedAt': playedAt } }
         );
         const playlistResult = res.toJSON();
@@ -45,4 +63,4 @@ const updateNowPlaying = async (request, reply) => {
     }
 };
 
-export default updateNowPlaying;
+export { updateNowPlaying, getNowPlaying };

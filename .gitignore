@@ -5,6 +5,7 @@ coverage
 public/*
 !public/.gitkeep
 .DS_Store
+bin/summer-schedule-2017.json
 
 # Elastic Beanstalk Files
 # .elasticbeanstalk/*

@@ -11,19 +11,34 @@ const showSchema = Joi.object().keys({
     endTime: Joi.number().integer().required(),
     isActive: Joi.boolean().required(),
     slug: Joi.string().required(),
-    description: Joi.string(),
-    primaryImage: Joi.string()
+    description: Joi.string().allow(''),
+    primaryImage: Joi.string().allow('')
 });
 
 const getShows = async (request, reply) => {
     const { db, ObjectID } = request.server.plugins.mongodb;
-    const params = request.query || {};
+    const { id } = request.params;
+    const queryParams = request.query;
+    const query = {
+        ...queryParams
+    };
+    const userIds = queryParams.users ? queryParams.users.split(',') : null;
+
+    if (userIds) {
+        query.users = userIds.map(e => new ObjectID(e.trim()));
+    }
+
+    const objId = id ? new ObjectID(id) : null;
+
+    if (objId) {
+        query._id = objId;
+    }
 
     try {
-        const result = await db.collection('shows').find(params).toArray();
+        const result = await db.collection('shows').find(query).toArray();
 
         const transformedResult = result.map(async (doc) => {
-            const objectIds = doc.users.map(id => new ObjectID(id));
+            const objectIds = doc.users.map(showId => new ObjectID(showId));
 
             const users = await db.collection('users').find({
                 _id: { $in: objectIds }
@@ -48,20 +63,15 @@ const updateShow = (request, reply) => {
     const { db, ObjectID } = request.server.plugins.mongodb;
     const show = request.payload;
 
-    try {
-        Joi.validate(show, showSchema, (err, value) => {
-            if (err) {
-                console.log(err);
-                return reply(Boom.serverUnavailable());
-            }
-            // if value === null, object is valid
-            if (value === null) {
-                return true;
-            }
-        });
-    } catch (err) {
+    const { err } = Joi.validate(show, showSchema);
+
+    if (err) {
         console.log(err);
-        return reply(Boom.internal('Something went wrong'));
+
+        return reply({
+            success: false,
+            message: 'Validation Failed'
+        });
     }
 
     const showId = new ObjectID(show._id);
@@ -91,9 +101,9 @@ const upsertShow = (request, reply) => {
 
     db.collection('shows').find({ showName: newShow.showName },
         {}, { limit: 1 },
-        async (err, cursor) => {
-            if (err) {
-                console.log(err);
+        async (e, cursor) => {
+            if (e) {
+                console.log(e);
                 return reply(Boom.serverUnavailable());
             }
 
@@ -102,23 +112,17 @@ const upsertShow = (request, reply) => {
             if (existingShow.length) {
                 return reply(Boom.unauthorized('A record with that show name already exists'));
             }
-            // Validate against the Show schema
-            try {
-                Joi.validate(newShow, showSchema, (validationErr, value) => {
-                    if (validationErr) {
-                        console.log(validationErr);
-                        return reply(Boom.badRequest());
-                    }
-                    // if value === null, object is valid
-                    if (value === null) {
-                        return true;
-                    }
-                });
-            } catch (e) {
-                console.log(e);
-                return reply(Boom.internal('Something went wrong'));
-            }
 
+            const { err } = Joi.validate(newShow, showSchema);
+
+            if (err) {
+                console.log(err);
+
+                return reply({
+                    success: false,
+                    message: 'Validation Failed'
+                });
+            }
             // insert the record
             db.collection('shows').insert(newShow, (error, doc) => {
                 if (error) {
