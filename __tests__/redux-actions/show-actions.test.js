@@ -41,7 +41,7 @@ describe('Show actions', () => {
         let url;
 
         beforeEach(() => {
-            url = '/api/shows?isActive=true&users=test';
+            url = `${API_ENDPOINT}/shows?isActive=true&users=test`;
             mock = new MockAdapter(axios);
         });
 

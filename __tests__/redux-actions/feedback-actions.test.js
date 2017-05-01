@@ -21,7 +21,7 @@ describe('feedbackActions', () => {
 
     describe('closeSnackbar', () => {
         it('should return a type CLOSE_SNACKBAR', () => {
-            const { type } = closeSnackbar;
+            const { type } = closeSnackbar();
 
             expect(type).toBe('CLOSE_SNACKBAR');
         });
