@@ -109,13 +109,13 @@ const loginUser = (creds) => {
                 return dispatch(snackbarMessage('Login failed. Please try again.'));
             }
 
-            const { idToken, displayName } = data;
+            const { idToken, id } = data;
 
             localStorage.setItem('idToken', idToken);
 
             dispatch(clearLoginForm());
             dispatch(getAllShows());
-            dispatch(getUserShows(displayName));
+            dispatch(getUserShows(id));
             dispatch(receiveLogin(data));
             dispatch(push('/'));
         } catch (err) {
