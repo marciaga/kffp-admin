@@ -15,7 +15,9 @@ const showRoutes = [
             validate: {
                 query: {
                     isActive: Joi.boolean(),
-                    users: Joi.string()
+                    users: Joi.string(),
+                    startWeek: Joi.string(),
+                    startTime: Joi.string()
                 }
             },
             auth: {
