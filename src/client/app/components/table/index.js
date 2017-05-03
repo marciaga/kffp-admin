@@ -70,7 +70,7 @@ class MainTable extends Component {
         if (selectedRows.length) {
             const modelName = this.props.model.name;
             const rowIndex = selectedRows[0];
-            const rowData = this.props.model.data[rowIndex];
+            const rowData = this.props.model.filteredResults[rowIndex];
 
             this.props.dispatch(setUpdateFormData('edit', modelName, rowData));
             this.props.dispatch(showOrHideModal(true));

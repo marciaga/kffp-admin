@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import Boom from 'boom';
 import Promise from 'bluebird';
+import moment from 'moment';
 
 const showSchema = Joi.object().keys({
     _id: Joi.string(),
@@ -15,12 +16,70 @@ const showSchema = Joi.object().keys({
     primaryImage: Joi.string().allow('')
 });
 
+const daysOfWeek = [
+    'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
+];
+
+const nextDayGenerator = day => moment().day(day).add(1, 'day').format('dddd');
+
+const determineSortOrderByDay = (startDay) => {
+    let start = startDay;
+
+    const ary = [start];
+
+    let i = 0;
+
+    for (i; i < daysOfWeek.length - 1;) {
+        start = nextDayGenerator(start);
+        ary.push(start);
+        i += 1;
+    }
+
+    return ary.reduce((memo, key, index) => {
+        memo[key.toLowerCase()] = index + 1;
+
+        return memo;
+    }, {});
+};
+
+const determineDayOrder = (start, data) => {
+    const sortOrder = determineSortOrderByDay(start);
+
+    const sortedByDay = data.sort((a, b) => {
+        const day1 = a.dayOfWeek.toLowerCase();
+        const day2 = b.dayOfWeek.toLowerCase();
+
+        return sortOrder[day1] - sortOrder[day2];
+    });
+
+    const filteredResults = sortedByDay.filter(d => (d.startTime && d.endTime));
+
+    // create an object keyed according to sortOrder so as to obtain
+    daysOfWeek.forEach((day) => {
+        sortOrder[day] = filteredResults.filter(d => d.dayOfWeek.toLowerCase() === day)
+        .sort((a, b) => a.startTime - b.startTime);
+    });
+
+    // then sort within each array by startTime
+    const finalSort = Object.keys(sortOrder).reduce((cur, prev) => {
+        cur.push(sortOrder[prev]);
+
+        return cur;
+    }, []);
+    // lastly, flatten the arrays
+    return finalSort.reduce((a, b) => [...a, ...b]);
+};
+
 const getShows = async (request, reply) => {
     const { db, ObjectID } = request.server.plugins.mongodb;
     const { id } = request.params;
     const queryParams = request.query;
+    const { startWeek } = queryParams;
+
+    // exclude shows that startTime: 0 and endTime: 0
     const query = {
-        ...queryParams
+        ...queryParams,
+        startWeek: undefined
     };
     const userIds = queryParams.users ? queryParams.users.split(',') : null;
 
@@ -52,7 +111,11 @@ const getShows = async (request, reply) => {
             return new Promise(resolve => resolve(doc));
         });
 
-        Promise.all(transformedResult).then(r => reply(r));
+        Promise.all(transformedResult).then((r) => {
+            const returnVal = startWeek ? determineDayOrder(startWeek, r) : r;
+
+            reply(returnVal);
+        });
     } catch (e) {
         console.log(e);
         return reply(Boom.serverUnavailable());
