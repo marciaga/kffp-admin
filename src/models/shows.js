@@ -45,17 +45,29 @@ const determineSortOrderByDay = (startDay) => {
 const determineDayOrder = (start, data) => {
     const sortOrder = determineSortOrderByDay(start);
 
-    return data.sort((a, b) => {
+    const sortedByDay = data.sort((a, b) => {
         const day1 = a.dayOfWeek.toLowerCase();
         const day2 = b.dayOfWeek.toLowerCase();
 
         return sortOrder[day1] - sortOrder[day2];
     });
 
+    const filteredResults = sortedByDay.filter(d => (d.startTime && d.endTime));
+
     // create an object keyed according to sortOrder so as to obtain
-    // { tuesday: [ {} ], wednesday: [ {} ] }
+    daysOfWeek.forEach((day) => {
+        sortOrder[day] = filteredResults.filter(d => d.dayOfWeek.toLowerCase() === day)
+        .sort((a, b) => a.startTime - b.startTime);
+    });
+
     // then sort within each array by startTime
+    const finalSort = Object.keys(sortOrder).reduce((cur, prev) => {
+        cur.push(sortOrder[prev]);
+
+        return cur;
+    }, []);
     // lastly, flatten the arrays
+    return finalSort.reduce((a, b) => [...a, ...b]);
 };
 
 const getShows = async (request, reply) => {
