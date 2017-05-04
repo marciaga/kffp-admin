@@ -22,13 +22,13 @@ const playlistSchema = Joi.object().keys({
 });
 
 const getPlaylists = async (db, ObjectID, show, playlistId) => {
-    const showId = new ObjectID(show._id);
-    const query = playlistId ? { playlistId } : { showId };
+    const showId = show._id;
+    const query = playlistId ? { playlistId } : { showId: new ObjectID(showId) };
 
     try {
-        const result = await db.collection('playlists').find(query).toArray();
-
-        return result;
+        return await db.collection('playlists').find(query)
+            .sort({ playlistDate: -1 })
+            .toArray();
     } catch (e) {
         console.log(e);
         return false;
@@ -77,7 +77,7 @@ const getPlaylistsByShow = async (request, reply) => {
 };
 
 const createPlaylist = async (request, reply) => {
-    const { db } = request.server.plugins.mongodb;
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const now = moment();
     const playlistDate = now.toISOString();
     const playlistId = shortid.generate();
@@ -93,7 +93,7 @@ const createPlaylist = async (request, reply) => {
     try {
         const result = await db.collection('playlists').find({
             playlistId,
-            showId
+            showId: new ObjectID(showId)
         }).toArray();
 
         if (result.length) {
@@ -117,6 +117,8 @@ const createPlaylist = async (request, reply) => {
             console.log(err);
             return reply(Boom.interval('Something went wrong'));
         }
+
+        newPlaylist.showId = new ObjectID(showId);
 
         db.collection('playlists').insert(newPlaylist, (err, doc) => {
             if (err) {
