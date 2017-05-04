@@ -50,7 +50,7 @@ const userRoutes = [
         }
     },
     {
-        path: `${API_BASE_URL}/users`,
+        path: `${API_BASE_URL}/users/{id?}`,
         method: 'PATCH',
         config: {
             auth: {

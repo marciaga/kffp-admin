@@ -15,14 +15,14 @@ const SearchResults = ({ searchResults, playlistId, dispatch }) => {
                 className="search-results__grid-wrapper"
             >
                 {searchResults && searchResults.map((tile, i) => {
-                    const { artist, track, album, images } = tile;
+                    const { artist, title, album, images } = tile;
                     const image = images.length && images[1] ?
                         images[1] : { url: 'http://placehold.it/300x300' };
 
                     return (
                         <GridTile
                             key={i}
-                            title={track}
+                            title={title}
                             subtitle={<span>by <b>{artist}</b></span>}
                             className="search-results__grid-tile"
                             onClick={() => handleClick(tile, playlistId)}

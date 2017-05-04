@@ -20,10 +20,13 @@ const UserSettingsForm = ({ fields, user, dispatch }) => {
     const submitHandler = (e) => {
         e.preventDefault();
 
+        // @TODO implement user feedback for validation
         const { name } = e.target;
         const { id } = user;
 
-        dispatch(updateUserPassword({ id, name, fields }));
+        if (id && name && Object.keys(fields).length) {
+            dispatch(updateUserPassword({ id, name, fields }));
+        }
     };
 
     const handleInputUpdate = (e) => {

@@ -27,7 +27,7 @@ const parseSearchResults = (results, albums) => {
 
         return {
             artist,
-            track: name || '',
+            title: name || '',
             album: albumName,
             label,
             releaseDate: release_date,

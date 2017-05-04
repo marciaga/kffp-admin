@@ -52,7 +52,7 @@ const determineDayOrder = (start, data) => {
         return sortOrder[day1] - sortOrder[day2];
     });
 
-    const filteredResults = sortedByDay.filter(d => (d.startTime && d.endTime));
+    const filteredResults = sortedByDay.filter(d => (d.endTime || d.startTime));
 
     // create an object keyed according to sortOrder so as to obtain
     daysOfWeek.forEach((day) => {
