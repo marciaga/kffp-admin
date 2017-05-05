@@ -3,7 +3,8 @@ import { push } from 'react-router-redux';
 import {
     getTokenFromLocalStorage,
     cleanPathname,
-    pathHasPlaylistId
+    pathHasPlaylistId,
+    removePlaylistIdFromPath
 } from '../utils/helperFunctions';
 import { API_ENDPOINT, GENERIC_ERROR_MESSAGE } from '../utils/constants';
 import { getShow } from './showActions';
@@ -89,8 +90,10 @@ const deletePlaylist = (playlistId, slug) => async (dispatch) => {
 
 const getShowPlaylists = pathname => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
+    const pathHasId = pathHasPlaylistId(pathname);
+    const showPath = pathHasId ? removePlaylistIdFromPath(pathname) : pathname;
     const path = cleanPathname(pathname);
-    const url = `${API_ENDPOINT}${path}`;
+    const url = `${API_ENDPOINT}${showPath}`;
 
     try {
         const { data } = await axios.get(url, {
@@ -102,7 +105,7 @@ const getShowPlaylists = pathname => async (dispatch) => {
 
         dispatch(getShow(show));
         dispatch(receivePlaylists(playlists));
-        // if there's a date slug, set the current Playlist
+        // if there's a playlist ID, set the current Playlist
         if (pathHasPlaylistId(path)) {
             const playlistId = path.split('/').pop();
             const playlist = playlists.find(p => p.playlistId === playlistId);
