@@ -21,13 +21,20 @@ const songSource = {
     beginDrag (props) {
         return {
             id: props.id,
-            index: props.index
+            originalIndex: props.findSong(props.id).index
         };
     },
     endDrag (props, monitor) {
-        const { id, index } = monitor.getDropResult();
+        const newIndex = props.index;
+        const { id: draggedId, originalIndex } = monitor.getItem();
+        const didDrop = monitor.didDrop();
 
-        props.dispatch(reorderSongs({ id, index }));
+        // If drop was cancelled, move it back
+        if (!didDrop) {
+            props.moveSong(draggedId, originalIndex);
+        }
+
+        props.dispatch(reorderSongs({ id: draggedId, index: newIndex }));
     }
 };
 
@@ -36,48 +43,39 @@ const songTarget = {
         return monitor.getItem();
     },
     hover (props, monitor, component) {
-        const dragIndex = monitor.getItem().index;
-        const hoverIndex = props.index;
+        const { id: draggedId } = monitor.getItem();
+        const { id: overId } = props;
+        // only replace items if they're different
+        if (draggedId !== overId) {
+            const { index: dragIndex } = props.findSong(draggedId);
+            const { index: hoverIndex } = props.findSong(overId);
+            // Determine rectangle on screen
+            const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
 
-        // Don't replace items with themselves
-        if (dragIndex === hoverIndex) {
-            return;
+            // Get horizontal middle
+            const hoverMiddleX = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
+
+            // Determine mouse position
+            const clientOffset = monitor.getClientOffset();
+
+            // Get pixels to the left
+            const hoverClientX = clientOffset.x - hoverBoundingRect.left;
+
+            // Only perform the move when the mouse has crossed half of the items width
+            // When dragging rightwards, only move when the cursor is after 50%
+            // When dragging leftwards, only move when the cursor is before 50%
+
+            const isDraggingRightwards = dragIndex < hoverIndex;
+            const isHoverBeforeMiddle = hoverClientX < hoverMiddleX;
+            const isDraggingLeftwards = dragIndex > hoverIndex;
+            const isHoverAfterMiddle = hoverClientX > hoverMiddleX;
+
+            if ((isDraggingRightwards && isHoverAfterMiddle) ||
+                (isDraggingLeftwards && isHoverBeforeMiddle)) {
+              // Time to actually perform the action
+                props.moveSong(draggedId, hoverIndex);
+            }
         }
-
-        // Determine rectangle on screen
-        const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
-
-        // Get vertical middle
-        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-
-        // Determine mouse position
-        const clientOffset = monitor.getClientOffset();
-
-        // Get pixels to the top
-        const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-
-        // Only perform the move when the mouse has crossed half of the items height
-        // When dragging downwards, only move when the cursor is below 50%
-        // When dragging upwards, only move when the cursor is above 50%
-
-        // Dragging downwards
-        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-            return;
-        }
-
-        // Dragging upwards
-        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-            return;
-        }
-
-        // Time to actually perform the action
-        props.moveSong(dragIndex, hoverIndex);
-
-        // Note: we're mutating the monitor item here!
-        // Generally it's better to avoid mutations,
-        // but it's good here for the sake of performance
-        // to avoid expensive index searches.
-        monitor.getItem().index = hoverIndex;
     }
 };
 

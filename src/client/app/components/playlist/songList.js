@@ -26,6 +26,7 @@ class SongList extends Component {
         super(props);
 
         this.moveSong = this.moveSong.bind(this);
+        this.findSong = this.findSong.bind(this);
         this.onSaveOrder = this.onSaveOrder.bind(this);
         this.addNewSong = this.addNewSong.bind(this);
         this.addAirBreak = this.addAirBreak.bind(this);
@@ -102,18 +103,28 @@ class SongList extends Component {
         this.props.dispatch(addAirBreak(airBreak));
     }
 
-    moveSong (dragIndex, hoverIndex) {
-        const { songs } = this.state;
-        const dragSong = songs[dragIndex];
+    moveSong (id, atIndex) {
+        const { song, index } = this.findSong(id);
 
         this.setState(update(this.state, {
             songs: {
                 $splice: [
-                    [dragIndex, 1],
-                    [hoverIndex, 0, dragSong]
+                    [index, 1],
+                    [atIndex, 0, song]
                 ]
             }
         }));
+    }
+
+    findSong (id) {
+        const { songs } = this.state;
+        // TODO: This could return undefined
+        const song = songs.filter(c => c.id === id)[0];
+
+        return {
+            song,
+            index: songs.indexOf(song)
+        };
     }
 
     render () {
@@ -166,6 +177,7 @@ class SongList extends Component {
                                 <SongFormWrapper
                                     index={i}
                                     moveSong={this.moveSong}
+                                    findSong={this.findSong}
                                     playlistId={playlistId}
                                     {...song}
                                 />
