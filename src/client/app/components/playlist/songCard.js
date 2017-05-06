@@ -77,7 +77,7 @@ const SongCard = (props) => {
 
 SongCard.propTypes = {
     album: PropTypes.string,
-    airBreak: PropTypes.string,
+    airBreak: PropTypes.bool,
     artist: PropTypes.string,
     title: PropTypes.string,
     releaseYear: PropTypes.string,
