@@ -55,41 +55,6 @@ const loginError = message => ({
     }
 });
 
-const verifyLogin = (isAuthenticated) => {
-    if (!isAuthenticated) {
-        return {
-            type: AUTH_VERIFICATION,
-            data: {
-                verified: false
-            }
-        };
-    }
-
-    const url = `${API_ENDPOINT}/users/verify`;
-    const idToken = localStorage.getItem('idToken');
-
-    return async (dispatch) => {
-        try {
-            const { data } = await axios.get(url, {
-                headers: {
-                    Authorization: `Bearer ${idToken}`
-                }
-            });
-
-            if (data.code === 401) {
-                return dispatch(loginError(data.message));
-            }
-
-            dispatch({
-                type: AUTH_VERIFICATION,
-                data
-            });
-        } catch (err) {
-            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
-        }
-    };
-};
-
 const clearLoginForm = () => ({
     type: CLEAR_LOGIN_FORM
 });
@@ -155,6 +120,43 @@ const logoutUser = () => (dispatch) => {
     } catch (err) {
         dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
     }
+};
+
+const verifyLogin = (isAuthenticated) => {
+    if (!isAuthenticated) {
+        return {
+            type: AUTH_VERIFICATION,
+            data: {
+                verified: false
+            }
+        };
+    }
+
+    const url = `${API_ENDPOINT}/users/verify`;
+    const idToken = localStorage.getItem('idToken');
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+
+            console.log(data);
+            if (data.code === 401) {
+                return dispatch(loginError(data.message));
+            }
+
+            dispatch({
+                type: AUTH_VERIFICATION,
+                data
+            });
+        } catch (err) {
+            dispatch(snackbarMessage('Token Expired. Please Log In Again.'));
+            dispatch(logoutUser());
+        }
+    };
 };
 
 export {
