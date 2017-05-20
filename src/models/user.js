@@ -163,7 +163,7 @@ const verifyToken = (request, reply) => {
                 }
                 */
                 console.log(err);
-                return reply(Boom.unauthorized(...err));
+                return reply(Boom.unauthorized('Token Expired. Please Log In Again.'));
             }
 
             return reply({ ...decoded, verified: true }).code(201);
