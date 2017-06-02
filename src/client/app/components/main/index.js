@@ -14,10 +14,9 @@ class Main extends Component {
     componentWillReceiveProps (nextProps) {
         const { auth } = nextProps;
         const { user } = auth;
+        const { id } = user;
 
-        if (this.props.auth.user !== user) {
-            const { id } = user;
-
+        if (id && this.props.auth.user !== user) {
             this.props.dispatch(getUserShows(id));
             this.props.dispatch(getAllShows());
         }
