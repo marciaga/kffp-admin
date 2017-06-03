@@ -143,7 +143,6 @@ const verifyLogin = (isAuthenticated) => {
                 }
             });
 
-            console.log(data);
             if (data.code === 401) {
                 return dispatch(loginError(data.message));
             }
