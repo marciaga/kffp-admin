@@ -295,12 +295,18 @@ const reorderSongs = data => ({
     data
 });
 
+const removeAirbreak = id => ({
+    type: DELETE_TRACK,
+    data: { id }
+});
+
 export {
     getShowPlaylists,
     addNewPlaylist,
     receivePlaylist,
     addTrack,
     addAirBreak,
+    removeAirbreak,
     reorderSongs,
     reorderSongsSave,
     updatePlaylistSong,

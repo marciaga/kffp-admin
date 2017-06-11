@@ -1,11 +1,29 @@
 import React, { PropTypes } from 'react';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
+import IconButton from 'material-ui/IconButton';
+import ActionDelete from 'material-ui/svg-icons/action/delete';
 import SongForm from './songForm';
+import { removeAirbreak } from '../../actions/playlistActions';
 
-const AirBreakCard = () =>
+const AirBreakCard = ({ id, dispatch }) =>
     <Card>
-        <CardText>
-            <h1>Air Break</h1>
+        <CardText style={{ position: 'relative' }}>
+            <h1
+                style={{ display: 'inline-block' }}
+            >
+                Air Break
+            </h1>
+            <IconButton
+                style={{
+                    display: 'inline-block',
+                    position: 'absolute',
+                    top: 0,
+                    right: 0
+                }}
+                onClick={() => dispatch(removeAirbreak(id))}
+            >
+                <ActionDelete />
+            </IconButton>
         </CardText>
     </Card>
 ;
@@ -73,6 +91,11 @@ const SongCard = (props) => {
             </CardText>
         </Card>
     );
+};
+
+AirBreakCard.propTypes = {
+    dispatch: PropTypes.func,
+    id: PropTypes.string
 };
 
 SongCard.propTypes = {

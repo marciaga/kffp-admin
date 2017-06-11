@@ -195,7 +195,6 @@ class SongList extends Component {
 SongList.propTypes = {
     nowPlaying: PropTypes.object,
     currentPlaylist: PropTypes.object,
-    currentSearch: PropTypes.string,
     dispatch: PropTypes.func
 };
 
