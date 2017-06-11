@@ -23,7 +23,10 @@ import {
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 import validateModelForm from '../utils/formValidation';
 import Models from '../data';
-import { snackbarMessage, confirmOpen } from './feedbackActions';
+import {
+    handleErrorModal,
+    confirmOpen
+} from './feedbackActions';
 
 const updateFormField = (fieldName, value) => ({
     type: UPDATE_FORM_FIELD,
@@ -97,7 +100,10 @@ const getUserAutoComplete = (text) => {
 
             dispatch(receiveUserAutocomplete(data));
         } catch (e) {
-            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
     };
 };
@@ -189,7 +195,10 @@ const prepareFormSubmit = (type, modelName) => {
                 }
             });
         } catch (err) {
-            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
     };
 };
@@ -213,7 +222,10 @@ const deleteForm = (id, modelName) => {
                 }
             });
         } catch (err) {
-            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
 
         dispatch({
@@ -250,7 +262,10 @@ const updateUserPassword = (obj) => {
                 data: { message }
             });
         } catch (e) {
-            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
     };
 };
@@ -287,7 +302,10 @@ const fileUpload = (formData) => {
                 data: newData
             });
         } catch (err) {
-            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
     };
 };

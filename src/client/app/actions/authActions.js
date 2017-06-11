@@ -11,7 +11,7 @@ import {
     CLEAR_LOGIN_FORM
 } from '../constants';
 import { getUserShows, getAllShows } from './showActions';
-import { snackbarMessage } from './feedbackActions';
+import { handleErrorModal } from './feedbackActions';
 import { API_ENDPOINT, GENERIC_ERROR_MESSAGE } from '../utils/constants';
 
 const loginInputChange = data => ({
@@ -71,7 +71,10 @@ const loginUser = (creds) => {
             });
 
             if (data.code === 401) {
-                return dispatch(snackbarMessage('Login failed. Please try again.'));
+                return dispatch(handleErrorModal({
+                    message: 'Login failed. Please try again.',
+                    open: true
+                }));
             }
 
             const { idToken, id } = data;
@@ -118,7 +121,10 @@ const logoutUser = () => (dispatch) => {
         dispatch(push('/'));
         return dispatch(receiveLogout());
     } catch (err) {
-        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
@@ -152,7 +158,11 @@ const verifyLogin = (isAuthenticated) => {
                 data
             });
         } catch (err) {
-            dispatch(snackbarMessage('Token Expired. Please Log In Again.'));
+            dispatch(handleErrorModal({
+                message: 'Token Expired. Please Log In Again.',
+                open: true
+            }));
+
             dispatch(logoutUser());
         }
     };

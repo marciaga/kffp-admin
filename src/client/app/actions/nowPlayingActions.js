@@ -3,7 +3,7 @@ import moment from 'moment';
 import { API_ENDPOINT, GENERIC_ERROR_MESSAGE } from '../utils/constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 import { receiveSongs } from './playlistActions';
-import { snackbarMessage } from './feedbackActions';
+import { handleErrorModal } from './feedbackActions';
 import { SET_NOW_PLAYING } from '../constants';
 
 const setNowPlaying = data => ({
@@ -39,7 +39,10 @@ const updateNowPlaying = params => async (dispatch) => {
             return dispatch(setNowPlaying(data.value));
         }
     } catch (e) {
-        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 

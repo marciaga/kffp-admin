@@ -20,4 +20,4 @@ export const NOW_PLAYING_PLAYED = '#E0E0E0';
 
 export const SHOWS_AUTOCOMPLETE_FILTER_LIMIT = 5;
 
-export const GENERIC_ERROR_MESSAGE = 'Something went wrong. Please note the URL and let the web team know.';
+export const GENERIC_ERROR_MESSAGE = 'Whoops, something went wrong. Please note the URL and let the web team know.';
