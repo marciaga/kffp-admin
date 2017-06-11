@@ -79,8 +79,8 @@ describe('Show actions', () => {
             await getUserShows('test')(dispatch);
         });
 
-        it('should have a type SNACKBAR_MESSAGE on a bad response', async () => {
-            const dispatch = ({ type }) => expect(type).toBe('SNACKBAR_MESSAGE');
+        it('should have a type TOGGLE_ERROR_MODAL on a bad response', async () => {
+            const dispatch = ({ type }) => expect(type).toBe('TOGGLE_ERROR_MODAL');
 
             mock.onGet(url).reply(404);
             await getUserShows('test')(dispatch);
@@ -88,7 +88,7 @@ describe('Show actions', () => {
 
         it('should have an error message on a bad response', async () => {
             const dispatch = ({ data }) => {
-                expect(data.message).toBe('Something went wrong. Please note the URL and let the web team know.');
+                expect(data.message).toBe('Whoops, something went wrong. Please note the URL and let the web team know.');
             };
 
             mock.onGet(url).reply(404);
@@ -119,8 +119,8 @@ describe('Show actions', () => {
             await getAllShows()(dispatch);
         });
 
-        it('should return a type SNACKBAR_MESSAGE on a bad response', async () => {
-            const dispatch = ({ type }) => expect(type).toBe('SNACKBAR_MESSAGE');
+        it('should return a type TOGGLE_ERROR_MODAL on a bad response', async () => {
+            const dispatch = ({ type }) => expect(type).toBe('TOGGLE_ERROR_MODAL');
 
             mock.onGet(url).reply(404);
             await getAllShows('test')(dispatch);
@@ -128,7 +128,7 @@ describe('Show actions', () => {
 
         it('should have an error message on a bad response', async () => {
             const dispatch = ({ data }) => {
-                expect(data.message).toBe('Something went wrong. Please note the URL and let the web team know.');
+                expect(data.message).toBe('Whoops, something went wrong. Please note the URL and let the web team know.');
             };
 
             mock.onGet(url).reply(404);

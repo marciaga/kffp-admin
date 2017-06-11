@@ -3,7 +3,7 @@ import Fuse from 'fuse.js';
 import Models from '../data';
 import { SET_MODEL, UPDATE_MODEL, UPDATE_FILTER_RESULTS } from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
-import { snackbarMessage } from './feedbackActions';
+import { handleErrorModal } from './feedbackActions';
 import { GENERIC_ERROR_MESSAGE, API_ENDPOINT } from '../utils/constants';
 
 const receiveModelData = model => ({
@@ -42,7 +42,10 @@ const setModel = (user, modelName, type) => {
 
             dispatch(receiveModelData(model));
         } catch (err) {
-            dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
     };
 };

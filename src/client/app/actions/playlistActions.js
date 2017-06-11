@@ -8,7 +8,11 @@ import {
 } from '../utils/helperFunctions';
 import { API_ENDPOINT, GENERIC_ERROR_MESSAGE } from '../utils/constants';
 import { getShow } from './showActions';
-import { snackbarMessage, confirmOpen } from './feedbackActions';
+import {
+    handleErrorModal,
+    snackbarMessage,
+    confirmOpen
+} from './feedbackActions';
 import {
     GET_SHOW_PLAYLISTS,
     ADD_PLAYLIST,
@@ -81,10 +85,16 @@ const deletePlaylist = (playlistId, slug) => async (dispatch) => {
         } else {
             const errorMessage = 'Playlist delete failed';
 
-            dispatch(snackbarMessage(errorMessage));
+            dispatch(handleErrorModal({
+                message: errorMessage,
+                open: true
+            }));
         }
     } catch (err) {
-        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
@@ -113,7 +123,10 @@ const getShowPlaylists = pathname => async (dispatch) => {
             dispatch(receivePlaylist(playlist));
         }
     } catch (err) {
-        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
@@ -152,7 +165,10 @@ const updatePlaylistDate = (date, playlistId) => async (dispatch) => {
 
         dispatch(snackbarMessage(message));
     } catch (err) {
-        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
@@ -177,7 +193,10 @@ const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
 
         dispatch(snackbarMessage(message));
     } catch (err) {
-        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
@@ -203,7 +222,10 @@ const addNewPlaylist = (showId, slug) => async (dispatch) => {
 
         dispatch(addNewPlaylistToSidebar(data));
     } catch (err) {
-        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
@@ -220,11 +242,16 @@ const addTrack = (track, playlistId) => async (dispatch) => {
         if (data.success) {
             dispatch(receiveTrack(data.track));
         } else {
-            // dispatch error message
-            console.log('add was unsuccessful');
+            dispatch(handleErrorModal({
+                message: 'Add was unsuccessful. Please try again.',
+                open: true
+            }));
         }
     } catch (err) {
-        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 
     dispatch({
@@ -256,11 +283,17 @@ const deleteSongFromPlaylist = (song, playlistId) => async (dispatch) => {
         } else {
             const errorMessage = 'Track delete failed';
 
-            dispatch(snackbarMessage(errorMessage));
+            dispatch(handleErrorModal({
+                message: errorMessage,
+                open: true
+            }));
         }
         dispatch(confirmOpen(false, null));
     } catch (err) {
-        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
@@ -283,10 +316,16 @@ const reorderSongsSave = (songs, id) => async (dispatch) => {
         } else {
             const errorMessage = 'Track reordering failed';
 
-            dispatch(snackbarMessage(errorMessage));
+            dispatch(handleErrorModal({
+                message: errorMessage,
+                open: true
+            }));
         }
     } catch (err) {
-        dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
@@ -295,12 +334,18 @@ const reorderSongs = data => ({
     data
 });
 
+const removeAirbreak = id => ({
+    type: DELETE_TRACK,
+    data: { id }
+});
+
 export {
     getShowPlaylists,
     addNewPlaylist,
     receivePlaylist,
     addTrack,
     addAirBreak,
+    removeAirbreak,
     reorderSongs,
     reorderSongsSave,
     updatePlaylistSong,

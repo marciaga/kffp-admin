@@ -4,14 +4,16 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import SnackbarMessage from './feedback/snackbar';
 import Navbar from './navbar';
 import Modal from './modal';
+import ErrorModal from './feedback/errorModal';
 
 const mapStateToProps = state => ({
     auth: state.auth,
-    modal: state.modal
+    modal: state.modal,
+    error: state.feedback.error
 });
 
 const App = (props) => {
-    const { dispatch, auth, modal } = props;
+    const { dispatch, auth, modal, error } = props;
     const { isAuthenticated, errorMessage, user } = auth;
 
     return (
@@ -29,6 +31,10 @@ const App = (props) => {
                         <Modal showModal={modal.showModal} dispatch={dispatch} />
                     </div>
                 }
+                <ErrorModal
+                    error={error}
+                    dispatch={dispatch}
+                />
                 <SnackbarMessage />
             </div>
         </MuiThemeProvider>
@@ -39,7 +45,8 @@ App.propTypes = {
     dispatch: PropTypes.func.isRequired,
     auth: PropTypes.object,
     children: PropTypes.object,
-    modal: PropTypes.object
+    modal: PropTypes.object,
+    error: PropTypes.object
 };
 
 export default connect(mapStateToProps)(App);

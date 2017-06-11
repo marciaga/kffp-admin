@@ -1,7 +1,9 @@
+import { GENERIC_ERROR_MESSAGE } from '../utils/constants';
 import {
     SNACKBAR_MESSAGE,
     CLOSE_SNACKBAR,
-    TOGGLE_CONFIRM_DIALOG
+    TOGGLE_CONFIRM_DIALOG,
+    TOGGLE_ERROR_MODAL
 } from '../constants';
 
 const initialState = {
@@ -12,6 +14,10 @@ const initialState = {
     confirmDialog: {
         open: false,
         data: null
+    },
+    error: {
+        open: false,
+        message: GENERIC_ERROR_MESSAGE
     }
 };
 
@@ -42,8 +48,19 @@ export default function feedbackReducer (state = initialState, action) {
         return {
             ...state,
             confirmDialog: {
-                open,
-                info
+                info,
+                open
+            }
+        };
+
+    case TOGGLE_ERROR_MODAL:
+        const { open: modalOpen, message } = action.data;
+
+        return {
+            ...state,
+            error: {
+                open: modalOpen,
+                message
             }
         };
 

@@ -71,7 +71,12 @@ const determineDayOrder = (start, data) => {
 };
 
 const getShows = async (request, reply) => {
-    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { mongodb } = request.server.plugins;
+
+    if (!mongodb) {
+        return reply({ success: false, message: 'No DB connection' });
+    }
+    const { db, ObjectID } = mongodb;
     const { id } = request.params;
     const queryParams = request.query;
     const { startWeek } = queryParams;
