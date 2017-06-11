@@ -36,7 +36,7 @@ const hoursToDateObj = (hours) => {
 };
 
 const humanReadableTime = (hour) => {
-    if (!hour || !Number.isInteger(hour)) {
+    if (!Number.isInteger(hour)) {
         return '';
     }
 
