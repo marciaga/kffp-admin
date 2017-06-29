@@ -11,9 +11,8 @@ config.load(); // load environment vars
 
 const WRITE_DB_NAME = 'kffp-admin-prod';
 const READ_DB_NAME = 'legacy-playlist';
-const DB_URL = 'mongodb://localhost:27017/';
-const { TEMPORARY_USER_PASSWORD } = process.env;
-
+const { TEMPORARY_USER_PASSWORD, DB_CONNECTION, DB_NAME } = process.env;
+const DB_URL = `${DB_CONNECTION}/${DB_NAME}`;
 const whitelistedAdmins = ['mark.arciaga@gmail.com', 'gilliflower@gmail.com', 'hk.clone@gmail.com', 'amy.zimmerman@gmail.com', 'fenton.felicity@gmail.com'];
 
 const dayOfWeekMapping = {
