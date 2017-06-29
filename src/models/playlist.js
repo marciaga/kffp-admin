@@ -216,11 +216,10 @@ const updateTracks = async (request, reply) => {
                 id: new ObjectID(track.id)
             } } }
         );
-
         const response = result.toJSON();
         const { ok, nModified, n } = response;
 
-        if (ok) {
+        if (ok && nModified) {
             return reply({ success: true, message: 'Song updated' });
         }
 

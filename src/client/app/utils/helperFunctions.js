@@ -64,7 +64,7 @@ const generateBlankSongData = () => ({
     artist: '',
     images: [],
     releaseDate: '',
-    track: ''
+    title: ''
 });
 // returns slug from pathname
 const cleanPathname = (pathname) => {

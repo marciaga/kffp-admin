@@ -179,7 +179,7 @@ class SongList extends Component {
                         const nowPlayingColor = this.setNowPlayingColor(
                             currentlyPlayingSong.songId, song
                         );
-                        // song: album, artist, track, releaseDate, id, images
+                        // song: album, artist, title, releaseDate, id, images
                         const { id } = song;
 
                         return (
