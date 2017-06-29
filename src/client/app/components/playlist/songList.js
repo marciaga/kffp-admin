@@ -1,16 +1,16 @@
 import React, { Component, PropTypes } from 'react';
-import { DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import AvPlayCircleFilled from 'material-ui/svg-icons/av/play-circle-filled';
 import update from 'immutability-helper';
 import cuid from 'cuid';
+import ArrowButton from './arrowButton';
 import SongFormWrapper from './songFormWrapper';
 import {
     reorderSongsSave,
     addTrack,
-    addAirBreak
+    addAirBreak,
+    reorderSongs
 } from '../../actions/playlistActions';
 import { generateBlankSongData } from '../../utils/helperFunctions';
 import {
@@ -50,6 +50,12 @@ class SongList extends Component {
 
         this.props.dispatch(setSongForm(songs));
         this.state = { songs };
+    }
+
+    componentWillUpdate (nextProps, nextState) {
+        const { songs } = nextState;
+
+        this.props.dispatch(setSongForm(songs));
     }
 
     onSaveOrder () {
@@ -98,19 +104,6 @@ class SongList extends Component {
         this.props.dispatch(addAirBreak(airBreak));
     }
 
-    moveSong (id, atIndex) {
-        const { song, index } = this.findSong(id);
-
-        this.setState(update(this.state, {
-            songs: {
-                $splice: [
-                    [index, 1],
-                    [atIndex, 0, song]
-                ]
-            }
-        }));
-    }
-
     findSong (id) {
         const { songs } = this.state;
         // TODO: This could return undefined
@@ -120,6 +113,29 @@ class SongList extends Component {
             song,
             index: songs.indexOf(song)
         };
+    }
+
+    moveSong (direction, id) {
+        const songs = this.state.songs;
+        const { song, index } = this.findSong(id);
+        // don't shift up if song is first or down if song is last
+        if ((!index && direction === 'up') ||
+            (index === songs.length && direction === 'down')) {
+            return;
+        }
+
+        const newIndex = direction === 'up' ? index - 1 : index + 1;
+
+        this.setState(update(this.state, {
+            songs: {
+                $splice: [
+                    [index, 1],
+                    [newIndex, 0, song]
+                ]
+            }
+        }));
+
+        this.props.dispatch(reorderSongs({ id, index: newIndex }));
     }
 
     render () {
@@ -164,14 +180,26 @@ class SongList extends Component {
                             currentlyPlayingSong.songId, song
                         );
                         // song: album, artist, track, releaseDate, id, images
+                        const { id } = song;
+
                         return (
                             <div
                                 className="song-wrapper"
-                                key={song.id || cuid()}
+                                key={id || cuid()}
                             >
+                                <ArrowButton
+                                    direction="up"
+                                    clickHandler={this.moveSong}
+                                    id={id}
+                                />
+                                <ArrowButton
+                                    direction="down"
+                                    clickHandler={this.moveSong}
+                                    id={id}
+                                />
+
                                 <SongFormWrapper
                                     index={i}
-                                    moveSong={this.moveSong}
                                     findSong={this.findSong}
                                     playlistId={playlistId}
                                     {...song}
@@ -198,4 +226,4 @@ SongList.propTypes = {
     dispatch: PropTypes.func
 };
 
-export default DragDropContext(HTML5Backend)(SongList);
+export default SongList;
