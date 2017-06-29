@@ -220,7 +220,7 @@ const updateTracks = async (request, reply) => {
         const response = result.toJSON();
         const { ok, nModified, n } = response;
 
-        if (ok && nModified) {
+        if (ok) {
             return reply({ success: true, message: 'Song updated' });
         }
 
@@ -250,7 +250,7 @@ const updatePlaylistField = async (request, reply) => {
         const response = result.toJSON();
         const { ok, nModified, n } = response;
 
-        if (ok && nModified) {
+        if (ok) {
             return reply({ success: true, message: `${field} was updated` });
         }
 
