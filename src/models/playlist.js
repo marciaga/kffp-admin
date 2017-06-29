@@ -183,9 +183,9 @@ const addTrack = async (request, reply) => {
         );
 
         const response = result.toJSON();
-        const { ok, nModified } = response;
+        const { ok } = response;
 
-        if (ok && nModified) {
+        if (ok) {
             return reply({
                 success: true,
                 track
@@ -269,7 +269,7 @@ const updateTrackOrder = async (request, reply) => {
     const { db } = request.server.plugins.mongodb;
 
     try {
-        const payload = request.payload;
+        const { payload } = request;
         // don't save any airbreaks
         const tracks = payload.filter(o => !o.airBreak);
         const { playlistId } = request.params;
@@ -280,9 +280,9 @@ const updateTrackOrder = async (request, reply) => {
         );
 
         const response = result.toJSON();
-        const { ok, nModified } = response;
+        const { ok } = response;
 
-        if (ok && nModified) {
+        if (ok) {
             return reply({ success: true });
         }
 
@@ -304,9 +304,9 @@ const deleteTrackFromPlaylist = async (request, reply) => {
 
         const response = result.toJSON();
         // { ok: 1, nModified: 1, n: 1 }
-        const { ok, nModified } = response;
+        const { ok } = response;
 
-        if (ok && nModified) {
+        if (ok) {
             return reply({ success: true });
         }
 
