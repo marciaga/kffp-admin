@@ -180,7 +180,8 @@ class SongList extends Component {
                             currentlyPlayingSong.songId, song
                         );
                         // song: album, artist, title, releaseDate, id, images
-                        const { id } = song;
+                        const { id, airBreak } = song;
+                        const nowPlayingVisibility = { visibility: !airBreak ? 'visible' : 'hidden' };
 
                         return (
                             <div
@@ -205,6 +206,7 @@ class SongList extends Component {
                                     {...song}
                                 />
                                 <IconButton
+                                    style={nowPlayingVisibility}
                                     tooltip="Click to set as Now Playing"
                                     onClick={() => this.addToNowPlaying(song, playlistId)}
                                 >

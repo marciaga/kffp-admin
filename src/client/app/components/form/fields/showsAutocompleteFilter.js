@@ -15,7 +15,11 @@ const ShowsAutoCompleteFilter = ({ dispatch, shows }) => {
         slug: s.slug
     }));
 
-    const handleSelection = (req) => {
+    const handleSelection = (req, i) => {
+        if (i < 0) {
+            return;
+        }
+        
         const { slug } = req;
 
         dispatch(resetCurrentPlaylist());

@@ -36,15 +36,19 @@ const generateHeading = ({ title, artist }) => {
     return str;
 };
 
-const generateSubtitle = ({ album, releaseYear }) => {
+const generateSubtitle = ({ album, releaseDate, label }) => {
     const subtitle = [];
 
     if (album) {
         subtitle.push('on ', album);
     }
 
-    if (releaseYear) {
-        subtitle.push(' - released ', releaseYear);
+    if (label) {
+        subtitle.push(' - released by ', label);
+    }
+
+    if (releaseDate) {
+        subtitle.push(' in ', releaseDate);
     }
 
     return subtitle.join(' ');
@@ -55,7 +59,8 @@ const SongCard = (props) => {
         album,
         artist,
         title,
-        releaseYear,
+        releaseDate,
+        label,
         id,
         form,
         playlistId,
@@ -65,7 +70,7 @@ const SongCard = (props) => {
     const { songs } = form;
     const currentSong = songs.find(s => id === s.id);
     const heading = generateHeading({ artist, title });
-    const subtitle = generateSubtitle({ album, releaseYear });
+    const subtitle = generateSubtitle({ album, releaseDate, label });
 
     if (props.airBreak) {
         return (
