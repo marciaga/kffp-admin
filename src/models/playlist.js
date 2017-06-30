@@ -265,12 +265,17 @@ const updatePlaylistField = async (request, reply) => {
 };
 
 const updateTrackOrder = async (request, reply) => {
-    const { db } = request.server.plugins.mongodb;
+    const { db, ObjectID } = request.server.plugins.mongodb;
 
     try {
         const { payload } = request;
         // don't save any airbreaks
-        const tracks = payload.filter(o => !o.airBreak);
+        const filteredTracks = payload.filter(o => !o.airBreak);
+        const tracks = filteredTracks.map(t => ({
+            ...t,
+            id: new ObjectID(t.id)
+        }));
+
         const { playlistId } = request.params;
 
         const result = await db.collection('playlists').update(
