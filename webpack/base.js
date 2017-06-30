@@ -29,6 +29,10 @@ module.exports = function () {
                     },
                     exclude: /node_modules/,
                     include: path.join(__dirname, '../', 'src', 'client')
+                },
+                {
+                    test: /\.json$/,
+                    use: 'json-loader'
                 }
             ]
         },

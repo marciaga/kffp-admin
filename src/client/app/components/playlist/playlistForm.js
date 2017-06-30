@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import DatePicker from 'material-ui/DatePicker';
 import RaisedButton from 'material-ui/RaisedButton';
 import ConfirmationDialog from '../feedback/confirm';
@@ -10,6 +10,8 @@ import {
     deletePlaylist
 } from '../../actions/playlistActions';
 import { confirmOpen } from '../../actions/feedbackActions';
+
+moment.tz.setDefault('America/Los_Angeles');
 
 const mapStateToProps = state => ({
     auth: state.auth,
@@ -31,7 +33,7 @@ const PlaylistForm = (props) => {
 
     if (shouldShowCurrentPlaylist(currentPlaylist)) {
         const { playlistDate, playlistId } = currentPlaylist;
-        const dateObj = moment.utc(playlistDate);
+        const dateObj = moment(playlistDate);
         const formattedDate = dateObj.format('MMMM Do, YYYY');
 
         return (

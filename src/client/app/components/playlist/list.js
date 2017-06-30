@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import AvQueueMusic from 'material-ui/svg-icons/av/queue-music';
@@ -12,6 +12,8 @@ import {
     pathHasPlaylistId,
     removePlaylistIdFromPath
 } from '../../utils/helperFunctions';
+
+moment.tz.setDefault('America/Los_Angeles');
 
 const mapStateToProps = state => ({
     ui: state.ui,
@@ -53,7 +55,7 @@ class PlaylistHistory extends Component {
         return (
             playlists.map((p, i) => {
                 const { playlistDate } = p;
-                const formattedDate = moment.utc(playlistDate).format('MM-DD-YYYY');
+                const formattedDate = moment(playlistDate).format('MM-DD-YYYY');
 
                 return (
                     <MenuItem
