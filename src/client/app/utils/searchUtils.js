@@ -5,6 +5,7 @@ import {
     GENERIC_ERROR_MESSAGE
 } from './constants';
 import { SEARCH_RESULTS, CLEAR_SEARCH_INPUT } from '../constants';
+import { getTokenFromLocalStorage } from './helperFunctions';
 import { snackbarMessage, handleErrorModal } from '../actions/feedbackActions';
 
 const getAlbumIds = (results) => {
@@ -46,6 +47,7 @@ const parseSearchResults = (results, albums) => {
 };
 
 const getTokenFromServer = async (refresh, dispatch) => {
+    const idToken = getTokenFromLocalStorage();
     // check local storage for spotify token
     const spotifyToken = window.localStorage ?
         localStorage.getItem('spotify_token') : null;
@@ -53,7 +55,11 @@ const getTokenFromServer = async (refresh, dispatch) => {
     if (!spotifyToken || refresh) {
         try {
             const url = `${API_ENDPOINT}/search/token`;
-            const { data } = await axios.get(url);
+            const { data } = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
             const { success, token } = data;
 
             if (window.localStorage && success) {
