@@ -1,5 +1,6 @@
 import imageUpload from '../../models';
 import userSearchHandler from '../../models/search';
+import getSpotifyToken from '../../models/spotify-token';
 import showRoutes from './routes/shows';
 import userRoutes from './routes/users';
 import playlistRoutes from './routes/playlists';
@@ -55,6 +56,18 @@ exports.register = (server, options, next) => {
                 scope: ['admin']
             },
             handler: userSearchHandler
+        }
+    });
+
+    server.route({
+        path: `${API_BASE_URL}/search/token`,
+        method: 'GET',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin', 'dj']
+            },
+            handler: getSpotifyToken
         }
     });
 

@@ -4,6 +4,8 @@ import moment from 'moment-timezone';
 import DatePicker from 'material-ui/DatePicker';
 import RaisedButton from 'material-ui/RaisedButton';
 import ConfirmationDialog from '../feedback/confirm';
+import Search from '../search';
+import SearchResults from '../search/searchResults';
 import SongList from './songList';
 import {
     updatePlaylistDate,
@@ -15,6 +17,7 @@ moment.tz.setDefault('America/Los_Angeles');
 
 const mapStateToProps = state => ({
     auth: state.auth,
+    search: state.search,
     show: state.show,
     playlist: state.playlist,
     nowPlaying: state.nowPlaying,
@@ -27,8 +30,9 @@ const handleDateChange = (u, { date, playlistId }, dispatch) =>
     dispatch(updatePlaylistDate(date, playlistId));
 
 const PlaylistForm = (props) => {
-    const { playlist, show, nowPlaying, dispatch, feedback } = props;
+    const { playlist, show, search, nowPlaying, dispatch, feedback } = props;
     const { currentPlaylist } = playlist;
+    const { searchResults, currentSearch } = search;
     const { currentShow: { slug = '' } } = show;
 
     if (shouldShowCurrentPlaylist(currentPlaylist)) {
@@ -46,11 +50,25 @@ const PlaylistForm = (props) => {
                     onChange={(u, date) => handleDateChange(u, { date, playlistId }, dispatch)}
                 />
 
-                <SongList
-                    currentPlaylist={currentPlaylist}
-                    nowPlaying={nowPlaying}
-                    dispatch={dispatch}
-                />
+                <Search />
+
+                {!!searchResults.length &&
+                    <SearchResults
+                        searchResults={searchResults}
+                        playlistId={currentPlaylist.playlistId}
+                        dispatch={dispatch}
+                    />
+                }
+
+                {!searchResults.length &&
+                    <SongList
+                        currentPlaylist={currentPlaylist}
+                        currentSearch={currentSearch}
+                        nowPlaying={nowPlaying}
+                        dispatch={dispatch}
+                    />
+                }
+
 
                 <div className="col col-md-12 flex-horizontal-center">
                     <RaisedButton
@@ -80,6 +98,7 @@ const PlaylistForm = (props) => {
 PlaylistForm.propTypes = {
     dispatch: PropTypes.func,
     playlist: PropTypes.object,
+    search: PropTypes.object,
     show: PropTypes.object,
     nowPlaying: PropTypes.object,
     feedback: PropTypes.object

@@ -8,7 +8,10 @@ const SearchResults = ({ searchResults, playlistId, dispatch }) => {
     };
 
     return (
-        <div className="search-results col col-md-12">
+        <div
+            className="search-results col col-md-12"
+            style={{ margin: '15px auto' }}
+        >
             <GridList
                 cellHeight={200}
                 cols={4}
@@ -25,6 +28,7 @@ const SearchResults = ({ searchResults, playlistId, dispatch }) => {
                             title={title}
                             subtitle={<span>by <b>{artist}</b></span>}
                             className="search-results__grid-tile"
+                            style={{ cursor: 'pointer' }}
                             onClick={() => handleClick(tile, playlistId)}
                         >
                             <img src={image.url} alt={album} />

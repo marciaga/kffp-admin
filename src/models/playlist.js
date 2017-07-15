@@ -247,7 +247,7 @@ const updatePlaylistField = async (request, reply) => {
         );
 
         const response = result.toJSON();
-        const { ok, nModified, n } = response;
+        const { ok, n } = response;
 
         if (ok) {
             return reply({ success: true, message: `${field} was updated` });

@@ -19,7 +19,7 @@ const ShowsAutoCompleteFilter = ({ dispatch, shows }) => {
         if (i < 0) {
             return;
         }
-        
+
         const { slug } = req;
 
         dispatch(resetCurrentPlaylist());
