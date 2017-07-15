@@ -1,4 +1,5 @@
 import { parseSearchResults } from '../../../src/client/app/utils/searchUtils';
+
 const mockApiResults = require('../../fixtures/apiResponse');
 const albumApiResults = require('../../fixtures/spotifyApiAlbums');
 

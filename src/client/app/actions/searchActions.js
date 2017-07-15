@@ -1,18 +1,18 @@
-import axios from 'axios';
 import {
-    UPDATE_SEARCH_FIELD,
-    SEARCH_RESULTS,
-    CLEAR_SEARCH_INPUT
+    UPDATE_SEARCH_FIELD
 } from '../constants';
 import {
-    GENERIC_ERROR_MESSAGE,
     SPOTIFY_API_URL,
     SPOTIFY_API_OFFSET,
     SPOTIFY_API_LIMIT,
-    SPOTIFY_API_RESULT_TYPE
+    SPOTIFY_API_RESULT_TYPE,
+    GENERIC_ERROR_MESSAGE
 } from '../utils/constants';
-import { snackbarMessage } from './feedbackActions';
-import { parseSearchResults, getAlbumIds } from '../utils/searchUtils';
+import { snackbarMessage, handleErrorModal } from './feedbackActions';
+import {
+    getTokenFromServer,
+    getSpotifyQuery
+} from '../utils/searchUtils';
 
 export const searchInput = val => ({
     type: UPDATE_SEARCH_FIELD,
@@ -25,47 +25,42 @@ export const searchForm = (val) => {
     if (val === '') {
         return snackbarMessage('Please enter a search!');
     }
+
     const encodedQuery = encodeURIComponent(val);
     const searchUrl = `${SPOTIFY_API_URL}/search?query=${encodedQuery}&offset=${SPOTIFY_API_OFFSET}&limit=${SPOTIFY_API_LIMIT}&type=${SPOTIFY_API_RESULT_TYPE}`;
 
     return async (dispatch) => {
+        let counter = 0;
+
+        const f = async (refresh = false) => {
+            try {
+                const token = await getTokenFromServer(refresh, dispatch);
+
+                return await getSpotifyQuery(dispatch, searchUrl, token);
+            } catch (err) {
+                const { response } = err;
+
+                if ((response && (response.status === 401)) && counter < 5) {
+                    counter++;
+                    // our token is expired, so get a new one and try the search again
+                    const getNewToken = true;
+                    return await f(getNewToken, dispatch);
+                }
+
+                return dispatch(handleErrorModal({
+                    message: GENERIC_ERROR_MESSAGE,
+                    open: true
+                }));
+            }
+        };
+
         try {
-            const { data, status } = await axios.get(searchUrl);
-            const { tracks } = data;
-
-            if (status !== 200) {
-                return dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
-            }
-
-            if (!tracks.items.length) {
-                const message = 'Song not found!';
-                // no song found, so dispatch action to open new form
-                dispatch({ type: CLEAR_SEARCH_INPUT });
-                return dispatch(snackbarMessage(message));
-            }
-
-            const albumIds = getAlbumIds(data);
-            const queryString = albumIds.join();
-            const albumUrl = `${SPOTIFY_API_URL}/albums?ids=${queryString}`;
-            const albumResults = await axios.get(albumUrl);
-
-            if (albumResults.status !== 200) {
-                return dispatch(snackbarMessage('No Album results... Please try again'));
-            }
-
-            const { albums } = albumResults.data;
-            const parsedSearchResults = parseSearchResults(data, albums);
-
-            dispatch({
-                type: CLEAR_SEARCH_INPUT
-            });
-
-            dispatch({
-                type: SEARCH_RESULTS,
-                data: parsedSearchResults
-            });
-        } catch (err) {
-            return dispatch(snackbarMessage(GENERIC_ERROR_MESSAGE));
+            return await f();
+        } catch (e) {
+            return dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
     };
 };

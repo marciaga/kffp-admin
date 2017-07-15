@@ -29,6 +29,7 @@ module.exports = {
         'react/no-find-dom-node': ['warn'],
         'react/prefer-stateless-function': 1,
         'no-console': 0,
+        'no-plusplus': 0,
         'comma-dangle': ['error', 'never'],
         extensions: 0,
         'arrow-body-style': ['error', 'as-needed'],

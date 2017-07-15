@@ -1,5 +1,4 @@
-/* TODO @ma - search is disabled until a new implementation can be solved */
-// import searchReducer from './searchReducer';
+import searchReducer from './searchReducer';
 import authReducer from './authReducer';
 import playlistReducer from './playlistReducer';
 import modalReducer from './modalReducer';
@@ -11,7 +10,7 @@ import nowPlayingReducer from './nowPlayingReducer';
 import uiReducer from './uiReducer';
 
 export default {
-    // search: searchReducer,
+    search: searchReducer,
     auth: authReducer,
     playlist: playlistReducer,
     modal: modalReducer,
