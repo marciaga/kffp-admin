@@ -86,11 +86,17 @@ const getShows = async (request, reply) => {
         ...queryParams,
         startWeek: undefined
     };
-    const userIds = queryParams.users ? queryParams.users.split(',') : null;
 
+    /*
+    We may, in the future need to address queries with multiple users,
+    but MongoDB knows to traverse the users array, looking for a match on a
+    single userId, so we can handle this case later if needed
+
+    const userIds = queryParams.users ? queryParams.users.split(',') : null;
     if (userIds) {
         query.users = userIds.map(e => new ObjectID(e.trim()));
     }
+    */
 
     const objId = id ? new ObjectID(id) : null;
 
@@ -100,7 +106,6 @@ const getShows = async (request, reply) => {
 
     try {
         const result = await db.collection('shows').find(query).toArray();
-
         const transformedResult = result.map(async (doc) => {
             const objectIds = doc.users.map(showId => new ObjectID(showId));
 
