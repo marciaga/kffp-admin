@@ -142,7 +142,6 @@ const shows = {
                 fieldType: 'Text',
                 name: 'text',
                 label: 'Slug',
-                disabled: true,
                 validation: ['required', 'string']
             },
             description: {
