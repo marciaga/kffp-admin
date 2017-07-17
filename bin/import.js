@@ -165,7 +165,7 @@ const transformPlaylists = (legacyPlaylists, shows) => {
                     artist,
                     album,
                     label,
-                    releaseYear: '',
+                    releaseDate: '',
                     playedAt: timestamp
                 };
             });

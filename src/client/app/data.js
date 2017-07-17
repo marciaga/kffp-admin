@@ -286,7 +286,7 @@ export const playlistFields = {
             name: 'label',
             hintText: 'Enter the Record Label'
         },
-        releaseYear: {
+        releaseDate: {
             label: 'Release Date',
             name: 'releaseDate',
             hintText: 'Enter the release date'
