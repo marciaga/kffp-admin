@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { GridList, GridTile } from 'material-ui/GridList';
-import { addTrack } from '../../actions/playlistActions';
+import RaisedButton from 'material-ui/RaisedButton';
+import { addTrack, clearSearchResults } from '../../actions/playlistActions';
 
 const SearchResults = ({ searchResults, playlistId, dispatch }) => {
     const handleClick = (track, pId) => {
@@ -12,6 +13,15 @@ const SearchResults = ({ searchResults, playlistId, dispatch }) => {
             className="search-results col col-md-12"
             style={{ margin: '15px auto' }}
         >
+            <div style={{ textAlign: 'center' }}>
+                <RaisedButton
+                    onClick={() => dispatch(clearSearchResults())}
+                    label="Close Results"
+                    primary={true}
+                    className="playlist-action__button"
+                />
+            </div>
+
             <GridList
                 cellHeight={200}
                 cols={4}

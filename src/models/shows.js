@@ -79,7 +79,7 @@ const getShows = async (request, reply) => {
     const { db, ObjectID } = mongodb;
     const { id } = request.params;
     const queryParams = request.query;
-    const { startWeek } = queryParams;
+    const { startWeek, users } = queryParams;
 
     // exclude shows that startTime: 0 and endTime: 0
     const query = {
@@ -97,6 +97,8 @@ const getShows = async (request, reply) => {
         query.users = userIds.map(e => new ObjectID(e.trim()));
     }
     */
+
+    query.users = users ? new ObjectID(users) : '';
 
     const objId = id ? new ObjectID(id) : null;
 
@@ -150,6 +152,10 @@ const updateShow = (request, reply) => {
     const showId = new ObjectID(show._id);
     // non-destructively assigns all properties to variable without _id
     const { _id, ...fieldsToUpdate } = show;
+
+    if (show.users.length) {
+        fieldsToUpdate.users = show.users.map(u => new ObjectID(u.trim()));
+    }
 
     db.collection('shows').update({ _id: showId }, fieldsToUpdate, (error, result) => {
         if (error) {
