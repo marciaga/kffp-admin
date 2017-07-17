@@ -259,6 +259,10 @@ const addTrack = (track, playlistId) => async (dispatch) => {
     });
 };
 
+const clearSearchResults = () => ({
+    type: CLEAR_SEARCH_RESULTS
+});
+
 const addAirBreak = data => ({
     type: ADD_TRACK,
     data
@@ -353,5 +357,6 @@ export {
     receiveSongs,
     resetCurrentPlaylist,
     updatePlaylistDate,
-    deletePlaylist
+    deletePlaylist,
+    clearSearchResults
 };

@@ -9,7 +9,7 @@ const songSchema = {
     artist: Joi.string().required(),
     album: Joi.string(),
     label: Joi.string(),
-    releaseYear: Joi.string(),
+    releaseDate: Joi.string(),
     playedAt: Joi.date().iso()
 };
 

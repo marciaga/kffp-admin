@@ -233,7 +233,7 @@ var transformPlaylists = function transformPlaylists(legacyPlaylists, shows) {
                     artist: artist,
                     album: album,
                     label: label,
-                    releaseYear: '',
+                    releaseDate: '',
                     playedAt: timestamp
                 };
             });
