@@ -66,4 +66,20 @@ const filterResults = data => (dispatch, getState) => {
     });
 };
 
-export { setModel, updateModelData, filterResults };
+const updateModelFuse = data => (dispatch, getState) => {
+    // data is the updatedShow object
+    const { model } = getState();
+
+    model.filteredResults = model.filteredResults.map((f) => {
+        if (f._id === data._id) {
+            return data;
+        }
+
+        return f;
+    });
+
+    model.fuse.list = model.data;
+    return dispatch(receiveModelData(model));
+};
+
+export { setModel, updateModelData, filterResults, updateModelFuse };
