@@ -79,13 +79,7 @@ const getShows = async (request, reply) => {
     const { db, ObjectID } = mongodb;
     const { id } = request.params;
     const queryParams = request.query;
-    const { startWeek, users } = queryParams;
-
-    // exclude shows that startTime: 0 and endTime: 0
-    const query = {
-        ...queryParams,
-        startWeek: undefined
-    };
+    const { startWeek, ...query } = queryParams;
 
     /*
     We may, in the future need to address queries with multiple users,
@@ -98,7 +92,11 @@ const getShows = async (request, reply) => {
     }
     */
 
-    query.users = users ? new ObjectID(users) : '';
+    const foundUserParams = !!queryParams.users;
+
+    if (foundUserParams) {
+        query.users = new ObjectID(queryParams.users);
+    }
 
     const objId = id ? new ObjectID(id) : null;
 
