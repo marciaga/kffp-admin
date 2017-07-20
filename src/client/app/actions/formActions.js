@@ -14,7 +14,7 @@ import {
     CLEAR_INPUT_FIELDS,
     SHOW_VALIDATION_ERRORS
 } from '../constants';
-import { updateModelData } from './modelActions';
+import { updateModelData, updateModelFuse } from './modelActions';
 import {
     formTypesToHttpVerbs,
     API_ENDPOINT,
@@ -185,6 +185,7 @@ const prepareFormSubmit = (type, modelName) => {
             // dispatch action to update model.data
             if (method === 'put') {
                 dispatch(updateModelData(formData));
+                dispatch(updateModelFuse(formData));
             }
 
             dispatch(receiveFormResult(data));
