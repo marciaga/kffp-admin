@@ -81,7 +81,9 @@ const manifest = {
                     url: DB_URL,
                     settings: {
                         db: {
-                            native_parser: false
+                            native_parser: false,
+                            numberOfRetries: 30,
+                            retryMiliSeconds: 1000
                         }
                     }
                 }
