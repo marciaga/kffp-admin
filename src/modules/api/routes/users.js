@@ -7,6 +7,7 @@ import {
     getUsers,
     updateUser,
     deleteUser,
+    resetPassword,
     updateUserField,
     verifyPassword
 } from '../../../models/user';
@@ -91,6 +92,17 @@ const userRoutes = [
                 { method: verifyCredentials, assign: 'user' }
             ],
             handler: loginHandler
+        }
+    },
+    {
+        path: `${API_BASE_URL}/users/reset/{id?}`,
+        method: 'POST',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: resetPassword
         }
     }
 ];
