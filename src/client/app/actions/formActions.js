@@ -271,6 +271,34 @@ const updateUserPassword = (obj) => {
     };
 };
 
+const resetUserPassword = (id) => {
+    const url = `${API_ENDPOINT}/users/reset/${id}`;
+    const idToken = getTokenFromLocalStorage();
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.post(url, { id }, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+
+            const message = data.success ? 'Password Reset Successful!' :
+                'Password Reset Failed.';
+
+            dispatch({
+                type: SNACKBAR_MESSAGE,
+                data: { message }
+            });
+        } catch (e) {
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
+        }
+    };
+};
+
 const updateUserSettingsInput = data => ({
     type: UPDATE_USER_SETTINGS_FIELD,
     data
@@ -335,5 +363,6 @@ export {
     updateUserSettingsInput,
     updateUserPassword,
     fileUpload,
-    removeUserFromShow
+    removeUserFromShow,
+    resetUserPassword
 };

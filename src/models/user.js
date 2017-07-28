@@ -393,6 +393,34 @@ const updateUserField = async (request, reply) => {
         return reply({ success: false, message: 'Update was not successful' });
     } catch (e) {
         console.log(e);
+        return reply(Boom.internal('Something went wrong'));
+    }
+};
+
+const resetPassword = async (request, reply) => {
+    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { id } = request.params;
+    const resetValue = process.env.TEMPORARY_USER_PASSWORD;
+
+    try {
+        const response = await updateField(
+            id,
+            'password',
+            resetValue,
+            db,
+            ObjectID
+        );
+
+        const { ok, nModified } = response;
+
+        if (ok && nModified) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    } catch (e) {
+        console.log(e);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -403,6 +431,7 @@ export {
     updateUser,
     deleteUser,
     loginHandler,
+    resetPassword,
     verifyCredentials,
     verifyUniqueUser,
     verifyPassword,

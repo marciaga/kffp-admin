@@ -48,7 +48,11 @@ class Users extends Component {
         return (
             <div>
                 <h2>Add New User</h2>
-                <FloatingActionButton onClick={() => this.handleClick('new', 'users')} secondary={true} style={{}}>
+                <FloatingActionButton
+                    onClick={() => this.handleClick('new', 'users')}
+                    secondary={true}
+                    style={{}}
+                >
                     <ContentAdd />
                 </FloatingActionButton>
                 <MainTable model={model} />
