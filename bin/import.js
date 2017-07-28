@@ -1,11 +1,12 @@
 /* eslint-disable */
+import 'babel-polyfill';
 import MongoClient, { ObjectId } from 'mongodb';
 import config from 'dotenv';
 import moment from 'moment';
 import shortid from 'shortid';
 import * as legacyShows from './legacyShows.json';
 import * as scheduleData from './summer-schedule-2017.json';
-import slugify from '../src/client/app/utils/stringParsing';
+// import slugify from '../src/client/app/utils/stringParsing';
 
 config.load(); // load environment vars
 
@@ -13,7 +14,13 @@ const WRITE_DB_NAME = 'kffp-admin-prod';
 const READ_DB_NAME = 'legacy-playlist';
 const { TEMPORARY_USER_PASSWORD, DB_CONNECTION, DB_NAME } = process.env;
 const DB_URL = `${DB_CONNECTION}/${DB_NAME}`;
-const whitelistedAdmins = ['mark.arciaga@gmail.com', 'gilliflower@gmail.com', 'hk.clone@gmail.com', 'amy.zimmerman@gmail.com', 'fenton.felicity@gmail.com'];
+
+const whitelistedAdmins = [
+    'mark.arciaga@gmail.com',
+    'gilliflower@gmail.com',
+    'hk.clone@gmail.com',
+    'fenton.felicity@gmail.com'
+];
 
 const dayOfWeekMapping = {
     0: 'Sunday',
@@ -23,6 +30,19 @@ const dayOfWeekMapping = {
     4: 'Thursday',
     5: 'Friday',
     6: 'Saturday'
+};
+
+const slugify = (text) => {
+    if (!text) {
+        return;
+    }
+
+    return text.toString().toLowerCase()
+        .replace(/\s+/g, '-')           // Replace spaces with -
+        .replace(/[^\w-]+/g, '')       // Remove all non-word chars
+        .replace(/--+/g, '-')         // Replace multiple - with single -
+        .replace(/^-+/, '')             // Trim - from start of text
+        .replace(/-+$/, '');            // Trim - from end of text
 };
 
 const mapDJsToShows = (schedule) => {
@@ -62,7 +82,7 @@ const getUserIdByName = () => {
 
 };
 
-const transformShows = (parsedSchedule, users) => {
+const transformShows = (parsedSchedule, users, legacyPlaylists) => {
     console.log('Transforming shows...')
     const isActive = true;
     const parsedLegacyShows = parseJson(legacyShows);
@@ -83,7 +103,11 @@ const transformShows = (parsedSchedule, users) => {
             return;
         }
 
-        const { title, djName, startDay, startHour, endHour, description } = show;
+        const match = legacyPlaylists.find(pl => pl.showName === show.title);
+
+        const description = match ? match.description : '';
+
+        const { title, djName, startDay, startHour, endHour } = show;
 
         return {
             _id: ObjectId(),
@@ -94,7 +118,7 @@ const transformShows = (parsedSchedule, users) => {
             endTime: Number(endHour),
             isActive,
             slug: slugify(title),
-            description: description
+            description
         }
     });
 
@@ -170,7 +194,7 @@ const transformPlaylists = (legacyPlaylists, shows) => {
                 };
             });
 
-            const foundShow = shows.find(show => show.showName === p.showName);
+            const foundShow = shows.find(show => show.showName === p.showName) || {};
 
             return {
                 _id: ObjectId(),
@@ -188,7 +212,7 @@ const transformPlaylists = (legacyPlaylists, shows) => {
 };
 
 const main = () => {
-    MongoClient.connect(`${DB_URL}${READ_DB_NAME}`, async (err, db) => {
+    MongoClient.connect(`${DB_CONNECTION}/${READ_DB_NAME}`, async (err, db) => {
         if (err) {
             throw new Error(`Error connecting to Mongo: ${err}`);
         }
@@ -196,7 +220,7 @@ const main = () => {
         console.log(`Connected to ${READ_DB_NAME} database`);
 
         try {
-            const newAdminDb = await MongoClient.connect(`${DB_URL}${WRITE_DB_NAME}`);
+            const newAdminDb = await MongoClient.connect(`${DB_CONNECTION}/${WRITE_DB_NAME}`);
             const collectionNames = await newAdminDb.listCollections().toArray();
 
             collectionNames.forEach(async (collectionName) => {
@@ -213,8 +237,8 @@ const main = () => {
 
             const parsedSchedule = parseJson(scheduleData);
             const users = transformUsers(parsedSchedule);
-            const shows = transformShows(parsedSchedule, users);
             const legacyPlaylists = await readLegacyPlaylists(db);
+            const shows = transformShows(parsedSchedule, users, legacyPlaylists);
             const transformedPlaylists = transformPlaylists(legacyPlaylists, shows);
 
             const userResult = await newAdminDb.collection('users').insertMany(users);

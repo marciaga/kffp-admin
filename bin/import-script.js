@@ -1,5 +1,7 @@
 'use strict';
 
+require('babel-polyfill');
+
 var _mongodb = require('mongodb');
 
 var _mongodb2 = _interopRequireDefault(_mongodb);
@@ -24,16 +26,14 @@ var _summerSchedule = require('./summer-schedule-2017.json');
 
 var scheduleData = _interopRequireWildcard(_summerSchedule);
 
-var _stringParsing = require('../src/client/app/utils/stringParsing');
-
-var _stringParsing2 = _interopRequireDefault(_stringParsing);
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } /* eslint-disable */
 
+
+// import slugify from '../src/client/app/utils/stringParsing';
 
 _dotenv2.default.load(); // load environment vars
 
@@ -45,7 +45,8 @@ var _process$env = process.env,
     DB_NAME = _process$env.DB_NAME;
 
 var DB_URL = DB_CONNECTION + '/' + DB_NAME;
-var whitelistedAdmins = ['mark.arciaga@gmail.com', 'gilliflower@gmail.com', 'hk.clone@gmail.com', 'amy.zimmerman@gmail.com', 'fenton.felicity@gmail.com'];
+
+var whitelistedAdmins = ['mark.arciaga@gmail.com', 'gilliflower@gmail.com', 'hk.clone@gmail.com', 'fenton.felicity@gmail.com'];
 
 var dayOfWeekMapping = {
     0: 'Sunday',
@@ -55,6 +56,18 @@ var dayOfWeekMapping = {
     4: 'Thursday',
     5: 'Friday',
     6: 'Saturday'
+};
+
+var slugify = function slugify(text) {
+    if (!text) {
+        return;
+    }
+
+    return text.toString().toLowerCase().replace(/\s+/g, '-') // Replace spaces with -
+    .replace(/[^\w-]+/g, '') // Remove all non-word chars
+    .replace(/--+/g, '-') // Replace multiple - with single -
+    .replace(/^-+/, '') // Trim - from start of text
+    .replace(/-+$/, ''); // Trim - from end of text
 };
 
 var mapDJsToShows = function mapDJsToShows(schedule) {
@@ -94,7 +107,7 @@ var parseJson = function parseJson(obj) {
 
 var getUserIdByName = function getUserIdByName() {};
 
-var transformShows = function transformShows(parsedSchedule, users) {
+var transformShows = function transformShows(parsedSchedule, users, legacyPlaylists) {
     console.log('Transforming shows...');
     var isActive = true;
     var parsedLegacyShows = parseJson(legacyShows);
@@ -117,12 +130,17 @@ var transformShows = function transformShows(parsedSchedule, users) {
             return;
         }
 
+        var match = legacyPlaylists.find(function (pl) {
+            return pl.showName === show.title;
+        });
+
+        var description = match ? match.description : '';
+
         var title = show.title,
             djName = show.djName,
             startDay = show.startDay,
             startHour = show.startHour,
-            endHour = show.endHour,
-            description = show.description;
+            endHour = show.endHour;
 
 
         return {
@@ -133,7 +151,7 @@ var transformShows = function transformShows(parsedSchedule, users) {
             startTime: Number(startHour),
             endTime: Number(endHour),
             isActive: isActive,
-            slug: (0, _stringParsing2.default)(title),
+            slug: slugify(title),
             description: description
         };
     });
@@ -240,7 +258,7 @@ var transformPlaylists = function transformPlaylists(legacyPlaylists, shows) {
 
             var foundShow = shows.find(function (show) {
                 return show.showName === p.showName;
-            });
+            }) || {};
 
             return {
                 _id: (0, _mongodb.ObjectId)(),
@@ -258,8 +276,8 @@ var transformPlaylists = function transformPlaylists(legacyPlaylists, shows) {
 };
 
 var main = function main() {
-    _mongodb2.default.connect('' + DB_URL + READ_DB_NAME, function _callee3(err, db) {
-        var newAdminDb, collectionNames, parsedSchedule, users, shows, legacyPlaylists, transformedPlaylists, userResult, showResult, playlistResult;
+    _mongodb2.default.connect(DB_CONNECTION + '/' + READ_DB_NAME, function _callee3(err, db) {
+        var newAdminDb, collectionNames, parsedSchedule, users, legacyPlaylists, shows, transformedPlaylists, userResult, showResult, playlistResult;
         return regeneratorRuntime.async(function _callee3$(_context3) {
             while (1) {
                 switch (_context3.prev = _context3.next) {
@@ -277,7 +295,7 @@ var main = function main() {
 
                         _context3.prev = 3;
                         _context3.next = 6;
-                        return regeneratorRuntime.awrap(_mongodb2.default.connect('' + DB_URL + WRITE_DB_NAME));
+                        return regeneratorRuntime.awrap(_mongodb2.default.connect(DB_CONNECTION + '/' + WRITE_DB_NAME));
 
                     case 6:
                         newAdminDb = _context3.sent;
@@ -322,12 +340,12 @@ var main = function main() {
 
                         parsedSchedule = parseJson(scheduleData);
                         users = transformUsers(parsedSchedule);
-                        shows = transformShows(parsedSchedule, users);
-                        _context3.next = 16;
+                        _context3.next = 15;
                         return regeneratorRuntime.awrap(readLegacyPlaylists(db));
 
-                    case 16:
+                    case 15:
                         legacyPlaylists = _context3.sent;
+                        shows = transformShows(parsedSchedule, users, legacyPlaylists);
                         transformedPlaylists = transformPlaylists(legacyPlaylists, shows);
                         _context3.next = 20;
                         return regeneratorRuntime.awrap(newAdminDb.collection('users').insertMany(users));
