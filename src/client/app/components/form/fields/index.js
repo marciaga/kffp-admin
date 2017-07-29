@@ -6,6 +6,7 @@ import TextArea from './textArea';
 import Time from './time';
 import ToggleField from './toggleField';
 import FileInput from './fileInput';
+import Wysiwyg from './wysiwyg';
 
 export {
     AutoCompleteField,
@@ -15,5 +16,6 @@ export {
     Select,
     Time,
     ToggleField,
-    FileInput
+    FileInput,
+    Wysiwyg
 };

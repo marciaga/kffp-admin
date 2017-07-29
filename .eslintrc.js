@@ -14,6 +14,7 @@ module.exports = {
         mocha: true,
         jest: true
     },
+    parser: 'babel-eslint',
     extends: ['airbnb'],
     rules: {
         indent: ['error', 4],

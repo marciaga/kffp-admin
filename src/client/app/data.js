@@ -53,10 +53,10 @@ const shows = {
                 validation: ['required', 'string']
             },
             description: {
-                fieldType: 'TextArea',
-                name: 'textarea',
+                fieldType: 'Wysiwyg',
+                name: 'wysiwyg',
                 label: 'Description',
-                hintText: 'Enter the show\'s description here'
+                hintText: 'Type here to enter the show\'s description'
             },
             primaryImage: {
                 fieldType: 'FileInput',
@@ -145,10 +145,10 @@ const shows = {
                 validation: ['required', 'string']
             },
             description: {
-                fieldType: 'TextArea',
-                name: 'textarea',
+                fieldType: 'Wysiwyg',
+                name: 'wysiwyg',
                 label: 'Description',
-                hintText: 'Enter the show\'s description here'
+                hintText: 'Type here to enter the show\'s description'
             },
             primaryImage: {
                 fieldType: 'FileInput',
