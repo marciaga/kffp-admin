@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import { Editor } from 'react-draft-wysiwyg';
 import MainTable from '../table';
 import { handleModal } from '../../actions/modalActions';
 import { setModel } from '../../actions/modelActions';
@@ -50,6 +51,7 @@ class Shows extends Component {
                 <FloatingActionButton onClick={() => this.handleClick('new', 'shows')} secondary={true} style={{}}>
                     <ContentAdd />
                 </FloatingActionButton>
+                <Editor />
                 <MainTable model={model} />
             </div>
         );
