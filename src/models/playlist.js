@@ -2,6 +2,7 @@ import Joi from 'joi';
 import Boom from 'boom';
 import moment from 'moment';
 import shortid from 'shortid';
+import { dateSortAsc, dateSortDesc } from '../client/app/utils/helperFunctions';
 
 const songSchema = {
     id: Joi.string(),
@@ -58,16 +59,30 @@ const getShow = async (db, ObjectID, slug) => {
 
 const getPlaylistsByShow = async (request, reply) => {
     const { db, ObjectID } = request.server.plugins.mongodb;
+    const { order } = request.query;
     const { slug, playlistId } = request.params;
 
     try {
         const show = await getShow(db, ObjectID, slug);
 
         const playlists = await getPlaylists(db, ObjectID, show, playlistId);
-        const mergedData = {
-            playlists,
-            show
-        };
+
+        const mergedData = { show };
+
+        switch (order) {
+        case 'asc':
+            mergedData.playlists = playlists.map(o => ({
+                ...o,
+                songs: dateSortAsc(o.songs)
+            }));
+
+            break;
+        default:
+            mergedData.playlists = playlists.map(o => ({
+                ...o,
+                songs: dateSortDesc(o.songs)
+            }));
+        }
 
         return reply(mergedData);
     } catch (err) {

@@ -84,8 +84,26 @@ const removePlaylistIdFromPath = (path) => {
     return pathParts.join('/');
 };
 
+const dateSortAsc = (ary) => {
+    if (!ary.length) {
+        return [];
+    }
+
+    return [...ary].sort((a, b) => new Date(a.playedAt) - new Date(b.playedAt));
+};
+
+const dateSortDesc = (ary) => {
+    if (!ary.length) {
+        return [];
+    }
+
+    return [...ary].sort((a, b) => new Date(b.playedAt) - new Date(a.playedAt));
+};
+
 export {
     debounce,
+    dateSortAsc,
+    dateSortDesc,
     hoursToDateObj,
     sortObjectsByKey,
     getTokenFromLocalStorage,

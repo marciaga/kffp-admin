@@ -175,7 +175,9 @@ ERROR 503
 }
 ```
 
-get a playlist by show slug and optionally playlist ID
+get a playlist by show slug and optionally playlist ID.
+
+Optional query param `order` e.g., `?order=asc`
 ```
 GET /api/v1/playlists/{slug}/{playlistId?}
 Response: 200 SUCCESS
