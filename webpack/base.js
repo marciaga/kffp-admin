@@ -20,12 +20,7 @@ module.exports = function () {
                 {
                     test: /\.(js|jsx)$/,
                     use: {
-                        loader: 'babel-loader',
-                        query: {
-                            cacheDirectory: true,
-                            presets: ['es2015'],
-                            plugins: ['syntax-async-functions', 'transform-regenerator']
-                        }
+                        loader: 'babel-loader'
                     },
                     exclude: /node_modules/,
                     include: path.join(__dirname, '../', 'src', 'client')
