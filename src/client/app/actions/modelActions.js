@@ -1,7 +1,12 @@
 import axios from 'axios';
 import Fuse from 'fuse.js';
 import Models from '../data';
-import { SET_MODEL, UPDATE_MODEL, UPDATE_FILTER_RESULTS } from '../constants';
+import {
+    ADD_MODEL,
+    SET_MODEL,
+    UPDATE_MODEL,
+    UPDATE_FILTER_RESULTS
+} from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 import { handleErrorModal } from './feedbackActions';
 import { GENERIC_ERROR_MESSAGE, API_ENDPOINT } from '../utils/constants';
@@ -55,6 +60,11 @@ const updateModelData = data => ({
     data
 });
 
+const addModelData = data => ({
+    type: ADD_MODEL,
+    data
+});
+
 const filterResults = data => (dispatch, getState) => {
     const { model } = getState();
     const fuse = model.fuse;
@@ -64,6 +74,29 @@ const filterResults = data => (dispatch, getState) => {
         type: UPDATE_FILTER_RESULTS,
         data: result
     });
+};
+
+const addModelFuse = data => (dispatch, getState) => {
+    const { model } = getState();
+
+    model.filteredResults = [
+        ...model.filteredResults,
+        data
+    ];
+    model.fuse.list = model.data;
+    return dispatch(receiveModelData(model));
+};
+
+const removeModelFuse = id => (dispatch, getState) => {
+    const { model } = getState();
+
+    model.filteredResults = model.filteredResults.filter(result =>
+        result._id !== id
+    );
+
+    model.fuse.list = model.data;
+
+    return dispatch(receiveModelData(model));
 };
 
 const updateModelFuse = data => (dispatch, getState) => {
@@ -82,4 +115,12 @@ const updateModelFuse = data => (dispatch, getState) => {
     return dispatch(receiveModelData(model));
 };
 
-export { setModel, updateModelData, filterResults, updateModelFuse };
+export {
+    setModel,
+    addModelData,
+    updateModelData,
+    filterResults,
+    updateModelFuse,
+    addModelFuse,
+    removeModelFuse
+};
