@@ -14,7 +14,13 @@ import {
     CLEAR_INPUT_FIELDS,
     SHOW_VALIDATION_ERRORS
 } from '../constants';
-import { updateModelData, updateModelFuse } from './modelActions';
+import {
+    addModelData,
+    updateModelData,
+    updateModelFuse,
+    addModelFuse,
+    removeModelFuse
+} from './modelActions';
 import {
     formTypesToHttpVerbs,
     API_ENDPOINT,
@@ -72,10 +78,8 @@ const setFormData = (formType, modelName) => {
         modelName,
         formType
     };
-    // TODO see if we can live without this
-    if (formType === 'new') {
-        return receiveFormData(formMetadata);
-    }
+
+    return receiveFormData(formMetadata);
 };
 
 const receiveUserAutocomplete = data => ({
@@ -183,9 +187,22 @@ const prepareFormSubmit = (type, modelName) => {
             }
 
             // dispatch action to update model.data
-            if (method === 'put') {
+            switch (method) {
+            case 'put':
                 dispatch(updateModelData(formData));
                 dispatch(updateModelFuse(formData));
+                break;
+            case 'post':
+                const toBeAdded = {
+                    ...formData,
+                    _id: data._id
+                };
+
+                dispatch(addModelData(toBeAdded));
+                dispatch(addModelFuse(toBeAdded));
+                break;
+            default:
+                break;
             }
 
             dispatch(receiveFormResult(data));
@@ -216,6 +233,7 @@ const deleteForm = (id, modelName) => {
                 }
             });
 
+            dispatch(removeModelFuse(id));
             dispatch({
                 type: DELETE_MODEL,
                 data: {

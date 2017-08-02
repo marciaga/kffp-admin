@@ -1,4 +1,5 @@
 import {
+    ADD_MODEL,
     SET_MODEL,
     UPDATE_MODEL,
     DELETE_MODEL,
@@ -25,6 +26,14 @@ export default function modelReducer (state = initialstate, action) {
             fuse
         };
 
+    case ADD_MODEL:
+        return {
+            ...state,
+            data: [
+                ...state.data,
+                action.data
+            ]
+        };
     case UPDATE_MODEL:
         const updatedModel = action.data;
         const modelIndex = state.data.map(m => m._id).indexOf(updatedModel._id);
