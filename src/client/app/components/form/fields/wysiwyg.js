@@ -38,7 +38,8 @@ const Wysiwyg = (props) => {
         return EditorState.createWithContent(contentState);
     };
 
-    const { label, value, hintText } = props;
+    const { label, value = '', hintText } = props;
+
     return (
         <div>
             <span>{label}</span>

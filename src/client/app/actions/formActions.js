@@ -72,10 +72,8 @@ const setFormData = (formType, modelName) => {
         modelName,
         formType
     };
-    // TODO see if we can live without this
-    if (formType === 'new') {
-        return receiveFormData(formMetadata);
-    }
+
+    return receiveFormData(formMetadata);
 };
 
 const receiveUserAutocomplete = data => ({
