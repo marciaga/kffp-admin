@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { push } from 'react-router-redux';
+import moment from 'moment';
 import {
     getTokenFromLocalStorage,
     cleanPathname,
@@ -143,8 +144,10 @@ const receivePlaylistFieldUpdate = data => ({
 const updatePlaylistDate = (date, playlistId) => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
     const url = `${API_ENDPOINT}/playlists/${playlistId}`;
-    const isoDate = date.toISOString();
-    const payload = { playlistDate: isoDate };
+    // convert local time to UTC 0 for storing in DB
+    const d = moment.utc(date).toISOString();
+
+    const payload = { playlistDate: d };
 
     try {
         const { data } = await axios.patch(url, payload, {
@@ -159,7 +162,7 @@ const updatePlaylistDate = (date, playlistId) => async (dispatch) => {
             dispatch(snackbarMessage(message));
 
             return dispatch(receivePlaylistFieldUpdate({ playlistId,
-                playlistDate: isoDate
+                playlistDate: d
             }));
         }
 

@@ -94,7 +94,7 @@ const getPlaylistsByShow = async (request, reply) => {
 const createPlaylist = async (request, reply) => {
     const { db, ObjectID } = request.server.plugins.mongodb;
     const now = moment();
-    const playlistDate = now.toISOString();
+    const playlistDate = now.toISOString(); // this is set to UTC 0
     const playlistId = shortid.generate();
     const { showId } = request.payload;
 
