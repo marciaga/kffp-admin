@@ -190,7 +190,7 @@ const transformPlaylists = (legacyPlaylists, shows) => {
                     album,
                     label,
                     releaseDate: '',
-                    playedAt: timestamp
+                    playedAt: new Date(timestamp)
                 };
             });
 
@@ -199,7 +199,7 @@ const transformPlaylists = (legacyPlaylists, shows) => {
             return {
                 _id: ObjectId(),
                 showId: foundShow._id,
-                playlistDate: date,
+                playlistDate: new Date(date),
                 playlistId: shortid.generate(),
                 songs
             };

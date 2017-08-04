@@ -100,7 +100,7 @@ const createPlaylist = async (request, reply) => {
 
     const newPlaylist = {
         showId,
-        playlistDate,
+        playlistDate: new Date(playlistDate),
         playlistId,
         songs: []
     };

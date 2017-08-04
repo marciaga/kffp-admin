@@ -147,7 +147,7 @@ const updatePlaylistDate = (date, playlistId) => async (dispatch) => {
     // convert local time to UTC 0 for storing in DB
     const d = moment.utc(date).toISOString();
 
-    const payload = { playlistDate: d };
+    const payload = { playlistDate: new Date(d) };
 
     try {
         const { data } = await axios.patch(url, payload, {

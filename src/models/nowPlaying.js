@@ -19,6 +19,7 @@ const getNowPlaying = async (request, reply) => {
 
 const updateNowPlaying = async (request, reply) => {
     const { playlistId, song, playedAt } = request.payload;
+    const playedAtDate = new Date(playedAt);
 
     try {
         const { db, ObjectID } = request.server.plugins.mongodb;
@@ -26,7 +27,7 @@ const updateNowPlaying = async (request, reply) => {
         const { id, ...songData } = song;
         const nowPlayingData = {
             ...songData,
-            playedAt,
+            playedAt: playedAtDate,
             songId: new ObjectID(song.id)
         };
 
@@ -44,7 +45,7 @@ const updateNowPlaying = async (request, reply) => {
 
         const res = await db.collection('playlists').update(
             { playlistId: pid, 'songs.id': nowPlayingData.songId },
-            { $set: { 'songs.$.playedAt': playedAt } }
+            { $set: { 'songs.$.playedAt': playedAtDate } }
         );
         const playlistResult = res.toJSON();
         const { ok, nModified } = playlistResult;
