@@ -203,11 +203,19 @@ const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
     }
 };
 
-const addNewPlaylist = (showId, slug) => async (dispatch) => {
+const addNewPlaylist = props => async (dispatch) => {
+    const { currentShowDJs, currentUserName, showId, slug } = props;
+
+    const isSub =
+        [currentShowDJs.indexOf(currentUserName)]
+        .map(f => f < 0)
+        .reduce(acc => acc);
+
     const idToken = getTokenFromLocalStorage();
     const url = `${API_ENDPOINT}/playlists`;
     const showData = {
-        showId
+        showId,
+        isSub
     };
 
     try {

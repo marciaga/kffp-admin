@@ -33,8 +33,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } /* eslint-disable */
 
 
-// import slugify from '../src/client/app/utils/stringParsing';
-
 _dotenv2.default.load(); // load environment vars
 
 var WRITE_DB_NAME = 'kffp-admin-prod';
@@ -252,7 +250,7 @@ var transformPlaylists = function transformPlaylists(legacyPlaylists, shows) {
                     album: album,
                     label: label,
                     releaseDate: '',
-                    playedAt: timestamp
+                    playedAt: new Date(timestamp)
                 };
             });
 
@@ -263,7 +261,8 @@ var transformPlaylists = function transformPlaylists(legacyPlaylists, shows) {
             return {
                 _id: (0, _mongodb.ObjectId)(),
                 showId: foundShow._id,
-                playlistDate: date,
+                isSub: false,
+                playlistDate: new Date(date),
                 playlistId: _shortid2.default.generate(),
                 songs: songs
             };

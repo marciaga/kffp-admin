@@ -19,7 +19,8 @@ const playlistSchema = Joi.object().keys({
     showId: Joi.string().required(),
     playlistDate: Joi.date().iso().required(),
     playlistId: Joi.string().required(),
-    songs: Joi.array().items(Joi.object(songSchema))
+    songs: Joi.array().items(Joi.object(songSchema)),
+    isSub: Joi.boolean()
 });
 
 const getPlaylists = async (db, ObjectID, show, playlistId) => {
@@ -96,10 +97,11 @@ const createPlaylist = async (request, reply) => {
     const now = moment();
     const playlistDate = now.toISOString(); // this is set to UTC 0
     const playlistId = shortid.generate();
-    const { showId } = request.payload;
+    const { showId, isSub } = request.payload;
 
     const newPlaylist = {
         showId,
+        isSub,
         playlistDate: new Date(playlistDate),
         playlistId,
         songs: []

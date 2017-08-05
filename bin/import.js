@@ -6,7 +6,6 @@ import moment from 'moment';
 import shortid from 'shortid';
 import * as legacyShows from './legacyShows.json';
 import * as scheduleData from './summer-schedule-2017.json';
-// import slugify from '../src/client/app/utils/stringParsing';
 
 config.load(); // load environment vars
 
@@ -199,6 +198,7 @@ const transformPlaylists = (legacyPlaylists, shows) => {
             return {
                 _id: ObjectId(),
                 showId: foundShow._id,
+                isSub: false,
                 playlistDate: new Date(date),
                 playlistId: shortid.generate(),
                 songs

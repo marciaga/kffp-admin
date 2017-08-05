@@ -5,10 +5,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { addNewPlaylist } from '../../actions/playlistActions';
 import { togglePlaylistDrawer } from '../../actions/uiActions';
 
-const ActionButtons = ({ dispatch, showId, slug }) => (
+const ActionButtons = ({ dispatch, ...props }) => (
     <div className="flex-horizontal-center col col-md-12 col-sm-12">
         <RaisedButton
-            onClick={() => dispatch(addNewPlaylist(showId, slug))}
+            onClick={() => dispatch(addNewPlaylist(props))}
             label="Make Playlist"
             secondary={true}
             icon={<ContentAdd />}
@@ -25,9 +25,7 @@ const ActionButtons = ({ dispatch, showId, slug }) => (
 );
 
 ActionButtons.propTypes = {
-    dispatch: PropTypes.func,
-    showId: PropTypes.string,
-    slug: PropTypes.string
+    dispatch: PropTypes.func
 };
 
 export default ActionButtons;
