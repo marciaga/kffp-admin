@@ -81,6 +81,7 @@
     "node-sass": "4.5.3",
     "normalize-scss": "^6.0.0",
     "postcss-cli": "^2.6.0",
+    "ramda": "^0.24.1",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "react-draft-wysiwyg": "^1.10.7",

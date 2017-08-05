@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import R from 'ramda';
 import PlaylistHistory from './list';
 import ShowHeader from './header';
 import PlaylistForm from './playlistForm';
@@ -26,9 +27,11 @@ class Playlist extends Component {
     }
 
     render () {
-        const { show, playlist, dispatch } = this.props;
+        const { show, playlist, dispatch, auth } = this.props;
         const { playlists } = playlist;
         const { currentShow } = show;
+        const currentUserName = R.pathOr('', ['user', 'displayName'], auth);
+        const currentShowDJs = R.pathOr([], ['users'], currentShow);
 
         return (
             <div className="playlist-main">
@@ -39,6 +42,8 @@ class Playlist extends Component {
                 </div>
                 <div className="row">
                     <ActionButtons
+                        currentUserName={currentUserName}
+                        currentShowDJs={currentShowDJs}
                         showId={currentShow._id}
                         slug={currentShow.slug}
                         dispatch={dispatch}
