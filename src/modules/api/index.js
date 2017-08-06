@@ -5,6 +5,7 @@ import showRoutes from './routes/shows';
 import userRoutes from './routes/users';
 import playlistRoutes from './routes/playlists';
 import nowPlayingRoutes from './routes/nowPlaying';
+import getReport from './routes/report';
 import { API_BASE_URL } from './constants';
 
 exports.register = (server, options, next) => {
@@ -68,6 +69,19 @@ exports.register = (server, options, next) => {
                 scope: ['admin', 'dj']
             },
             handler: getSpotifyToken
+        }
+    });
+
+    server.route({
+        path: `${API_BASE_URL}/report`,
+        method: 'GET',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin'],
+                mode: 'optional'
+            },
+            handler: getReport
         }
     });
 
