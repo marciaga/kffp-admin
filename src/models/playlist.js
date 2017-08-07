@@ -267,7 +267,8 @@ const updatePlaylistField = async (request, reply) => {
         const { ok, n } = response;
 
         if (ok) {
-            return reply({ success: true, message: `${field} was updated` });
+            let updateMessage = (field === 'playlistDate') ? 'The playlist date was updated' : `The document field '${field}' was updated`;
+            return reply({ success: true, message: updateMessage });
         }
 
         if (ok && n) {
