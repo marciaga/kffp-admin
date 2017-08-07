@@ -1,3 +1,4 @@
+import Joi from 'joi';
 import imageUpload from '../../models';
 import userSearchHandler from '../../models/search';
 import getSpotifyToken from '../../models/spotify-token';
@@ -78,10 +79,15 @@ exports.register = (server, options, next) => {
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin'],
-                mode: 'optional'
+                scope: ['admin']
             },
-            handler: getReport
+            handler: getReport,
+            validate: {
+                query: {
+                    startDate: Joi.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+                    endDate: Joi.string().regex(/^\d{4}-\d{2}-\d{2}$/)
+                }
+            }
         }
     });
 

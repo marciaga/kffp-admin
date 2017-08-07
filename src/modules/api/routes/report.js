@@ -1,3 +1,4 @@
+import R from 'ramda';
 import Boom from 'boom';
 
 const getReport = async (request, reply) => {
@@ -14,7 +15,26 @@ const getReport = async (request, reply) => {
         .sort({ playlistDate: 1 })
         .toArray();
 
-        return reply(result);
+        const setProps = arr => arr.map((obj) => {
+            const { artist, title, album, label } = obj;
+
+            return {
+                artist,
+                title,
+                album,
+                label
+            };
+        });
+
+        const composeSongs = R.compose(
+            setProps,
+            R.flatten,
+            R.map(s => s.songs)
+        );
+
+        const res = composeSongs(result);
+
+        return reply(res);
     } catch (err) {
         console.log(err);
         return reply(Boom.internal('Failed to generate playlist report.'));
