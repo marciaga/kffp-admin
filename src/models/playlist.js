@@ -266,11 +266,12 @@ const updatePlaylistField = async (request, reply) => {
         const response = result.toJSON();
         const { ok, n } = response;
         const userMessages = {
-          'playlistDate' : 'The playlist date was updated',
-          'showId' : 'This playlist has been reassigned to a different show',
-          'undefined' : 'The playlist record has been updated'
-        }
-        const userMessage = userMessages[field] == undefined ? userMessages['undefined'] : userMessages[field];
+            playlistDate: 'The playlist date was updated',
+            showId: 'This playlist has been reassigned to a different show',
+            noMatch: 'The playlist record has been updated'
+        };
+        const userMessage = userMessages[field] === undefined ?
+        userMessages.noMatch : userMessages[field];
 
         if (ok) {
             return reply({ success: true, message: userMessage });
