@@ -184,8 +184,13 @@ const addTrack = async (request, reply) => {
     try {
         const track = request.payload;
         const { playlistId } = request.params;
+        const now = moment();
+        const playedAt = now.toISOString(); // this is set to UTC 0
 
         track.id = new ObjectID();
+        // TODO when adding a track, just set the playedAt to the current date.
+        // subsequent updates via nowPlaying API may modify this value
+        track.playedAt = playedAt;
 
         const result = await db.collection('playlists').update(
             { playlistId },
