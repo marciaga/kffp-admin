@@ -184,8 +184,13 @@ const addTrack = async (request, reply) => {
     try {
         const track = request.payload;
         const { playlistId } = request.params;
+        const now = moment();
+        const playedAt = now.toISOString(); // this is set to UTC 0
 
         track.id = new ObjectID();
+        // TODO when adding a track, just set the playedAt to the current date.
+        // subsequent updates via nowPlaying API may modify this value
+        track.playedAt = playedAt;
 
         const result = await db.collection('playlists').update(
             { playlistId },
@@ -266,11 +271,12 @@ const updatePlaylistField = async (request, reply) => {
         const response = result.toJSON();
         const { ok, n } = response;
         const userMessages = {
-          'playlistDate' : 'The playlist date was updated',
-          'showId' : 'This playlist has been reassigned to a different show',
-          'undefined' : 'The playlist record has been updated'
-        }
-        const userMessage = userMessages[field] == undefined ? userMessages['undefined'] : userMessages[field];
+            playlistDate: 'The playlist date was updated',
+            showId: 'This playlist has been reassigned to a different show',
+            noMatch: 'The playlist record has been updated'
+        };
+        const userMessage = userMessages[field] === undefined ?
+        userMessages.noMatch : userMessages[field];
 
         if (ok) {
             return reply({ success: true, message: userMessage });
