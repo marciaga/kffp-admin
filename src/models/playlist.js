@@ -2,7 +2,7 @@ import Joi from 'joi';
 import Boom from 'boom';
 import moment from 'moment';
 import shortid from 'shortid';
-import { dateSortAsc, dateSortDesc } from '../client/app/utils/helperFunctions';
+import { dateSortAsc, dateSortDesc, playlistUpdateMessage } from '../client/app/utils/helperFunctions';
 
 const songSchema = {
     id: Joi.string(),
@@ -114,7 +114,7 @@ const createPlaylist = async (request, reply) => {
         }).toArray();
 
         if (result.length) {
-            const msg = 'That playlist already exists';
+            const msg = playlistUpdateMessage('playlistAlreadyExists');
 
             return reply(Boom.unauthorized(msg));
         }
@@ -171,7 +171,7 @@ const deletePlaylist = async (request, reply) => {
             return reply({ success: true });
         }
 
-        return reply({ success: false, message: 'Playlist delete was not successful' });
+        return reply({ success: false, message: playlistUpdateMessage('playlistDeleteFail') });
     } catch (e) {
         console.log(e);
         return reply(Boom.internal('Something went wrong'));
@@ -214,7 +214,7 @@ const addTrack = async (request, reply) => {
             });
         }
 
-        return reply({ success: false, message: 'Update was not successful' });
+        return reply({ success: false, message: playlistUpdateMessage('noSuccess') });
     } catch (err) {
         console.log(err);
         return reply(Boom.internal('Something went wrong'));
@@ -242,14 +242,14 @@ const updateTracks = async (request, reply) => {
         const { ok, nModified, n } = response;
 
         if (ok && nModified) {
-            return reply({ success: true, message: 'Song updated' });
+            return reply({ success: true, message: playlistUpdateMessage('songUpdated') });
         }
 
         if (ok && n) {
-            return reply({ success: false, message: 'Document was unchanged' });
+            return reply({ success: false, message: playlistUpdateMessage('noChange') });
         }
 
-        return reply({ success: false, message: 'Update was not successful' });
+        return reply({ success: false, message: playlistUpdateMessage('noSuccess') });
     } catch (err) {
         console.log(err);
         return reply(Boom.internal('Something went wrong'));
@@ -270,23 +270,16 @@ const updatePlaylistField = async (request, reply) => {
 
         const response = result.toJSON();
         const { ok, n } = response;
-        const userMessages = {
-            playlistDate: 'The playlist date was updated',
-            showId: 'This playlist has been reassigned to a different show',
-            noMatch: 'The playlist record has been updated'
-        };
-        const userMessage = userMessages[field] === undefined ?
-        userMessages.noMatch : userMessages[field];
 
         if (ok) {
-            return reply({ success: true, message: userMessage });
+            return reply({ success: true, message: playlistUpdateMessage(field) });
         }
 
         if (ok && n) {
-            return reply({ success: false, message: 'Document was unchanged' });
+            return reply({ success: false, message: playlistUpdateMessage('noChange') });
         }
 
-        return reply({ success: false, message: 'Update was not successful' });
+        return reply({ success: false, message: playlistUpdateMessage('noSuccess') });
     } catch (err) {
         console.log(err);
         return reply(Boom.internal('Something went wrong'));
@@ -319,7 +312,7 @@ const updateTrackOrder = async (request, reply) => {
             return reply({ success: true });
         }
 
-        return reply({ success: false, message: 'Update was not successful' });
+        return reply({ success: false, message: playlistUpdateMessage('noSuccess') });
     } catch (err) {
         console.log(err);
         return reply(Boom.internal('Something went wrong'));
@@ -343,7 +336,7 @@ const deleteTrackFromPlaylist = async (request, reply) => {
             return reply({ success: true });
         }
 
-        return reply({ success: false, message: 'Update was not successful' });
+        return reply({ success: false, message: playlistUpdateMessage('noSuccess') });
     } catch (err) {
         console.log(err);
         return reply(Boom.internal('Something went wrong'));

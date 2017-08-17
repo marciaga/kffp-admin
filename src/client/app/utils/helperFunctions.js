@@ -100,6 +100,24 @@ const dateSortDesc = (ary) => {
     return [...ary].sort((a, b) => new Date(b.playedAt) - new Date(a.playedAt));
 };
 
+const playlistUpdateMessage = (messageKey) => {
+    const userMessages = {
+        playlistDate: 'The playlist date was updated',
+        showId: 'This playlist has been reassigned to a different show',
+        playlistAlreadyExists: 'That playlist already exists',
+        playlistDeleteFail: 'Playlist delete failed',
+        songUpdated: 'Song successfully updated',
+        noChange: 'The document was unchanged',
+        noSuccess: 'Update was not successful',
+        noMatch: 'The playlist record has been updated'
+    };
+
+    const userMessage = userMessages[messageKey] === undefined ?
+        userMessages.noMatch : userMessages[messageKey];
+
+    return userMessage;
+};
+
 export {
     debounce,
     dateSortAsc,
@@ -111,5 +129,6 @@ export {
     cleanPathname,
     pathHasPlaylistId,
     removePlaylistIdFromPath,
-    humanReadableTime
+    humanReadableTime,
+    playlistUpdateMessage
 };
