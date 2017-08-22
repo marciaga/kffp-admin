@@ -37,6 +37,10 @@ const Menu = ({ dispatch, user }) => {
                 onTouchTap={() => dispatch(push('settings'))}
             />
             <MenuItem
+                primaryText={'Home'}
+                onTouchTap={() => dispatch(push('/'))}
+            />
+            <MenuItem
                 primaryText={'Sign out'}
                 onTouchTap={() => dispatch(logoutUser())}
             />
