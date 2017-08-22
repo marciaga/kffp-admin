@@ -108,12 +108,12 @@ const playlistUpdateMessage = (messageKey) => {
         playlistDeleteFail: 'Playlist delete failed',
         songUpdated: 'Song successfully updated',
         noChange: 'The document was unchanged',
-        noSuccess: 'Update was not successful',
-        noMatch: 'The playlist record has been updated'
+        noSuccess: 'Update was not successful'
     };
 
-    const userMessage = userMessages[messageKey] === undefined ?
-        userMessages.noMatch : userMessages[messageKey];
+    const noMatch = 'The playlist record has been updated';
+
+    const userMessage = userMessages[messageKey] ? userMessages[messageKey] : noMatch;
 
     return userMessage;
 };
