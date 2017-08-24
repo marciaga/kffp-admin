@@ -1,16 +1,21 @@
-version: "2"
+version: "3"
 services:
   web:
     build: .
+    image: freeformpdx/kffpadmin
     volumes:
-      - ./:/app
+      - .:/opt/app
+      - /opt/app/node_modules
+
     ports:
       - "3000:3000"
     links:
       - db
-    command: yarn run dev
     environment:
       NODE_ENV: development
+    command: yarn dev
+    depends_on:
+        - db
   db:
     image: mongo
     ports:

@@ -1,17 +1,23 @@
 import searchReducer from './searchReducer';
 import authReducer from './authReducer';
-import usersReducer from './usersReducer';
 import playlistReducer from './playlistReducer';
 import modalReducer from './modalReducer';
 import modelReducer from './modelReducer';
 import formReducer from './formReducer';
+import showReducer from './showReducer';
+import feedbackReducer from './feedbackReducer';
+import nowPlayingReducer from './nowPlayingReducer';
+import uiReducer from './uiReducer';
 
 export default {
     search: searchReducer,
     auth: authReducer,
-    users: usersReducer,
     playlist: playlistReducer,
     modal: modalReducer,
     model: modelReducer,
-    form: formReducer
+    form: formReducer,
+    show: showReducer,
+    feedback: feedbackReducer,
+    nowPlaying: nowPlayingReducer,
+    ui: uiReducer
 };

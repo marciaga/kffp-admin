@@ -6,24 +6,55 @@ import {
     FORM_SUCCESS,
     SUBMIT_ERROR,
     TOGGLE_MODAL,
-    DELETE_MODEL
+    DELETE_MODEL,
+    SET_SONG_FORM,
+    UPDATE_SONG_FORM,
+    UPDATE_USER_SETTINGS_FIELD,
+    SNACKBAR_MESSAGE,
+    CLEAR_INPUT_FIELDS,
+    SHOW_VALIDATION_ERRORS
 } from '../constants';
-import { updateModelData } from './modelActions';
-import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
+import {
+    addModelData,
+    updateModelData,
+    updateModelFuse,
+    addModelFuse,
+    removeModelFuse
+} from './modelActions';
+import {
+    formTypesToHttpVerbs,
+    API_ENDPOINT,
+    GENERIC_ERROR_MESSAGE
+} from '../utils/constants';
+import { getTokenFromLocalStorage } from '../utils/helperFunctions';
+import validateModelForm from '../utils/formValidation';
 import Models from '../data';
+import {
+    handleErrorModal,
+    confirmOpen
+} from './feedbackActions';
 
-const updateFormField = (fieldName, value) => {
-    return {
-        type: UPDATE_FORM_FIELD,
-        data: {
-            fieldName,
-            value
-        }
+const updateFormField = (fieldName, value) => ({
+    type: UPDATE_FORM_FIELD,
+    data: {
+        fieldName,
+        value
     }
-};
+});
+
+const receiveFormData = data => ({
+    type: SET_FORM_FIELDS,
+    data
+});
+
+const updateSongForm = data => ({
+    type: UPDATE_SONG_FORM,
+    data
+});
+
 
 const setUpdateFormData = (formType, modelName, data) => {
-    const fields = Models[modelName][formType]['fields'];
+    const fields = Models[modelName][formType].fields;
 
     const newFields = Object.keys(fields).reduce((memo, v) => {
         memo[v] = fields[v];
@@ -41,29 +72,27 @@ const setUpdateFormData = (formType, modelName, data) => {
 };
 
 const setFormData = (formType, modelName) => {
-    const fields = Models[modelName][formType]['fields'];
+    const fields = Models[modelName][formType].fields;
     const formMetadata = {
         fields,
         modelName,
         formType
     };
 
-    if (formType === 'new') {
-
-        return receiveFormData(formMetadata);
-    }
+    return receiveFormData(formMetadata);
 };
 
-const receiveFormData = (data) => {
-    return {
-        type: SET_FORM_FIELDS,
-        data
+const receiveUserAutocomplete = data => ({
+    type: SET_USER_AUTOCOMPLETE,
+    data: {
+        autocompleteResults: data
     }
-};
+});
+
 
 const getUserAutoComplete = (text) => {
     const url = `${API_ENDPOINT}/search/users?text=${text}`;
-    const idToken = localStorage.getItem('idToken');
+    const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {
         try {
@@ -75,39 +104,50 @@ const getUserAutoComplete = (text) => {
 
             dispatch(receiveUserAutocomplete(data));
         } catch (e) {
-            console.log(e);
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
     };
 };
 
-const receiveUserAutocomplete = (data) => {
-    return {
-        type: SET_USER_AUTOCOMPLETE,
-        data: {
-            autocompleteResults: data
-        }
-    }
-};
 // write a test for this!
-const addUsersToShow = (data) => {
-    return (dispatch, getState) => {
-        const { form } = getState();
-        const { fields } = form;
-        const { users } = fields;
-        const { value } = users;
+const addUsersToShow = data => (dispatch, getState) => {
+    const { form } = getState();
+    const { fields } = form;
+    const { users } = fields;
+    const { value } = users;
 
-        if (value && Array.isArray(value)) {
-            const nextValue = [...value, data];
-            return dispatch(updateFormField('users', nextValue));
-        }
-
-        const firstValue = [data];
-        dispatch(updateFormField('users', firstValue));
+    if (value && Array.isArray(value)) {
+        const nextValue = [...value, data];
+        return dispatch(updateFormField('users', nextValue));
     }
+
+    const firstValue = [data];
+    dispatch(updateFormField('users', firstValue));
 };
+
+
+const formSubmitError = message => ({
+    type: SUBMIT_ERROR,
+    data: {
+        message
+    }
+});
+
+const receiveFormResult = data => ({
+    type: FORM_SUCCESS,
+    data
+});
+
+const receiveValidationErrors = data => ({
+    type: SHOW_VALIDATION_ERRORS,
+    data
+});
 
 const prepareFormSubmit = (type, modelName) => {
-    const idToken = localStorage.getItem('idToken');
+    const idToken = getTokenFromLocalStorage();
     const method = formTypesToHttpVerbs[type];
     const formUrl = `${API_ENDPOINT}/${modelName}`;
 
@@ -116,24 +156,53 @@ const prepareFormSubmit = (type, modelName) => {
         const { fields } = form;
         const formData = Object.keys(fields).reduce((memo, f) => {
             memo[f] = fields[f].value;
+
             return memo;
         }, {});
 
+        /* we only need one transofrm so far, but we need to extract this logic
+         * into a separate function should we have additional cases later.
+        */
+        const hasUserProperty = Object.prototype.hasOwnProperty.call(formData, 'users');
+        const dataToSend = hasUserProperty ? {
+            ...formData,
+            users: formData.users.map(user => user._id)
+        } : formData;
+
+        const validationErrors = validateModelForm(modelName, type, dataToSend);
+
+        if (validationErrors.length) {
+            return dispatch(receiveValidationErrors(validationErrors));
+        }
+
         try {
-            const { data } = await axios[method](formUrl, formData, {
+            const { data } = await axios[method](formUrl, dataToSend, {
                 headers: {
                     Authorization: `Bearer ${idToken}`
                 }
             });
 
             if (data.code === 401) {
-                console.log(data.message)
                 return dispatch(formSubmitError(data.message));
             }
 
             // dispatch action to update model.data
-            if (method === 'put') {
+            switch (method) {
+            case 'put':
                 dispatch(updateModelData(formData));
+                dispatch(updateModelFuse(formData));
+                break;
+            case 'post':
+                const toBeAdded = {
+                    ...formData,
+                    _id: data._id
+                };
+
+                dispatch(addModelData(toBeAdded));
+                dispatch(addModelFuse(toBeAdded));
+                break;
+            default:
+                break;
             }
 
             dispatch(receiveFormResult(data));
@@ -144,50 +213,38 @@ const prepareFormSubmit = (type, modelName) => {
                 }
             });
         } catch (err) {
-            console.log(err);
-        }
-    }
-};
-
-const receiveFormResult = (data) => {
-    return {
-        type: FORM_SUCCESS,
-        data: data
-    };
-};
-
-const formSubmitError = (message) => {
-    return {
-        type: SUBMIT_ERROR,
-        data: {
-            message: message
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
     };
 };
 
 const deleteForm = (id, modelName) => {
     const url = `${API_ENDPOINT}/${modelName}?id=${id}`;
-    const idToken = localStorage.getItem('idToken');
+    const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {
         try {
-            const { data } = await axios.delete(url, {
+            await axios.delete(url, {
                 headers: {
                     Authorization: `Bearer ${idToken}`
                 }
             });
 
+            dispatch(removeModelFuse(id));
             dispatch({
                 type: DELETE_MODEL,
                 data: {
                     id
                 }
             });
-
-
-
         } catch (err) {
-            console.log(err);
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
 
         dispatch({
@@ -196,15 +253,134 @@ const deleteForm = (id, modelName) => {
                 showModal: false
             }
         });
-    }
+
+        dispatch(confirmOpen(false));
+    };
+};
+
+const clearInputFields = () => ({ type: CLEAR_INPUT_FIELDS });
+
+const updateUserPassword = (obj) => {
+    const { name, fields, id } = obj;
+    const url = `${API_ENDPOINT}/users/${id}`;
+    const idToken = getTokenFromLocalStorage();
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.patch(url, { name, fields }, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+            const message = data.success ? 'Update was successful!' : 'Update Failed.';
+
+            dispatch(clearInputFields());
+
+            dispatch({
+                type: SNACKBAR_MESSAGE,
+                data: { message }
+            });
+        } catch (e) {
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
+        }
+    };
+};
+
+const resetUserPassword = (id) => {
+    const url = `${API_ENDPOINT}/users/reset/${id}`;
+    const idToken = getTokenFromLocalStorage();
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.post(url, { id }, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+
+            const message = data.success ? 'Password Reset Successful!' :
+                'Password Reset Failed.';
+
+            dispatch({
+                type: SNACKBAR_MESSAGE,
+                data: { message }
+            });
+        } catch (e) {
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
+        }
+    };
+};
+
+const updateUserSettingsInput = data => ({
+    type: UPDATE_USER_SETTINGS_FIELD,
+    data
+});
+
+const setSongForm = songs => ({
+    type: SET_SONG_FORM,
+    data: songs
+});
+
+const fileUpload = (formData) => {
+    const url = `${API_ENDPOINT}/upload`;
+    const idToken = getTokenFromLocalStorage();
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.post(url, formData, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+
+            const newData = {
+                fieldName: 'primaryImage',
+                value: data.filePath
+            };
+
+            dispatch({
+                type: UPDATE_FORM_FIELD,
+                data: newData
+            });
+        } catch (err) {
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
+        }
+    };
+};
+
+const removeUserFromShow = val => (dispatch, getState) => {
+    const { form } = getState();
+    const { fields } = form;
+    const { users } = fields;
+    const { value } = users;
+
+    const data = value.filter(item => item._id !== val);
+
+    return dispatch(updateFormField('users', data));
 };
 
 export {
     prepareFormSubmit,
     setFormData,
+    setSongForm,
+    updateSongForm,
     updateFormField,
     getUserAutoComplete,
     addUsersToShow,
     setUpdateFormData,
-    deleteForm
+    deleteForm,
+    updateUserSettingsInput,
+    updateUserPassword,
+    fileUpload,
+    removeUserFromShow,
+    resetUserPassword
 };

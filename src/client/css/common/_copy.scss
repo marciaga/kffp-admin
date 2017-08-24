@@ -1,0 +1,21 @@
+.h1 {
+    margin-bottom: .7em;
+    font-size: font(size, x-large);
+    font-weight: font(weight, regular);
+    letter-spacing: .03em;
+}
+
+
+.h2 {
+    font-size: font(size, large);
+    font-weight: font(weight, regular);
+}
+
+.content-p {
+    max-width: 100%;
+    font-size: font(size, medium);
+}
+
+.page-heading {
+    margin: 20px auto;
+}

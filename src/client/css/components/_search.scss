@@ -1,0 +1,13 @@
+.search-results {
+    margin: 0 auto;
+    max-width: 900px;
+
+    &__grid-wrapper {
+        height: 350px;
+        overflow-y: scroll;
+    }
+
+    &__grid-tile {
+        max-width: 200px;
+    }
+}

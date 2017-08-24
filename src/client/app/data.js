@@ -7,40 +7,61 @@ const shows = {
                 fieldType: 'Text',
                 name: 'text',
                 hintText: 'Enter the show name',
-                label: 'Show Name'
+                label: 'Show Name',
+                validation: ['string', 'required']
             },
             users: {
                 fieldType: 'AutoCompleteField',
                 name: 'autocomplete_field',
                 label: 'Select a DJ',
-                hintText: 'Type a name'
+                hintText: 'Type a name',
+                validation: ['required', 'array']
             },
             dayOfWeek: {
                 fieldType: 'Select',
                 label: 'Day of the Week',
                 name: 'select',
                 hintText: 'Select a Day of the Week',
-                items: daysOfWeek.map(d => {
-                    return {
-                        label: d,
-                        value: d
-                    }
-                })
+                items: daysOfWeek.map(d => ({
+                    label: d,
+                    value: d
+                })),
+                validation: ['required', 'string']
             },
             startTime: {
                 fieldType: 'Time',
                 name: 'timepicker',
-                hintText: 'Select a Start Time'
+                hintText: 'Select a Start Time',
+                validation: ['required', 'number']
             },
             endTime: {
                 fieldType: 'Time',
                 name: 'timepicker',
-                hintText: 'Select a Start Time'
+                hintText: 'Select a Start Time',
+                validation: ['required', 'number']
             },
             isActive: {
                 fieldType: 'ToggleField',
                 label: 'Active Show?',
                 value: true // default toggled
+            },
+            slug: {
+                fieldType: 'Text',
+                name: 'text',
+                label: 'Slug',
+                hintText: 'Enter the show slug',
+                validation: ['required', 'string']
+            },
+            description: {
+                fieldType: 'Wysiwyg',
+                name: 'wysiwyg',
+                label: 'Description',
+                hintText: 'Type here to enter the show\'s description'
+            },
+            primaryImage: {
+                fieldType: 'FileInput',
+                name: 'file',
+                label: 'Main Image'
             }
         }
     },
@@ -63,6 +84,9 @@ const shows = {
             },
             isActive: {
                 label: 'Active'
+            },
+            slug: {
+                label: 'Slug'
             }
         }
     },
@@ -75,40 +99,61 @@ const shows = {
                 fieldType: 'Text',
                 name: 'text',
                 hintText: 'Enter the show name',
-                label: 'Show Name'
+                label: 'Show Name',
+                validation: ['string', 'required']
             },
             users: {
                 fieldType: 'AutoCompleteField',
                 name: 'autocomplete_field',
                 label: 'Select a DJ',
-                hintText: 'Type a name'
+                hintText: 'Type a name',
+                validation: ['required', 'array']
             },
             dayOfWeek: {
                 fieldType: 'Select',
                 label: 'Day of the Week',
                 name: 'select',
                 hintText: 'Select a Day of the Week',
-                items: daysOfWeek.map(d => {
-                    return {
-                        label: d,
-                        value: d
-                    }
-                })
+                items: daysOfWeek.map(d => ({
+                    label: d,
+                    value: d
+                })),
+                validation: ['required', 'string']
             },
             startTime: {
                 fieldType: 'Time',
                 name: 'timepicker',
-                hintText: 'Select a Start Time'
+                hintText: 'Select a Start Time',
+                validation: ['required', 'number']
             },
             endTime: {
                 fieldType: 'Time',
                 name: 'timepicker',
-                hintText: 'Select a Start Time'
+                hintText: 'Select a Start Time',
+                validation: ['required', 'number']
             },
             isActive: {
                 fieldType: 'ToggleField',
                 label: 'Active Show?',
-                value: true // default toggled
+                value: true, // default toggled
+                validation: ['required', 'boolean']
+            },
+            slug: {
+                fieldType: 'Text',
+                name: 'text',
+                label: 'Slug',
+                validation: ['required', 'string']
+            },
+            description: {
+                fieldType: 'Wysiwyg',
+                name: 'wysiwyg',
+                label: 'Description',
+                hintText: 'Type here to enter the show\'s description'
+            },
+            primaryImage: {
+                fieldType: 'FileInput',
+                name: 'file',
+                label: 'Main Image'
             }
         }
     }
@@ -121,13 +166,15 @@ const users = {
                 fieldType: 'Text',
                 name: 'text',
                 hintText: 'Enter name as it should be displayed',
-                label: 'DJ Name'
+                label: 'DJ Name',
+                validation: ['required', 'string']
             },
             email: {
                 fieldType: 'Text',
-                name: 'email_field',
+                name: 'text',
                 hintText: 'Enter Email Address',
-                label: 'Email'
+                label: 'Email',
+                validation: ['required', 'string']
             },
             password: {
                 fieldType: 'Text',
@@ -140,12 +187,11 @@ const users = {
                 label: 'User Role',
                 name: 'select',
                 hintText: 'Select a User Role',
-                items: userRoles.map(r => {
-                    return {
-                        label: r,
-                        value: r
-                    }
-                })
+                items: userRoles.map(r => ({
+                    label: r,
+                    value: r
+                })),
+                validation: ['required', 'string']
             }
         }
     },
@@ -171,38 +217,84 @@ const users = {
                 fieldType: 'Text',
                 name: 'text',
                 hintText: 'Enter name as it should be displayed',
-                label: 'DJ Name'
+                label: 'DJ Name',
+                validation: ['required', 'string']
             },
             email: {
                 fieldType: 'Text',
-                name: 'email_field',
+                name: 'text',
                 hintText: 'Enter Email Address',
-                label: 'Email'
+                label: 'Email',
+                validation: ['required', 'string']
             },
             role: {
                 fieldType: 'Select',
                 label: 'User Role',
                 name: 'select',
                 hintText: 'Select a User Role',
-                items: userRoles.map(r => {
-                    return {
-                        label: r,
-                        value: r
-                    }
-                })
+                items: userRoles.map(r => ({
+                    label: r,
+                    value: r
+                })),
+                validation: ['required', 'string']
+            }
+        }
+    },
+    settings: {
+        fields: {
+            oldPassword: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Enter your current password',
+                validation: ['required', 'string']
+            },
+            newPasswordFirst: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Enter your new password',
+                validation: ['required', 'string']
+            },
+            newPasswordSecond: {
+                fieldType: 'Text',
+                name: 'password',
+                hintText: 'Enter your new password again',
+                validation: ['required', 'string']
             }
         }
     }
 };
 
-const playlist = {
+export const playlistFields = {
     fields: {
-
+        title: {
+            label: 'Track Name',
+            name: 'title',
+            hintText: 'Enter the track name'
+        },
+        artist: {
+            label: 'Artist Name',
+            name: 'artist',
+            hintText: 'Enter the artist name'
+        },
+        album: {
+            label: 'Album Name',
+            name: 'album',
+            hintText: 'Enter the album name'
+        },
+        label: {
+            label: 'Record Label',
+            name: 'label',
+            hintText: 'Enter the Record Label'
+        },
+        releaseDate: {
+            label: 'Release Date',
+            name: 'releaseDate',
+            hintText: 'Enter the release date'
+        }
     }
 };
 
 export default {
     shows,
-    users,
-    playlist
+    users
 };

@@ -1,21 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import MainTable from '../table';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import MainTable from '../table';
 import { handleModal } from '../../actions/modalActions';
 import { setModel } from '../../actions/modelActions';
 import { setFormData } from '../../actions/formActions';
 
-const mapStateToProps = (state) => {
-    return {
-        modal: state.modal,
-        model: state.model,
-        auth: state.auth,
-        routing: state.routing
-    }
-};
+const mapStateToProps = state => ({
+    modal: state.modal,
+    model: state.model,
+    auth: state.auth,
+    routing: state.routing
+});
 
 class Users extends Component {
     constructor (props) {
@@ -24,17 +22,9 @@ class Users extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick (formType, modelName) {
-        const { showModal } = this.props.modal;
-
-        this.props.dispatch(setFormData(formType, modelName));
-        this.props.dispatch(handleModal(showModal));
-    }
-
     componentWillReceiveProps (nextProps) {
-        const { auth, routing } = nextProps;
+        const { auth } = nextProps;
         const { user } = auth;
-        const { locationBeforeTransitions } = routing;
 
         if (this.props.auth.user !== user) {
             if (user.scope !== 'admin') {
@@ -45,13 +35,24 @@ class Users extends Component {
         }
     }
 
+    handleClick (formType, modelName) {
+        const { showModal } = this.props.modal;
+
+        this.props.dispatch(setFormData(formType, modelName));
+        this.props.dispatch(handleModal(showModal));
+    }
+
     render () {
         const { model } = this.props;
 
         return (
             <div>
-                <p>Add New User</p>
-                <FloatingActionButton onClick={() => this.handleClick('new', 'users')} secondary={true} style={{}}>
+                <h2>Add New User</h2>
+                <FloatingActionButton
+                    onClick={() => this.handleClick('new', 'users')}
+                    secondary={true}
+                    style={{}}
+                >
                     <ContentAdd />
                 </FloatingActionButton>
                 <MainTable model={model} />
@@ -59,5 +60,13 @@ class Users extends Component {
         );
     }
 }
+
+Users.propTypes = {
+    model: PropTypes.object,
+    showModal: PropTypes.bool,
+    dispatch: PropTypes.func,
+    modal: PropTypes.object,
+    auth: PropTypes.object
+};
 
 export default connect(mapStateToProps)(Users);

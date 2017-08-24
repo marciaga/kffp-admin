@@ -1,4 +1,4 @@
-export const TableConfig = {
+const TableConfig = {
     fixedHeader: true,
     fixedFooter: false,
     stripedRows: false,
@@ -9,3 +9,5 @@ export const TableConfig = {
     deselectOnClickaway: true,
     showCheckboxes: true
 };
+
+export default TableConfig;

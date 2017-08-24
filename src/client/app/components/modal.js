@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 import { handleModal } from '../actions/modalActions';
 import Form from './form';
 
@@ -32,6 +30,11 @@ class Modal extends Component {
             </Dialog>
         );
     }
+}
+
+Modal.propTypes = {
+    dispatch: PropTypes.func,
+    showModal: PropTypes.bool
 };
 
-export { Modal };
+export default Modal;

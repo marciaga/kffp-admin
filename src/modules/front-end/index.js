@@ -2,7 +2,27 @@ const renderReactApp = (request, reply) => {
     reply.view('app');
 };
 
-exports.register = function (server, options, next) {
+const renderStaticFiles = (request, reply) => {
+    const filename = request.path;
+
+    reply.file(`./public${filename}`);
+};
+
+
+exports.register = (server, options, next) => {
+    server.route({
+        path: '/css/{params*}',
+        method: 'GET',
+        handler: renderStaticFiles,
+        config: { auth: false }
+    });
+
+    server.route({
+        path: '/js/{params*}',
+        method: 'GET',
+        handler: renderStaticFiles,
+        config: { auth: false }
+    });
 
     server.route({
         method: 'GET',

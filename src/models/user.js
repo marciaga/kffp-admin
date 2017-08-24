@@ -8,88 +8,140 @@ const userSchema = Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string(),
     displayName: Joi.string().required(),
+    firstName: Joi.string(),
+    lastName: Joi.string(),
     role: Joi.string().required()
 });
 
+const getUserById = async (id, db) => {
+    try {
+        const result = await db.collection('users').findOne({ _id: id });
+
+        return result;
+    } catch (e) {
+        console.log(e);
+        return Boom.create(503, 'Service Unavailble', e);
+    }
+};
+
+const createToken = (user) => {
+    const { _id, email, role, displayName } = user;
+    const secret = process.env.JWT_SECRET_KEY;
+
+    return jwt.sign(
+        {
+            id: _id,
+            email,
+            displayName,
+            scope: role
+        },
+        secret,
+        {
+            algorithm: 'HS256',
+            expiresIn: '7d'
+        }
+    );
+};
+
 /* Route Handlers */
 const loginHandler = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const password = request.payload.password;
+
+    if (!request.pre.user.email) {
+        return reply({
+            success: false,
+            code: 401,
+            message: 'User not found'
+        });
+    }
 
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
         if (err) {
-            return reply(Boom.internal('Internal MongoDB error', err));
+            console.log(err);
+            return reply(Boom.create(503, 'Service Unavailble'));
         }
 
-        bcrypt.compare(password, user.password, (err, isValid) => {
+        if (!user) {
+            return reply({ success: false, message: 'Username/email not found' });
+        }
+
+        bcrypt.compare(password, user.password, (error, isValid) => {
             if (isValid) {
                 const idToken = createToken(user);
-                return reply({ email: user.email, verified: true, idToken});
+                const { _id, email, displayName, role } = user;
+
+                return reply({
+                    id: _id,
+                    email,
+                    displayName,
+                    idToken,
+                    scope: role,
+                    verified: true
+                });
             }
-            return reply(Boom.create(401, 'Incorrect username or email!'));
+
+            return reply({ success: false, message: 'Bad credentials' });
         });
     });
 };
 
 // Fetch all users
 const getUsers = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
 
     db.collection('users').find({}, { password: 0 }, async (err, cursor) => {
         if (err) {
-            return reply(Boom.internal('Internal MongoDB error', err));
+            console.log(err);
+            return reply(Boom.create(503, 'Service Unavailble'));
         }
 
         const users = await cursor.toArray();
 
         return reply(users);
-    })
+    });
+};
+
+const hashPassword = (password, callback) => {
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(password, salt, (error, hash) => callback(error, hash));
+    });
 };
 
 // CREATE user method
 const createUser = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
 
-    try {
-        Joi.validate(request.payload, userSchema, (err, value) => {
-            // if value === null, object is valid
-            if (err) {
-                throw Boom.badRequest(err);
-            }
+    const { err } = Joi.validate(request.payload, userSchema);
 
-            return true;
+    if (err) {
+        console.log(err);
+
+        return reply({
+            success: false,
+            message: 'Validation Error'
         });
-    } catch (err) {
-        return reply(err);
     }
 
     const { email, password, role, displayName } = request.payload;
 
-    hashPassword(password, (err, hash) => {
-        if (err) {
-            return reply(Boom.badRequest(err));
+    hashPassword(password, (error, hash) => {
+        if (error) {
+            console.log(error);
+            return reply(Boom.badRequest());
         }
 
         db.collection('users').insert({
-            displayName: displayName,
-            email: email,
+            displayName,
+            email,
             password: hash,
-            role: role
-        }, (err, user) => {
-            if (err) {
-                return reply(Boom.internal('Internal MongoDB error', err));
+            role
+        }, (mongoErr, user) => {
+            if (mongoErr) {
+                return reply(Boom.serverUnavailable());
             }
 
             reply({ id_token: createToken(user) }).code(201);
-        })
-    })
-};
-
-/* Helper functions */
-const hashPassword = (password, callback) => {
-    bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(password, salt, (err, hash) => {
-            return callback(err, hash);
         });
     });
 };
@@ -110,99 +162,76 @@ const verifyToken = (request, reply) => {
                     expiredAt: 1408621000
                 }
                 */
-                const error = {
-                    ...err,
-                    code: 401
-                };
-                return reply(error);
+                console.log(err);
+                return reply(Boom.unauthorized('Token Expired. Please Log In Again.'));
             }
 
             return reply({ ...decoded, verified: true }).code(201);
         });
     } else {
-        return reply({ verified: false });
+        return reply(Boom.unauthorized());
     }
 };
 
 const verifyCredentials = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const password = request.payload.password;
 
     db.collection('users').findOne({ email: request.payload.email }, (err, user) => {
         if (err) {
-            return reply(Boom.internal('Internal MongoDB error', err));
+            console.log(err);
+            return reply(Boom.serverUnavailable());
         }
 
         if (user) {
-            bcrypt.compare(password, user.password, (err, isValid) => {
+            bcrypt.compare(password, user.password, (error, isValid) => {
                 if (isValid) {
                     return reply(user);
                 }
-                return reply(Boom.create(401, 'Incorrect username or email!'));
+
+                return reply({ success: false, message: 'Incorrect Password' });
             });
         } else {
-            return reply(Boom.create(401, 'Incorrect username or email!'));
+            return reply({ success: false, message: 'Username/email not found' });
         }
     });
-}
-
-const createToken = (user) => {
-    const { _id, email, role } = user;
-    const secret = process.env.JWT_SECRET_KEY;
-
-    return jwt.sign(
-        {
-            id: _id,
-            email: email,
-            scope: role
-        },
-        secret,
-        {
-            algorithm: 'HS256',
-            expiresIn: '7d'
-        }
-    );
 };
 
 const verifyUniqueUser = (request, reply) => {
-    const { db } = request.server.plugins['hapi-mongodb'];
+    const { db } = request.server.plugins.mongodb;
     const { email } = request.payload;
 
-    db.collection('users').findOne({ $or: [{ email: email }] }, (err, user) => {
+    db.collection('users').findOne({ $or: [{ email }] }, (err, user) => {
         if (user && (user.email === email)) {
             return reply(Boom.create(401, 'Email already taken!'));
         }
 
         return reply(request.payload);
     });
-}
+};
 
 const updateUser = (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const user = request.payload;
 
-    try {
-        Joi.validate(user, userSchema, (err, value) => {
-            // if value === null, object is valid
-            if (err) {
-                console.log(err);
-                throw Boom.badRequest(err);
-            }
+    const { err } = Joi.validate(user, userSchema);
 
-            return true;
+    if (err) {
+        return reply({
+            success: false,
+            message: 'Validation Failed'
         });
-    } catch (err) {
-        return reply(err);
     }
 
     const userId = new ObjectID(user._id);
     const { _id, ...fieldsToUpdate } = user;
 
     db.collection('users').update({ _id: userId },
-        fieldsToUpdate,
-        (err, result) => {
-            if (err) {
-                return reply(Boom.internal('Internal MongoDB error', err));
+        { $set: fieldsToUpdate },
+        (e, result) => {
+            if (e) {
+                console.log('error in mongo', e);
+                return reply(Boom.serverUnavailable());
             }
             // response, e.g. { ok: 1, nModified: 1, n: 1 }
             const response = result.toJSON();
@@ -218,13 +247,14 @@ const updateUser = (request, reply) => {
 };
 
 const deleteUser = (request, reply) => {
-    const { db, ObjectID } = request.server.plugins['hapi-mongodb'];
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const { id } = request.query;
     const userId = new ObjectID(id);
 
     db.collection('users').remove({ _id: userId }, { justOne: true }, (err, result) => {
         if (err) {
-            return reply(Boom.internal('Internal MongoDB error', err));
+            console.log(err);
+            return reply(Boom.serverUnavailable());
         }
         // result, e.g. { ok: 1, n: 0 }
         const response = result.toJSON();
@@ -238,6 +268,162 @@ const deleteUser = (request, reply) => {
     });
 };
 
+const verifyPassword = async (request, reply) => {
+    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { id } = request.params;
+    const { name, fields } = request.payload;
+    // if it's not the changePassword request, continue
+    if (name !== 'changePassword') {
+        return reply.continue();
+    }
+
+    const { newPasswordFirst, newPasswordSecond } = fields;
+    // if it is the changePassword request, verify the relevant fields match
+    if (newPasswordFirst !== newPasswordSecond) {
+        return reply({
+            success: false,
+            message: 'New password entries do not match.'
+        });
+    }
+
+    const userId = new ObjectID(id);
+
+    try {
+        const user = await getUserById(userId, db);
+        const { currentPassword } = fields;
+
+        bcrypt.compare(currentPassword, user.password, (e, isValid) => {
+            if (e) {
+                console.log(e);
+                return reply(Boom.internal('Something went wrong with encryption...'));
+            }
+            if (isValid) {
+                // hash the password and return it to the route handler
+                return hashPassword(newPasswordFirst, (err, hash) => {
+                    if (err) {
+                        return reply({
+                            success: false,
+                            message: 'Something went wrong...'
+                        });
+                    }
+                    return reply({
+                        success: true,
+                        password: hash
+                    });
+                });
+            }
+
+            return reply({
+                success: false,
+                message: 'Current password is incorrect.'
+            });
+        });
+    } catch (e) {
+        console.log(e);
+        return reply(Boom.internal('Something went wrong...'));
+    }
+};
+
+const updateField = async (id, fieldName, value, db, ObjectID) => {
+    const userId = new ObjectID(id);
+
+    try {
+        const result = await db.collection('users').update(
+            { _id: userId },
+            { $set: {
+                [fieldName]: value
+            } }
+        );
+
+        return result.toJSON();
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+};
+
+const updateUserField = async (request, reply) => {
+    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { result } = request.pre;
+    const { id } = request.params;
+    const { name, fields } = request.payload;
+
+    if (result && result.success) {
+        try {
+            const response = await updateField(
+                id,
+                'password',
+                result.password,
+                db,
+                ObjectID
+            );
+            const { ok, nModified } = response;
+
+            if (ok && nModified) {
+                return reply({ success: true });
+            }
+
+            return reply({ success: false, message: 'Update was not successful' });
+        } catch (e) {
+            console.log(e);
+            return reply(Boom.internal('Something went wrong'));
+        }
+    }
+
+    if (result && !result.success) {
+        return reply(result.message);
+    }
+    // @ma: currently, this block isn't being used, but it probably will later on
+    try {
+        const key = Object.keys(fields).find(f => fields[f]);
+        const value = fields[key];
+        const response = await updateField(
+            id,
+            name,
+            value,
+            db,
+            ObjectID
+        );
+        const { ok, nModified } = response;
+
+        if (ok && nModified) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    } catch (e) {
+        console.log(e);
+        return reply(Boom.internal('Something went wrong'));
+    }
+};
+
+const resetPassword = async (request, reply) => {
+    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { id } = request.params;
+    const resetValue = process.env.TEMPORARY_USER_PASSWORD;
+
+    try {
+        const response = await updateField(
+            id,
+            'password',
+            resetValue,
+            db,
+            ObjectID
+        );
+
+        const { ok, nModified } = response;
+
+        if (ok && nModified) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    } catch (e) {
+        console.log(e);
+        return reply(Boom.internal('Something went wrong'));
+    }
+};
+
 export {
     getUsers,
     verifyToken,
@@ -245,6 +431,9 @@ export {
     updateUser,
     deleteUser,
     loginHandler,
+    resetPassword,
     verifyCredentials,
-    verifyUniqueUser
+    verifyUniqueUser,
+    verifyPassword,
+    updateUserField
 };

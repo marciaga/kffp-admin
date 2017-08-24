@@ -1,17 +1,25 @@
-version: "2"
+version: "3"
 services:
   web:
     build: .
-    volumes:
-      - ./:/app
+    image: freeformpdx/kffp-admin
     ports:
-      - "3000:3000"
-    links:
-      - db
-    command: yarn run build && yarn run start
+      - "3000"
+    command: yarn start
     environment:
       NODE_ENV: production
+    links:
+      - db
+
   db:
     image: mongo
     ports:
-      - "27017:27017"
+      - "27017"
+
+  server:
+    image: marciaga/kffp-nginx
+    build: ./docker/nginx
+    ports:
+      - "80:80"
+    links:
+      - web

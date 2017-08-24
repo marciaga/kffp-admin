@@ -1,45 +1,66 @@
-import axios from 'axios';
-import { UPDATE_SEARCH_FIELD, SEARCH_RESULTS, CLEAR_SEARCH_INPUT } from '../constants';
-import { API_URL, API_OFFSET, API_LIMIT, API_RESULT_TYPE } from '../utils/constants';
-import { parseSearchResults } from '../utils/searchUtils';
+import {
+    UPDATE_SEARCH_FIELD
+} from '../constants';
+import {
+    SPOTIFY_API_URL,
+    SPOTIFY_API_OFFSET,
+    SPOTIFY_API_LIMIT,
+    SPOTIFY_API_RESULT_TYPE,
+    GENERIC_ERROR_MESSAGE
+} from '../utils/constants';
+import { snackbarMessage, handleErrorModal } from './feedbackActions';
+import {
+    getTokenFromServer,
+    getSpotifyQuery
+} from '../utils/searchUtils';
 
-export const searchInput = (val) => {
-    return {
-        type: UPDATE_SEARCH_FIELD,
+export const searchInput = val => ({
+    type: UPDATE_SEARCH_FIELD,
+    data: {
         currentSearch: val
     }
-};
+});
 
 export const searchForm = (val) => {
     if (val === '') {
-        // dispatch validation error
-        return;
+        return snackbarMessage('Please enter a search!');
     }
+
     const encodedQuery = encodeURIComponent(val);
-    const url = `${API_URL}?query=${encodedQuery}&offset=${API_OFFSET}&limit=${API_LIMIT}&type=${API_RESULT_TYPE}`;
+    const searchUrl = `${SPOTIFY_API_URL}/search?query=${encodedQuery}&offset=${SPOTIFY_API_OFFSET}&limit=${SPOTIFY_API_LIMIT}&type=${SPOTIFY_API_RESULT_TYPE}`;
 
     return async (dispatch) => {
-        try {
-            const { data, status } = await axios.get(url);
+        let counter = 0;
 
-            if (status !== 200) {
-                console.log('Something went wrong...');
-                // dispatch error message
-                return;
+        const f = async (refresh = false) => {
+            try {
+                const token = await getTokenFromServer(refresh, dispatch);
+
+                return await getSpotifyQuery(dispatch, searchUrl, token);
+            } catch (err) {
+                const { response } = err;
+
+                if ((response && (response.status === 401)) && counter < 5) {
+                    counter++;
+                    // our token is expired, so get a new one and try the search again
+                    const getNewToken = true;
+                    return await f(getNewToken, dispatch);
+                }
+
+                return dispatch(handleErrorModal({
+                    message: GENERIC_ERROR_MESSAGE,
+                    open: true
+                }));
             }
+        };
 
-            const parsedSearchResults = parseSearchResults(data);
-
-            dispatch({
-                type: CLEAR_SEARCH_INPUT
-            });
-
-            dispatch({
-                type: SEARCH_RESULTS,
-                data: parsedSearchResults
-            });
-        } catch (err) {
-            console.log(err);
+        try {
+            return await f();
+        } catch (e) {
+            return dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
-    }
+    };
 };
