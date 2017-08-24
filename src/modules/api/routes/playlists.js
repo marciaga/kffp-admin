@@ -66,7 +66,7 @@ const playlistRoutes = [
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj']
+                scope: ['admin']
             },
             handler: deletePlaylist
         }
