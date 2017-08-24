@@ -24,7 +24,7 @@ deployment:
       - yarn build:production
       - zip -r kffpadmin.zip .
       - eb use kffpadmin-prod --profile default
-      - eb deploy master --timeout 20 --profile default --verbose
+      - eb deploy kffpadmin-prod --timeout 20 --profile default --verbose
 
   staging:
     branch: develop
