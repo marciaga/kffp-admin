@@ -23,7 +23,8 @@ deployment:
       - openssl aes-256-cbc -d -in secrets -k $KEY -out .env
       - yarn build:production
       - zip -r kffpadmin.zip .
-      - eb deploy master --timeout 20
+      - eb use kffpadmin-prod --profile default
+      - eb deploy master --timeout 20 --profile default
 
   staging:
     branch: develop
