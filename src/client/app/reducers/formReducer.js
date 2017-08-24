@@ -7,7 +7,8 @@ import {
     SET_SONG_FORM,
     UPDATE_SONG_FORM,
     UPDATE_USER_SETTINGS_FIELD,
-    CLEAR_INPUT_FIELDS
+    CLEAR_INPUT_FIELDS,
+    SHOW_VALIDATION_ERRORS
 } from '../constants';
 
 const initialState = {
@@ -59,7 +60,8 @@ export default function formReducer (state = initialState, action) {
     case FORM_SUCCESS:
         return {
             ...state,
-            errors: []
+            errors: [],
+            validationErrors: []
         };
 
     case SUBMIT_ERROR:
@@ -101,6 +103,12 @@ export default function formReducer (state = initialState, action) {
         return {
             ...state,
             fields: {}
+        };
+
+    case SHOW_VALIDATION_ERRORS:
+        return {
+            ...state,
+            validationErrors: action.data
         };
 
     default:

@@ -1,100 +1,129 @@
 import Joi from 'joi';
 import Boom from 'boom';
 import moment from 'moment';
-import cuid from 'cuid';
+import shortid from 'shortid';
+import { dateSortAsc, dateSortDesc, playlistUpdateMessage } from '../client/app/utils/helperFunctions';
 
 const songSchema = {
     id: Joi.string(),
     title: Joi.string().required(),
     artist: Joi.string().required(),
     album: Joi.string(),
-    releaseYear: Joi.string(),
+    label: Joi.string(),
+    releaseDate: Joi.string(),
     playedAt: Joi.date().iso()
 };
 
 const playlistSchema = Joi.object().keys({
     _id: Joi.string(),
     showId: Joi.string().required(),
-    showDateTime: Joi.date().iso().required(),
-    dateSlug: Joi.string().required(),
-    songs: Joi.array().items(Joi.object(songSchema))
+    playlistDate: Joi.date().iso().required(),
+    playlistId: Joi.string().required(),
+    songs: Joi.array().items(Joi.object(songSchema)),
+    isSub: Joi.boolean()
 });
 
-const getPlaylists = async (db, show) => {
-    const showId = show._id.toString();
+const getPlaylists = async (db, ObjectID, show, playlistId) => {
+    const showId = show._id;
+    const query = playlistId ? { playlistId } : { showId: new ObjectID(showId) };
 
     try {
-        const result = await db.collection('playlists').find({
-            showId
-        })
-        .toArray();
-
-        return result;
+        return await db.collection('playlists').find(query)
+            .sort({ playlistDate: -1 })
+            .toArray();
     } catch (e) {
         console.log(e);
+        return false;
     }
 };
 
-const getShow = async (db, slug) => (
-    await db.collection('shows').findOne({
-        slug
-    })
-);
+const getShow = async (db, ObjectID, slug) => {
+    try {
+        const show = await db.collection('shows').findOne({ slug });
 
-// TODO this needs to be limited so we don't fetch everything at once
+        const objectIds = show.users.map(id => new ObjectID(id));
+        const users = await db.collection('users').find({
+            _id: { $in: objectIds }
+        }, {
+            _id: 0,
+            displayName: 1
+        }).toArray();
+
+        show.users = users.map(user => user.displayName);
+
+        return show;
+    } catch (e) {
+        console.log(e);
+        return {};
+    }
+};
+
 const getPlaylistsByShow = async (request, reply) => {
-    const { db } = request.server.plugins.mongodb;
-    const { slug } = request.params;
+    const { db, ObjectID } = request.server.plugins.mongodb;
+    const { order } = request.query;
+    const { slug, playlistId } = request.params;
 
     try {
-        const show = await getShow(db, slug);
-        const playlists = await getPlaylists(db, show);
-        const mergedData = {
-            playlists,
-            show
-        };
+        const show = await getShow(db, ObjectID, slug);
+
+        const playlists = await getPlaylists(db, ObjectID, show, playlistId);
+
+        const mergedData = { show };
+
+        switch (order) {
+        case 'asc':
+            mergedData.playlists = playlists.map(o => ({
+                ...o,
+                songs: dateSortAsc(o.songs)
+            }));
+
+            break;
+        default:
+            mergedData.playlists = playlists.map(o => ({
+                ...o,
+                songs: dateSortDesc(o.songs)
+            }));
+        }
 
         return reply(mergedData);
     } catch (err) {
         console.log(err);
-        return err;
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
 const createPlaylist = async (request, reply) => {
-    const { db } = request.server.plugins.mongodb;
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const now = moment();
-    const showDateTime = now.toISOString();
-    const dateSlug = now.format('Y[-]MM[-]DD');
-    const { showId } = request.payload;
+    const playlistDate = now.toISOString(); // this is set to UTC 0
+    const playlistId = shortid.generate();
+    const { showId, isSub } = request.payload;
 
     const newPlaylist = {
         showId,
-        showDateTime,
-        dateSlug,
+        isSub,
+        playlistDate: new Date(playlistDate),
+        playlistId,
         songs: []
     };
 
     try {
         const result = await db.collection('playlists').find({
-            dateSlug,
-            showId
+            playlistId,
+            showId: new ObjectID(showId)
         }).toArray();
 
         if (result.length) {
-            const msg = {
-                code: 401,
-                message: 'That playlist already exists'
-            };
+            const msg = playlistUpdateMessage('playlistAlreadyExists');
 
-            return reply(msg);
+            return reply(Boom.unauthorized(msg));
         }
 
         try {
             Joi.validate(newPlaylist, playlistSchema, (err, value) => {
                 if (err) {
                     console.log(err);
-                    throw Boom.badRequest(err);
+                    return reply(Boom.badRequest());
                 }
                 // if value === null, object is valid
                 if (value === null) {
@@ -102,12 +131,16 @@ const createPlaylist = async (request, reply) => {
                 }
             });
         } catch (err) {
-            return reply(err);
+            console.log(err);
+            return reply(Boom.interval('Something went wrong'));
         }
+
+        newPlaylist.showId = new ObjectID(showId);
 
         db.collection('playlists').insert(newPlaylist, (err, doc) => {
             if (err) {
-                return reply(Boom.internal('Internal MongoDB error', err));
+                console.log(err);
+                return reply(Boom.serverUnavailable());
             }
 
             const { ops } = doc;
@@ -115,11 +148,33 @@ const createPlaylist = async (request, reply) => {
                 i === 0
             ));
 
-            return reply(newDoc);
+            return reply(newDoc).code(201);
         });
     } catch (err) {
         console.log(err);
-        return reply(err);
+        return reply(Boom.internal('Something went wrong'));
+    }
+};
+
+const deletePlaylist = async (request, reply) => {
+    const { db } = request.server.plugins.mongodb;
+    const { playlistId } = request.params;
+
+    try {
+        const result = await db.collection('playlists').deleteOne({
+            playlistId
+        });
+        const response = result.toJSON();
+        const { ok } = response;
+
+        if (ok) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: playlistUpdateMessage('playlistDeleteFail') });
+    } catch (e) {
+        console.log(e);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -129,12 +184,16 @@ const addTrack = async (request, reply) => {
     try {
         const track = request.payload;
         const { playlistId } = request.params;
-        const id = new ObjectID(playlistId);
+        const now = moment();
+        const playedAt = now.toISOString(); // this is set to UTC 0
 
-        track.id = cuid();
+        track.id = new ObjectID();
+        // TODO when adding a track, just set the playedAt to the current date.
+        // subsequent updates via nowPlaying API may modify this value
+        track.playedAt = playedAt;
 
         const result = await db.collection('playlists').update(
-            { _id: id },
+            { playlistId },
             {
                 $push: {
                     songs: {
@@ -146,19 +205,19 @@ const addTrack = async (request, reply) => {
         );
 
         const response = result.toJSON();
-        const { ok, nModified } = response;
+        const { ok } = response;
 
-        if (ok && nModified) {
+        if (ok) {
             return reply({
                 success: true,
                 track
             });
         }
 
-        return reply({ success: false, message: 'Update was not successful' });
+        return reply({ success: false, message: playlistUpdateMessage('noSuccess') });
     } catch (err) {
         console.log(err);
-        return reply(err);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -168,26 +227,62 @@ const updateTracks = async (request, reply) => {
     try {
         const track = request.payload;
         const { playlistId } = request.params;
-        const result = await db.collection('playlists').update(
-            { _id: ObjectID(playlistId), 'songs.id': track.id },
-            { $set: { 'songs.$': track } }
-        );
 
+        const result = await db.collection('playlists').update(
+            {
+                playlistId,
+                'songs.id': new ObjectID(track.id)
+            },
+            { $set: { 'songs.$': {
+                ...track,
+                id: new ObjectID(track.id)
+            } } }
+        );
         const response = result.toJSON();
         const { ok, nModified, n } = response;
 
         if (ok && nModified) {
-            return reply({ success: true, message: 'Song updated' });
+            return reply({ success: true, message: playlistUpdateMessage('songUpdated') });
         }
 
         if (ok && n) {
-            return reply({ success: false, message: 'Document was unchanged' });
+            return reply({ success: false, message: playlistUpdateMessage('noChange') });
         }
 
-        return reply({ success: false, message: 'Update was not successful' });
+        return reply({ success: false, message: playlistUpdateMessage('noSuccess') });
     } catch (err) {
         console.log(err);
-        return reply(err);
+        return reply(Boom.internal('Something went wrong'));
+    }
+};
+
+const updatePlaylistField = async (request, reply) => {
+    const { db } = request.server.plugins.mongodb;
+
+    try {
+        const data = request.payload;
+        const field = data ? Object.keys(data).shift() : '';
+        const { playlistId } = request.params;
+        const result = await db.collection('playlists').update(
+            { playlistId },
+            { $set: { [field]: data[field] } }
+        );
+
+        const response = result.toJSON();
+        const { ok, n } = response;
+
+        if (ok) {
+            return reply({ success: true, message: playlistUpdateMessage(field) });
+        }
+
+        if (ok && n) {
+            return reply({ success: false, message: playlistUpdateMessage('noChange') });
+        }
+
+        return reply({ success: false, message: playlistUpdateMessage('noSuccess') });
+    } catch (err) {
+        console.log(err);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -195,28 +290,32 @@ const updateTrackOrder = async (request, reply) => {
     const { db, ObjectID } = request.server.plugins.mongodb;
 
     try {
-        const payload = request.payload;
+        const { payload } = request;
         // don't save any airbreaks
-        const tracks = payload.filter(o => !o.airBreak);
+        const filteredTracks = payload.filter(o => !o.airBreak);
+        const tracks = filteredTracks.map(t => ({
+            ...t,
+            id: new ObjectID(t.id)
+        }));
+
         const { playlistId } = request.params;
-        const id = new ObjectID(playlistId);
 
         const result = await db.collection('playlists').update(
-            { _id: id },
+            { playlistId },
             { $set: { songs: tracks } }
         );
 
         const response = result.toJSON();
-        const { ok, nModified } = response;
+        const { ok } = response;
 
-        if (ok && nModified) {
+        if (ok) {
             return reply({ success: true });
         }
 
-        return reply({ success: false, message: 'Update was not successful' });
+        return reply({ success: false, message: playlistUpdateMessage('noSuccess') });
     } catch (err) {
         console.log(err);
-        return reply(err);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -225,23 +324,22 @@ const deleteTrackFromPlaylist = async (request, reply) => {
 
     try {
         const { playlistId, trackId } = request.params;
-        const pid = new ObjectID(playlistId);
 
         const result = await db.collection('playlists').update(
-            { _id: pid }, { $pull: { songs: { id: trackId } } });
+            { playlistId }, { $pull: { songs: { id: new ObjectID(trackId) } } });
 
         const response = result.toJSON();
         // { ok: 1, nModified: 1, n: 1 }
-        const { ok, nModified } = response;
+        const { ok } = response;
 
-        if (ok && nModified) {
+        if (ok) {
             return reply({ success: true });
         }
 
-        return reply({ success: false, message: 'Update was not successful' });
+        return reply({ success: false, message: playlistUpdateMessage('noSuccess') });
     } catch (err) {
         console.log(err);
-        return reply(err);
+        return reply(Boom.internal('Something went wrong'));
     }
 };
 
@@ -250,6 +348,8 @@ export {
     createPlaylist,
     addTrack,
     updateTracks,
+    updatePlaylistField,
     updateTrackOrder,
-    deleteTrackFromPlaylist
+    deleteTrackFromPlaylist,
+    deletePlaylist
 };

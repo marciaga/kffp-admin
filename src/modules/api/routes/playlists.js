@@ -1,15 +1,19 @@
+import { API_BASE_URL } from '../constants';
 import {
     getPlaylistsByShow,
     createPlaylist,
     addTrack,
     updateTracks,
     updateTrackOrder,
-    deleteTrackFromPlaylist
+    updatePlaylistField,
+    deleteTrackFromPlaylist,
+    deletePlaylist
 } from '../../../models/playlist';
+
 
 const playlistRoutes = [
     {
-        path: '/api/playlists/{slug}',
+        path: `${API_BASE_URL}/playlists/{slug}/{playlistId?}`,
         method: 'GET',
         config: {
             validate: {
@@ -17,13 +21,14 @@ const playlistRoutes = [
             },
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj']
+                scope: ['admin', 'dj'],
+                mode: 'optional'
             },
             handler: getPlaylistsByShow
         }
     },
     {
-        path: '/api/playlists',
+        path: `${API_BASE_URL}/playlists`,
         method: 'POST',
         config: {
             auth: {
@@ -34,7 +39,7 @@ const playlistRoutes = [
         }
     },
     {
-        path: '/api/playlists/{playlistId}',
+        path: `${API_BASE_URL}/playlists/{playlistId}`,
         method: 'PUT',
         config: {
             auth: {
@@ -45,7 +50,29 @@ const playlistRoutes = [
         }
     },
     {
-        path: '/api/playlists/{playlistId}',
+        path: `${API_BASE_URL}/playlists/{playlistId}`,
+        method: 'PATCH',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin', 'dj']
+            },
+            handler: updatePlaylistField
+        }
+    },
+    {
+        path: `${API_BASE_URL}/playlists/{playlistId}`,
+        method: 'DELETE',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin', 'dj']
+            },
+            handler: deletePlaylist
+        }
+    },
+    {
+        path: `${API_BASE_URL}/playlists/{playlistId}/tracks`,
         method: 'PATCH',
         config: {
             auth: {
@@ -56,7 +83,7 @@ const playlistRoutes = [
         }
     },
     {
-        path: '/api/playlists/{playlistId}/tracks',
+        path: `${API_BASE_URL}/playlists/{playlistId}/tracks`,
         method: 'PUT',
         config: {
             auth: {
@@ -67,7 +94,7 @@ const playlistRoutes = [
         }
     },
     {
-        path: '/api/playlists/{playlistId}/tracks/{trackId}',
+        path: `${API_BASE_URL}/playlists/{playlistId}/tracks/{trackId}`,
         method: 'DELETE',
         config: {
             auth: {

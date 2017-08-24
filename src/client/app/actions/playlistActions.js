@@ -1,11 +1,19 @@
 import axios from 'axios';
+import { push } from 'react-router-redux';
+import moment from 'moment';
 import {
     getTokenFromLocalStorage,
-    cleanPathname
+    cleanPathname,
+    pathHasPlaylistId,
+    removePlaylistIdFromPath
 } from '../utils/helperFunctions';
-import { API_ENDPOINT } from '../utils/constants';
+import { API_ENDPOINT, GENERIC_ERROR_MESSAGE } from '../utils/constants';
 import { getShow } from './showActions';
-import { snackbarMessage } from './feedbackActions';
+import {
+    handleErrorModal,
+    snackbarMessage,
+    confirmOpen
+} from './feedbackActions';
 import {
     GET_SHOW_PLAYLISTS,
     ADD_PLAYLIST,
@@ -15,7 +23,9 @@ import {
     CLEAR_SEARCH_RESULTS,
     REORDER_SONGS,
     UPDATE_PLAYLIST_SONGS,
-    RESET_CURRENT_PLAYLIST
+    UPDATE_PLAYLIST_FIELD,
+    RESET_CURRENT_PLAYLIST,
+    DELETE_PLAYLIST
 } from '../constants';
 
 const receiveTrack = data => ({
@@ -47,10 +57,54 @@ const addNewPlaylistToSidebar = data => ({
     data
 });
 
+const deletePlaylist = (playlistId, slug) => async (dispatch) => {
+    const idToken = getTokenFromLocalStorage();
+    const url = `${API_ENDPOINT}/playlists/${playlistId}`;
+
+    try {
+        const { data } = await axios.delete(url, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        if (data.success) {
+            const message = 'Playlist deleted successfully!';
+
+            dispatch(snackbarMessage(message));
+
+            dispatch({
+                type: DELETE_PLAYLIST,
+                data: {
+                    playlistId
+                }
+            });
+
+            dispatch(confirmOpen(false));
+
+            dispatch(push(`/playlists/${slug}`));
+        } else {
+            const errorMessage = 'Playlist delete failed';
+
+            dispatch(handleErrorModal({
+                message: errorMessage,
+                open: true
+            }));
+        }
+    } catch (err) {
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
+    }
+};
+
 const getShowPlaylists = pathname => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
+    const pathHasId = pathHasPlaylistId(pathname);
+    const showPath = pathHasId ? removePlaylistIdFromPath(pathname) : pathname;
     const path = cleanPathname(pathname);
-    const url = `${API_ENDPOINT}${path}`;
+    const url = `${API_ENDPOINT}${showPath}`;
 
     try {
         const { data } = await axios.get(url, {
@@ -62,8 +116,18 @@ const getShowPlaylists = pathname => async (dispatch) => {
 
         dispatch(getShow(show));
         dispatch(receivePlaylists(playlists));
+        // if there's a playlist ID, set the current Playlist
+        if (pathHasPlaylistId(path)) {
+            const playlistId = path.split('/').pop();
+            const playlist = playlists.find(p => p.playlistId === playlistId);
+
+            dispatch(receivePlaylist(playlist));
+        }
     } catch (err) {
-        console.log(err);
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
@@ -72,9 +136,48 @@ const receiveSongs = data => ({
     data
 });
 
-const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
+const receivePlaylistFieldUpdate = data => ({
+    type: UPDATE_PLAYLIST_FIELD,
+    data
+});
+
+const updatePlaylistDate = (date, playlistId) => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
     const url = `${API_ENDPOINT}/playlists/${playlistId}`;
+    // convert local time to UTC 0 for storing in DB
+    const d = moment.utc(date).toISOString();
+
+    const payload = { playlistDate: new Date(d) };
+
+    try {
+        const { data } = await axios.patch(url, payload, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        const { success, message } = data;
+
+        if (success) {
+            dispatch(snackbarMessage(message));
+
+            return dispatch(receivePlaylistFieldUpdate({ playlistId,
+                playlistDate: d
+            }));
+        }
+
+        dispatch(snackbarMessage(message));
+    } catch (err) {
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
+    }
+};
+
+const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
+    const idToken = getTokenFromLocalStorage();
+    const url = `${API_ENDPOINT}/playlists/${playlistId}/tracks`;
     const songData = song;
 
     try {
@@ -93,15 +196,26 @@ const updatePlaylistSong = (song, playlistId) => async (dispatch) => {
 
         dispatch(snackbarMessage(message));
     } catch (err) {
-        console.log(err);
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
-const addNewPlaylist = showId => async (dispatch) => {
+const addNewPlaylist = props => async (dispatch) => {
+    const { currentShowDJs, currentUserName, showId, slug } = props;
+
+    const isSub =
+        [currentShowDJs.indexOf(currentUserName)]
+        .map(f => f < 0)
+        .reduce(acc => acc);
+
     const idToken = getTokenFromLocalStorage();
     const url = `${API_ENDPOINT}/playlists`;
     const showData = {
-        showId
+        showId,
+        isSub
     };
 
     try {
@@ -111,10 +225,18 @@ const addNewPlaylist = showId => async (dispatch) => {
             }
         });
 
+        const { playlistId } = data;
+
         dispatch(receivePlaylist(data));
+
+        dispatch(push(`/playlists/${slug}/${playlistId}`));
+
         dispatch(addNewPlaylistToSidebar(data));
     } catch (err) {
-        console.log(err);
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
@@ -131,17 +253,26 @@ const addTrack = (track, playlistId) => async (dispatch) => {
         if (data.success) {
             dispatch(receiveTrack(data.track));
         } else {
-            // dispatch error message
-            console.log('add was unsuccessful');
+            dispatch(handleErrorModal({
+                message: 'Add was unsuccessful. Please try again.',
+                open: true
+            }));
         }
     } catch (err) {
-        console.log(err);
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 
     dispatch({
         type: CLEAR_SEARCH_RESULTS
     });
 };
+
+const clearSearchResults = () => ({
+    type: CLEAR_SEARCH_RESULTS
+});
 
 const addAirBreak = data => ({
     type: ADD_TRACK,
@@ -167,10 +298,17 @@ const deleteSongFromPlaylist = (song, playlistId) => async (dispatch) => {
         } else {
             const errorMessage = 'Track delete failed';
 
-            dispatch(snackbarMessage(errorMessage));
+            dispatch(handleErrorModal({
+                message: errorMessage,
+                open: true
+            }));
         }
+        dispatch(confirmOpen(false, null));
     } catch (err) {
-        console.log(err);
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
@@ -193,10 +331,16 @@ const reorderSongsSave = (songs, id) => async (dispatch) => {
         } else {
             const errorMessage = 'Track reordering failed';
 
-            dispatch(snackbarMessage(errorMessage));
+            dispatch(handleErrorModal({
+                message: errorMessage,
+                open: true
+            }));
         }
     } catch (err) {
-        console.log(err);
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
 };
 
@@ -205,16 +349,25 @@ const reorderSongs = data => ({
     data
 });
 
+const removeAirbreak = id => ({
+    type: DELETE_TRACK,
+    data: { id }
+});
+
 export {
     getShowPlaylists,
     addNewPlaylist,
     receivePlaylist,
     addTrack,
     addAirBreak,
+    removeAirbreak,
     reorderSongs,
     reorderSongsSave,
     updatePlaylistSong,
     deleteSongFromPlaylist,
     receiveSongs,
-    resetCurrentPlaylist
+    resetCurrentPlaylist,
+    updatePlaylistDate,
+    deletePlaylist,
+    clearSearchResults
 };

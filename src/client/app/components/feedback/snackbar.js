@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Snackbar from 'material-ui/Snackbar';
 import { connect } from 'react-redux';
 import { closeSnackbar } from '../../actions/feedbackActions';
@@ -34,3 +34,10 @@ class SnackbarMessage extends Component {
 }
 
 export default connect(mapStateToProps)(SnackbarMessage);
+
+SnackbarMessage.propTypes = {
+    feedback: PropTypes.shape({
+        snackbar: PropTypes.object
+    }),
+    dispatch: PropTypes.func
+};

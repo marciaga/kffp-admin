@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { getUserShows, getAllShows } from '../../actions/showActions';
 import ShowSelect from './select';
@@ -14,11 +14,10 @@ class Main extends Component {
     componentWillReceiveProps (nextProps) {
         const { auth } = nextProps;
         const { user } = auth;
+        const { id } = user;
 
-        if (this.props.auth.user !== user) {
-            const { displayName } = user;
-
-            this.props.dispatch(getUserShows(displayName));
+        if (id && this.props.auth.user !== user) {
+            this.props.dispatch(getUserShows(id));
             this.props.dispatch(getAllShows());
         }
     }
@@ -40,5 +39,11 @@ class Main extends Component {
         );
     }
 }
+
+Main.propTypes = {
+    dispatch: PropTypes.func,
+    show: PropTypes.object,
+    auth: PropTypes.object
+};
 
 export default connect(mapStateToProps)(Main);

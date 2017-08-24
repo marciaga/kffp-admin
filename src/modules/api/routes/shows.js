@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { API_BASE_URL } from '../constants';
 import {
     getShows,
     updateShow,
@@ -8,13 +9,15 @@ import {
 
 const showRoutes = [
     {
-        path: '/api/shows',
+        path: `${API_BASE_URL}/shows/{id?}`,
         method: 'GET',
         config: {
             validate: {
                 query: {
                     isActive: Joi.boolean(),
-                    users: Joi.string()
+                    users: Joi.string(),
+                    startWeek: Joi.string(),
+                    startTime: Joi.string()
                 }
             },
             auth: {
@@ -27,7 +30,7 @@ const showRoutes = [
     },
     // create a show
     {
-        path: '/api/shows',
+        path: `${API_BASE_URL}/shows`,
         method: 'POST',
         config: {
             auth: {
@@ -39,7 +42,7 @@ const showRoutes = [
     },
     // update a show
     {
-        path: '/api/shows',
+        path: `${API_BASE_URL}/shows`,
         method: 'PUT',
         config: {
             auth: {
@@ -51,7 +54,7 @@ const showRoutes = [
     },
     // Delete a show
     {
-        path: '/api/shows',
+        path: `${API_BASE_URL}/shows`,
         method: 'DELETE',
         config: {
             auth: {

@@ -1,7 +1,15 @@
 import axios from 'axios';
+import Fuse from 'fuse.js';
 import Models from '../data';
-import { SET_MODEL, UPDATE_MODEL } from '../constants';
+import {
+    ADD_MODEL,
+    SET_MODEL,
+    UPDATE_MODEL,
+    UPDATE_FILTER_RESULTS
+} from '../constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
+import { handleErrorModal } from './feedbackActions';
+import { GENERIC_ERROR_MESSAGE, API_ENDPOINT } from '../utils/constants';
 
 const receiveModelData = model => ({
     type: SET_MODEL,
@@ -17,7 +25,7 @@ const setModel = (user, modelName, type) => {
         // redirect to root path
     }
 
-    const url = `/api/${modelName}`;
+    const url = `${API_ENDPOINT}/${modelName}`;
     const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {
@@ -27,14 +35,22 @@ const setModel = (user, modelName, type) => {
                     Authorization: `Bearer ${idToken}`
                 }
             });
+            const options = {
+                keys: Object.keys(model.fields)
+            };
+            const fuse = new Fuse(data, options);
 
             model.data = data;
             model.name = modelName;
             model.type = type;
+            model.fuse = fuse;
 
             dispatch(receiveModelData(model));
         } catch (err) {
-            console.log(err);
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
     };
 };
@@ -44,4 +60,67 @@ const updateModelData = data => ({
     data
 });
 
-export { setModel, updateModelData };
+const addModelData = data => ({
+    type: ADD_MODEL,
+    data
+});
+
+const filterResults = data => (dispatch, getState) => {
+    const { model } = getState();
+    const fuse = model.fuse;
+    const result = fuse.search(data);
+
+    dispatch({
+        type: UPDATE_FILTER_RESULTS,
+        data: result
+    });
+};
+
+const addModelFuse = data => (dispatch, getState) => {
+    const { model } = getState();
+
+    model.filteredResults = [
+        ...model.filteredResults,
+        data
+    ];
+    model.fuse.list = model.data;
+    return dispatch(receiveModelData(model));
+};
+
+const removeModelFuse = id => (dispatch, getState) => {
+    const { model } = getState();
+
+    model.filteredResults = model.filteredResults.filter(result =>
+        result._id !== id
+    );
+
+    model.fuse.list = model.data;
+
+    return dispatch(receiveModelData(model));
+};
+
+const updateModelFuse = data => (dispatch, getState) => {
+    // data is the updatedShow object
+    const { model } = getState();
+
+    model.filteredResults = model.filteredResults.map((f) => {
+        if (f._id === data._id) {
+            return data;
+        }
+
+        return f;
+    });
+
+    model.fuse.list = model.data;
+    return dispatch(receiveModelData(model));
+};
+
+export {
+    setModel,
+    addModelData,
+    updateModelData,
+    filterResults,
+    updateModelFuse,
+    addModelFuse,
+    removeModelFuse
+};

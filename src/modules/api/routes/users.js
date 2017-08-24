@@ -7,13 +7,15 @@ import {
     getUsers,
     updateUser,
     deleteUser,
+    resetPassword,
     updateUserField,
     verifyPassword
 } from '../../../models/user';
+import { API_BASE_URL } from '../constants';
 
 const userRoutes = [
     {
-        path: '/api/users',
+        path: `${API_BASE_URL}/users`,
         method: 'GET',
         config: {
             auth: {
@@ -24,7 +26,7 @@ const userRoutes = [
         }
     },
     {
-        path: '/api/users',
+        path: `${API_BASE_URL}/users`,
         method: 'POST',
         config: {
             auth: {
@@ -38,7 +40,7 @@ const userRoutes = [
         }
     },
     {
-        path: '/api/users',
+        path: `${API_BASE_URL}/users`,
         method: 'PUT',
         config: {
             auth: {
@@ -49,12 +51,12 @@ const userRoutes = [
         }
     },
     {
-        path: '/api/users/{id}',
+        path: `${API_BASE_URL}/users/{id?}`,
         method: 'PATCH',
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin']
+                scope: ['admin', 'dj']
             },
             pre: [
                 { method: verifyPassword, assign: 'result' }
@@ -63,7 +65,7 @@ const userRoutes = [
         }
     },
     {
-        path: '/api/users',
+        path: `${API_BASE_URL}/users`,
         method: 'DELETE',
         config: {
             auth: {
@@ -74,7 +76,7 @@ const userRoutes = [
         }
     },
     {
-        path: '/api/users/verify',
+        path: `${API_BASE_URL}/users/verify`,
         method: 'GET',
         config: {
             auth: false,
@@ -82,7 +84,7 @@ const userRoutes = [
         }
     },
     {
-        path: '/api/users/authenticate',
+        path: `${API_BASE_URL}/users/authenticate`,
         method: 'POST',
         config: {
             auth: false,
@@ -90,6 +92,17 @@ const userRoutes = [
                 { method: verifyCredentials, assign: 'user' }
             ],
             handler: loginHandler
+        }
+    },
+    {
+        path: `${API_BASE_URL}/users/reset/{id?}`,
+        method: 'POST',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: resetPassword
         }
     }
 ];

@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import R from 'ramda';
 import PlaylistHistory from './list';
 import ShowHeader from './header';
 import PlaylistForm from './playlistForm';
@@ -14,12 +15,6 @@ const mapStateToProps = state => ({
 });
 
 class Playlist extends Component {
-    constructor (props) {
-        super(props);
-
-        this.isEditPath = this.isEditPath.bind(this);
-    }
-
     componentWillReceiveProps (nextProps) {
         const { auth, routing } = nextProps;
         const { user } = auth;
@@ -31,20 +26,12 @@ class Playlist extends Component {
         }
     }
 
-    isEditPath (path) {
-        const ri = new RegExp('edit', 'i');
-
-        return ri.test(path);
-    }
-
     render () {
-        const { show, playlist, dispatch, route, routeParams } = this.props;
+        const { show, playlist, dispatch, auth } = this.props;
         const { playlists } = playlist;
         const { currentShow } = show;
-        const { path } = route;
-        const { slug } = currentShow;
-        
-        console.log(routeParams);
+        const currentUserName = R.pathOr('', ['user', 'displayName'], auth);
+        const currentShowDJs = R.pathOr([], ['users'], currentShow);
 
         return (
             <div className="playlist-main">
@@ -55,20 +42,32 @@ class Playlist extends Component {
                 </div>
                 <div className="row">
                     <ActionButtons
+                        currentUserName={currentUserName}
+                        currentShowDJs={currentShowDJs}
                         showId={currentShow._id}
+                        slug={currentShow.slug}
                         dispatch={dispatch}
                     />
 
                     <PlaylistHistory
                         dispatch={dispatch}
+                        playlist={playlist}
                         playlists={playlists}
                     />
 
-                    <PlaylistForm isEditPath={this.isEditPath(path)} />
+                    <PlaylistForm />
                 </div>
             </div>
         );
     }
 }
+
+Playlist.propTypes = {
+    dispatch: PropTypes.func,
+    auth: PropTypes.object,
+    routing: PropTypes.object,
+    show: PropTypes.object,
+    playlist: PropTypes.object
+};
 
 export default connect(mapStateToProps)(Playlist);

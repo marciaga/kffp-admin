@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -47,8 +47,12 @@ class Users extends Component {
 
         return (
             <div>
-                <p>Add New User</p>
-                <FloatingActionButton onClick={() => this.handleClick('new', 'users')} secondary={true} style={{}}>
+                <h2>Add New User</h2>
+                <FloatingActionButton
+                    onClick={() => this.handleClick('new', 'users')}
+                    secondary={true}
+                    style={{}}
+                >
                     <ContentAdd />
                 </FloatingActionButton>
                 <MainTable model={model} />
@@ -56,5 +60,13 @@ class Users extends Component {
         );
     }
 }
+
+Users.propTypes = {
+    model: PropTypes.object,
+    showModal: PropTypes.bool,
+    dispatch: PropTypes.func,
+    modal: PropTypes.object,
+    auth: PropTypes.object
+};
 
 export default connect(mapStateToProps)(Users);

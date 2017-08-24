@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import { SHOWS_AUTOCOMPLETE_FILTER_LIMIT } from '../../../utils/constants';
 import { navigateToPlaylists } from '../../../actions/showActions';
@@ -15,7 +15,11 @@ const ShowsAutoCompleteFilter = ({ dispatch, shows }) => {
         slug: s.slug
     }));
 
-    const handleSelection = (req) => {
+    const handleSelection = (req, i) => {
+        if (i < 0) {
+            return;
+        }
+
         const { slug } = req;
 
         dispatch(resetCurrentPlaylist());
@@ -24,7 +28,7 @@ const ShowsAutoCompleteFilter = ({ dispatch, shows }) => {
 
     return (
         <AutoComplete
-            floatingLabelText="Sub Playlist"
+            floatingLabelText="Start typing to search other shows"
             filter={AutoComplete.fuzzyFilter}
             dataSource={showData}
             dataSourceConfig={dataSourceConfig}
@@ -32,6 +36,11 @@ const ShowsAutoCompleteFilter = ({ dispatch, shows }) => {
             onNewRequest={handleSelection}
         />
     );
+};
+
+ShowsAutoCompleteFilter.propTypes = {
+    dispatch: PropTypes.func,
+    shows: PropTypes.array
 };
 
 export default ShowsAutoCompleteFilter;

@@ -69,7 +69,7 @@ const Navbar = ({ dispatch, errorMessage, user, isAuthenticated }) => {
 
     return (
         <AppBar
-            title={title}
+            title={<span style={{ cursor: 'pointer' }}>{title}</span>}
             showMenuIconButton={false}
             onTitleTouchTap={() => dispatch(push('/'))}
             iconElementRight={renderLoginElement(errorMessage, isAuthenticated, user, dispatch)}
@@ -78,10 +78,16 @@ const Navbar = ({ dispatch, errorMessage, user, isAuthenticated }) => {
     );
 };
 
+Menu.propTypes = {
+    dispatch: PropTypes.func,
+    user: PropTypes.object
+};
+
 Navbar.propTypes = {
     dispatch: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
-    errorMessage: PropTypes.string
+    errorMessage: PropTypes.string,
+    user: PropTypes.object
 };
 
 export default Navbar;

@@ -11,12 +11,28 @@ import {
     UPDATE_SONG_FORM,
     UPDATE_USER_SETTINGS_FIELD,
     SNACKBAR_MESSAGE,
-    CLEAR_INPUT_FIELDS
+    CLEAR_INPUT_FIELDS,
+    SHOW_VALIDATION_ERRORS
 } from '../constants';
-import { updateModelData } from './modelActions';
-import { formTypesToHttpVerbs, API_ENDPOINT } from '../utils/constants';
+import {
+    addModelData,
+    updateModelData,
+    updateModelFuse,
+    addModelFuse,
+    removeModelFuse
+} from './modelActions';
+import {
+    formTypesToHttpVerbs,
+    API_ENDPOINT,
+    GENERIC_ERROR_MESSAGE
+} from '../utils/constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
+import validateModelForm from '../utils/formValidation';
 import Models from '../data';
+import {
+    handleErrorModal,
+    confirmOpen
+} from './feedbackActions';
 
 const updateFormField = (fieldName, value) => ({
     type: UPDATE_FORM_FIELD,
@@ -62,10 +78,8 @@ const setFormData = (formType, modelName) => {
         modelName,
         formType
     };
-    // TODO see if we can live without this
-    if (formType === 'new') {
-        return receiveFormData(formMetadata);
-    }
+
+    return receiveFormData(formMetadata);
 };
 
 const receiveUserAutocomplete = data => ({
@@ -90,7 +104,10 @@ const getUserAutoComplete = (text) => {
 
             dispatch(receiveUserAutocomplete(data));
         } catch (e) {
-            console.log(e);
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
     };
 };
@@ -124,6 +141,11 @@ const receiveFormResult = data => ({
     data
 });
 
+const receiveValidationErrors = data => ({
+    type: SHOW_VALIDATION_ERRORS,
+    data
+});
+
 const prepareFormSubmit = (type, modelName) => {
     const idToken = getTokenFromLocalStorage();
     const method = formTypesToHttpVerbs[type];
@@ -134,11 +156,27 @@ const prepareFormSubmit = (type, modelName) => {
         const { fields } = form;
         const formData = Object.keys(fields).reduce((memo, f) => {
             memo[f] = fields[f].value;
+
             return memo;
         }, {});
 
+        /* we only need one transofrm so far, but we need to extract this logic
+         * into a separate function should we have additional cases later.
+        */
+        const hasUserProperty = Object.prototype.hasOwnProperty.call(formData, 'users');
+        const dataToSend = hasUserProperty ? {
+            ...formData,
+            users: formData.users.map(user => user._id)
+        } : formData;
+
+        const validationErrors = validateModelForm(modelName, type, dataToSend);
+
+        if (validationErrors.length) {
+            return dispatch(receiveValidationErrors(validationErrors));
+        }
+
         try {
-            const { data } = await axios[method](formUrl, formData, {
+            const { data } = await axios[method](formUrl, dataToSend, {
                 headers: {
                     Authorization: `Bearer ${idToken}`
                 }
@@ -149,8 +187,22 @@ const prepareFormSubmit = (type, modelName) => {
             }
 
             // dispatch action to update model.data
-            if (method === 'put') {
+            switch (method) {
+            case 'put':
                 dispatch(updateModelData(formData));
+                dispatch(updateModelFuse(formData));
+                break;
+            case 'post':
+                const toBeAdded = {
+                    ...formData,
+                    _id: data._id
+                };
+
+                dispatch(addModelData(toBeAdded));
+                dispatch(addModelFuse(toBeAdded));
+                break;
+            default:
+                break;
             }
 
             dispatch(receiveFormResult(data));
@@ -161,7 +213,10 @@ const prepareFormSubmit = (type, modelName) => {
                 }
             });
         } catch (err) {
-            console.log(err);
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
     };
 };
@@ -172,14 +227,13 @@ const deleteForm = (id, modelName) => {
 
     return async (dispatch) => {
         try {
-            const { data } = await axios.delete(url, { // TODO data is not used
+            await axios.delete(url, {
                 headers: {
                     Authorization: `Bearer ${idToken}`
                 }
             });
 
-            console.log(data);
-
+            dispatch(removeModelFuse(id));
             dispatch({
                 type: DELETE_MODEL,
                 data: {
@@ -187,7 +241,10 @@ const deleteForm = (id, modelName) => {
                 }
             });
         } catch (err) {
-            console.log(err);
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
 
         dispatch({
@@ -196,6 +253,8 @@ const deleteForm = (id, modelName) => {
                 showModal: false
             }
         });
+
+        dispatch(confirmOpen(false));
     };
 };
 
@@ -222,7 +281,38 @@ const updateUserPassword = (obj) => {
                 data: { message }
             });
         } catch (e) {
-            console.log(e);
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
+        }
+    };
+};
+
+const resetUserPassword = (id) => {
+    const url = `${API_ENDPOINT}/users/reset/${id}`;
+    const idToken = getTokenFromLocalStorage();
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.post(url, { id }, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+
+            const message = data.success ? 'Password Reset Successful!' :
+                'Password Reset Failed.';
+
+            dispatch({
+                type: SNACKBAR_MESSAGE,
+                data: { message }
+            });
+        } catch (e) {
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
         }
     };
 };
@@ -237,6 +327,47 @@ const setSongForm = songs => ({
     data: songs
 });
 
+const fileUpload = (formData) => {
+    const url = `${API_ENDPOINT}/upload`;
+    const idToken = getTokenFromLocalStorage();
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.post(url, formData, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+
+            const newData = {
+                fieldName: 'primaryImage',
+                value: data.filePath
+            };
+
+            dispatch({
+                type: UPDATE_FORM_FIELD,
+                data: newData
+            });
+        } catch (err) {
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
+        }
+    };
+};
+
+const removeUserFromShow = val => (dispatch, getState) => {
+    const { form } = getState();
+    const { fields } = form;
+    const { users } = fields;
+    const { value } = users;
+
+    const data = value.filter(item => item._id !== val);
+
+    return dispatch(updateFormField('users', data));
+};
+
 export {
     prepareFormSubmit,
     setFormData,
@@ -248,5 +379,8 @@ export {
     setUpdateFormData,
     deleteForm,
     updateUserSettingsInput,
-    updateUserPassword
+    updateUserPassword,
+    fileUpload,
+    removeUserFromShow,
+    resetUserPassword
 };

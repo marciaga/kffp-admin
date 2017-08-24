@@ -1,10 +1,12 @@
 import { TOGGLE_PLAYLIST_DRAWER } from '../constants';
 
-const togglePlaylistDrawer = (val) => ({
+const togglePlaylistDrawer = val => ({
     type: TOGGLE_PLAYLIST_DRAWER,
     data: {
         playlistDrawer: val
     }
 });
 
-export { togglePlaylistDrawer };
+const dummyAction = lint => console.log(lint);
+
+export { togglePlaylistDrawer, dummyAction };

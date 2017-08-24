@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -46,7 +46,7 @@ class Shows extends Component {
 
         return (
             <div>
-                <p>Add New Show</p>
+                <h2>Add New Show</h2>
                 <FloatingActionButton onClick={() => this.handleClick('new', 'shows')} secondary={true} style={{}}>
                     <ContentAdd />
                 </FloatingActionButton>
@@ -55,5 +55,14 @@ class Shows extends Component {
         );
     }
 }
+
+Shows.propTypes = {
+    dispatch: PropTypes.func,
+    auth: PropTypes.object,
+    model: PropTypes.object,
+    modal: PropTypes.object,
+    showModal: PropTypes.bool
+};
+
 
 export default connect(mapStateToProps)(Shows);
