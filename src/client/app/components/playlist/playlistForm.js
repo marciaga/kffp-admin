@@ -70,16 +70,16 @@ const PlaylistForm = (props) => {
                     />
                 }
 
-                { scope === 'admin' &&
-                <div className="col col-md-12 flex-horizontal-center">
-                    <RaisedButton
-                        label="Delete Playlist"
-                        labelColor="white"
-                        backgroundColor="red"
-                        onClick={() => dispatch(confirmOpen(true, null))}
-                    />
-                </div>
-              }
+                {scope === 'admin' &&
+                    <div className="col col-md-12 flex-horizontal-center">
+                        <RaisedButton
+                            label="Delete Playlist"
+                            labelColor="white"
+                            backgroundColor="red"
+                            onClick={() => dispatch(confirmOpen(true, null))}
+                        />
+                    </div>
+                }
                 <ConfirmationDialog
                     title="Are you sure you want to delete this Playlist?"
                     open={feedback.confirmDialog.open}
