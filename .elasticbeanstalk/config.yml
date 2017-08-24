@@ -1,4 +1,6 @@
 branch-defaults:
+   master:
+    environment: kffpadmin-prod
   develop:
     environment: kffpadmin-stage
 
