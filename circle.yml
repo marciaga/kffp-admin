@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 6.9.1
+    version: 6.11.1
   environment:
     PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
 
@@ -22,8 +22,8 @@ deployment:
     commands:
       - openssl aes-256-cbc -d -in secrets -k $KEY -out .env
       - yarn build:production
-      - zip -r kffpadmin.zip .
-      - eb deploy --timeout 20
+      - zip -r kffpadminprod.zip .
+      - eb deploy --timeout 20 --verbose
 
   staging:
     branch: develop
