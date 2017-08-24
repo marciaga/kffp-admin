@@ -30,10 +30,11 @@ const handleDateChange = (u, { date, playlistId }, dispatch) =>
     dispatch(updatePlaylistDate(date, playlistId));
 
 const PlaylistForm = (props) => {
-    const { playlist, show, search, nowPlaying, dispatch, feedback } = props;
+    const { playlist, show, search, nowPlaying, dispatch, feedback, auth } = props;
     const { currentPlaylist } = playlist;
     const { searchResults, currentSearch } = search;
     const { currentShow: { slug = '' } } = show;
+    const { scope } = auth.user;
 
     if (shouldShowCurrentPlaylist(currentPlaylist)) {
         const { playlistDate, playlistId } = currentPlaylist;
@@ -69,7 +70,7 @@ const PlaylistForm = (props) => {
                     />
                 }
 
-
+                { scope === 'admin' &&
                 <div className="col col-md-12 flex-horizontal-center">
                     <RaisedButton
                         label="Delete Playlist"
@@ -78,6 +79,7 @@ const PlaylistForm = (props) => {
                         onClick={() => dispatch(confirmOpen(true, null))}
                     />
                 </div>
+              }
                 <ConfirmationDialog
                     title="Are you sure you want to delete this Playlist?"
                     open={feedback.confirmDialog.open}
@@ -97,6 +99,7 @@ const PlaylistForm = (props) => {
 
 PlaylistForm.propTypes = {
     dispatch: PropTypes.func,
+    auth: PropTypes.object,
     playlist: PropTypes.object,
     search: PropTypes.object,
     show: PropTypes.object,
