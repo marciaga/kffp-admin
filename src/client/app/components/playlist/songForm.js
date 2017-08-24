@@ -1,17 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
+import ConfirmationDialog from '../feedback/confirm';
 import { playlistFields } from '../../data';
 import { debounce } from '../../utils/helperFunctions';
 import { FORM_FIELD_DEBOUNCE_TIME } from '../../utils/constants';
 import { updateSongForm } from '../../actions/formActions';
+import { confirmOpen } from '../../actions/feedbackActions';
 import {
     updatePlaylistSong,
     deleteSongFromPlaylist
 } from '../../actions/playlistActions';
+
+const mapStateToProps = state => ({
+    feedback: state.feedback
+});
 
 class SongForm extends Component {
     constructor (props) {
@@ -20,7 +27,6 @@ class SongForm extends Component {
         this.renderFormFields = this.renderFormFields.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
         this.changeHandler = this.changeHandler.bind(this);
-        this.deleteSong = this.deleteSong.bind(this);
         this.debouncer = debounce(this.debouncedHandler, FORM_FIELD_DEBOUNCE_TIME);
     }
 
@@ -28,12 +34,8 @@ class SongForm extends Component {
         this.debouncer(e.target.value, field);
     }
 
-    deleteSong (song, playlistId) {
-        if (!window.confirm('Are You Sure?')) {
-            return;
-        }
-
-        this.props.dispatch(deleteSongFromPlaylist(song, playlistId));
+    openConfirmDialog () {
+        this.props.dispatch(confirmOpen(true, null));
     }
 
     debouncedHandler (val, field) {
@@ -77,23 +79,41 @@ class SongForm extends Component {
     }
 
     render () {
-        const { currentSong, playlistId } = this.props;
+        const { currentSong, playlistId, dispatch, feedback } = this.props;
 
         return (
             <div>
                 <Divider />
                 <form onSubmit={this.submitHandler}>
                     {this.renderFormFields(currentSong)}
-                    <RaisedButton type="submit" label="Submit Track Info" />
+                    <div>
+                        <RaisedButton type="submit" label="Submit Track Info" />
+                    </div>
                 </form>
                 <IconButton
-                    onClick={() => this.deleteSong(currentSong, playlistId)}
+                    onClick={() => this.openConfirmDialog()}
                 >
                     <ActionDelete />
                 </IconButton>
+                <ConfirmationDialog
+                    title="Are you sure want to delete this song?"
+                    open={feedback.confirmDialog.open}
+                    cancelHandler={() => dispatch(confirmOpen(false, null))}
+                    okHandler={() =>
+                        dispatch(deleteSongFromPlaylist(currentSong, playlistId))
+                    }
+                />
             </div>
         );
     }
 }
 
-export default SongForm;
+SongForm.propTypes = {
+    currentSong: PropTypes.object,
+    playlistId: PropTypes.string,
+    dispatch: PropTypes.func,
+    id: PropTypes.string,
+    feedback: PropTypes.object
+};
+
+export default connect(mapStateToProps)(SongForm);

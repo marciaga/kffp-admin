@@ -11,6 +11,8 @@ import {
     CLEAR_LOGIN_FORM
 } from '../constants';
 import { getUserShows, getAllShows } from './showActions';
+import { handleErrorModal } from './feedbackActions';
+import { API_ENDPOINT, GENERIC_ERROR_MESSAGE } from '../utils/constants';
 
 const loginInputChange = data => ({
     type: UPDATE_LOGIN_FORM,
@@ -53,48 +55,13 @@ const loginError = message => ({
     }
 });
 
-const verifyLogin = (isAuthenticated) => {
-    if (!isAuthenticated) {
-        return {
-            type: AUTH_VERIFICATION,
-            data: {
-                verified: false
-            }
-        };
-    }
-
-    const url = '/api/users/verify';
-    const idToken = localStorage.getItem('idToken');
-
-    return async (dispatch) => {
-        try {
-            const { data } = await axios.get(url, {
-                headers: {
-                    Authorization: `Bearer ${idToken}`
-                }
-            });
-
-            if (data.code === 401) {
-                return dispatch(loginError(data.message));
-            }
-
-            dispatch({
-                type: AUTH_VERIFICATION,
-                data
-            });
-        } catch (err) {
-            console.log(err);
-        }
-    };
-};
-
 const clearLoginForm = () => ({
     type: CLEAR_LOGIN_FORM
 });
 
 const loginUser = (creds) => {
     const { email, password } = creds;
-    const url = '/api/users/authenticate';
+    const url = `${API_ENDPOINT}/users/authenticate`;
 
     return async (dispatch) => {
         try {
@@ -102,14 +69,23 @@ const loginUser = (creds) => {
                 email,
                 password
             });
-            const { idToken, displayName } = data;
+
+            if (data.code === 401) {
+                return dispatch(handleErrorModal({
+                    message: 'Login failed. Please try again.',
+                    open: true
+                }));
+            }
+
+            const { idToken, id } = data;
 
             localStorage.setItem('idToken', idToken);
 
             dispatch(clearLoginForm());
             dispatch(getAllShows());
-            dispatch(getUserShows(displayName));
+            dispatch(getUserShows(id));
             dispatch(receiveLogin(data));
+            dispatch(push('/'));
         } catch (err) {
             const error = { ...err };
             const message = error.response.data.message;
@@ -145,8 +121,51 @@ const logoutUser = () => (dispatch) => {
         dispatch(push('/'));
         return dispatch(receiveLogout());
     } catch (err) {
-        console.log(err);
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
     }
+};
+
+const verifyLogin = (isAuthenticated) => {
+    if (!isAuthenticated) {
+        return {
+            type: AUTH_VERIFICATION,
+            data: {
+                verified: false
+            }
+        };
+    }
+
+    const url = `${API_ENDPOINT}/users/verify`;
+    const idToken = localStorage.getItem('idToken');
+
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+
+            if (data.code === 401) {
+                return dispatch(loginError(data.message));
+            }
+
+            dispatch({
+                type: AUTH_VERIFICATION,
+                data
+            });
+        } catch (err) {
+            dispatch(handleErrorModal({
+                message: 'Token Expired. Please Log In Again.',
+                open: true
+            }));
+
+            dispatch(logoutUser());
+        }
+    };
 };
 
 export {

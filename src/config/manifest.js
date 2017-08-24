@@ -1,5 +1,4 @@
-import path from 'path';
-import webpackConfig from '../../webpack.config.js';
+import webpackConfig from '../../webpack.config';
 
 const DB_URL = `${process.env.DB_CONNECTION}/${process.env.DB_NAME}`;
 const webpackHotMiddleware = {
@@ -18,6 +17,20 @@ const webpackDevMiddleware = {
         }
     }
 };
+const { SENTRY_PUBLIC_KEY, SENTRY_SECRET_KEY, SENTRY_PROJECT_ID } = process.env;
+const SENTRY_DSN = `http://${SENTRY_PUBLIC_KEY}:${SENTRY_SECRET_KEY}@sentry.io/${SENTRY_PROJECT_ID}`;
+const sentryPlugin = {
+    plugin: {
+        register: 'hapi-raven-boom',
+        options: {
+            dsn: SENTRY_DSN,
+            settings: {
+                captureUnhandledRejections: true
+            },
+            tags: ['some-tag']
+        }
+    }
+};
 
 const manifest = {
     server: {
@@ -27,7 +40,7 @@ const manifest = {
     },
     connections: [
         {
-            port: 3000,
+            port: process.env.PORT || 3000,
             labels: ['web']
         }
     ],
@@ -68,7 +81,9 @@ const manifest = {
                     url: DB_URL,
                     settings: {
                         db: {
-                            native_parser: false
+                            native_parser: false,
+                            numberOfRetries: 30,
+                            retryMiliSeconds: 1000
                         }
                     }
                 }
@@ -85,9 +100,14 @@ const manifest = {
     ]
 };
 
+const { NODE_ENV } = process.env;
 
-if (process.env.NODE_ENV !== 'production') {
+if (NODE_ENV === 'development') {
     manifest.registrations.push(webpackDevMiddleware, webpackHotMiddleware);
+}
+
+if (NODE_ENV === 'production' || NODE_ENV === 'staging') {
+    manifest.registrations.push(sentryPlugin);
 }
 
 export default manifest;

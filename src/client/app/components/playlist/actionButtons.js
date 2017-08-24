@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import RaisedButton from 'material-ui/RaisedButton';
-import { push } from 'react-router-redux';
 import { addNewPlaylist } from '../../actions/playlistActions';
 import { togglePlaylistDrawer } from '../../actions/uiActions';
 
-const ActionButtons = ({ dispatch, showId }) => (
+const ActionButtons = ({ dispatch, ...props }) => (
     <div className="flex-horizontal-center col col-md-12 col-sm-12">
         <RaisedButton
-            onClick={() => dispatch(addNewPlaylist(showId))}
+            onClick={() => dispatch(addNewPlaylist(props))}
             label="Make Playlist"
             secondary={true}
             icon={<ContentAdd />}
@@ -24,5 +23,9 @@ const ActionButtons = ({ dispatch, showId }) => (
         />
     </div>
 );
+
+ActionButtons.propTypes = {
+    dispatch: PropTypes.func
+};
 
 export default ActionButtons;

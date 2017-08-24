@@ -17,5 +17,5 @@ export default function playlistReducer (state = initialState, action) {
 
     default:
         return state;
-    };
+    }
 }

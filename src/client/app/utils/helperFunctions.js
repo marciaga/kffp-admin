@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const debounce = (func, wait, immediate) => {
     let timeout;
 
@@ -33,6 +35,14 @@ const hoursToDateObj = (hours) => {
     return date;
 };
 
+const humanReadableTime = (hour) => {
+    if (!Number.isInteger(hour)) {
+        return '';
+    }
+
+    return moment(hour, 'HH').format('h:mm a');
+};
+
 const getTokenFromLocalStorage = () => (
     window.localStorage ? localStorage.getItem('idToken') : null
 );
@@ -54,7 +64,7 @@ const generateBlankSongData = () => ({
     artist: '',
     images: [],
     releaseDate: '',
-    track: ''
+    title: ''
 });
 // returns slug from pathname
 const cleanPathname = (pathname) => {
@@ -64,11 +74,61 @@ const cleanPathname = (pathname) => {
     return splitPath.join('/');
 };
 
+const pathHasPlaylistId = path => path.split('/').length === 4;
+
+const removePlaylistIdFromPath = (path) => {
+    const pathParts = path.split('/');
+
+    pathParts.pop();
+
+    return pathParts.join('/');
+};
+
+const dateSortAsc = (ary) => {
+    if (!ary.length) {
+        return [];
+    }
+
+    return [...ary].sort((a, b) => new Date(a.playedAt) - new Date(b.playedAt));
+};
+
+const dateSortDesc = (ary) => {
+    if (!ary.length) {
+        return [];
+    }
+
+    return [...ary].sort((a, b) => new Date(b.playedAt) - new Date(a.playedAt));
+};
+
+const playlistUpdateMessage = (messageKey) => {
+    const userMessages = {
+        playlistDate: 'The playlist date was updated',
+        showId: 'This playlist has been reassigned to a different show',
+        playlistAlreadyExists: 'That playlist already exists',
+        playlistDeleteFail: 'Playlist delete failed',
+        songUpdated: 'Song successfully updated',
+        noChange: 'The document was unchanged',
+        noSuccess: 'Update was not successful'
+    };
+
+    const noMatch = 'The playlist record has been updated';
+
+    const userMessage = userMessages[messageKey] ? userMessages[messageKey] : noMatch;
+
+    return userMessage;
+};
+
 export {
     debounce,
+    dateSortAsc,
+    dateSortDesc,
     hoursToDateObj,
     sortObjectsByKey,
     getTokenFromLocalStorage,
     generateBlankSongData,
-    cleanPathname
+    cleanPathname,
+    pathHasPlaylistId,
+    removePlaylistIdFromPath,
+    humanReadableTime,
+    playlistUpdateMessage
 };

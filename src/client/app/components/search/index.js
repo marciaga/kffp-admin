@@ -1,3 +1,7 @@
+/**
+ * TODO @ma - this component is deprecated because spotify's API changed
+ * and there's no suitable replacement as of June 1, 2017
+*/
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import ActionSearch from 'material-ui/svg-icons/action/search';
@@ -62,7 +66,9 @@ export class Search extends Component {
 }
 
 Search.propTypes = {
-    dispatch: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired,
+    currentSearch: PropTypes.string,
+    search: PropTypes.object
 };
 
 export default connect(mapStateToProps)(Search);

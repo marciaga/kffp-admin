@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+import React, { Component, PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import AvPlayCircleFilled from 'material-ui/svg-icons/av/play-circle-filled';
 import update from 'immutability-helper';
 import cuid from 'cuid';
+import ArrowButton from './arrowButton';
 import SongFormWrapper from './songFormWrapper';
 import {
     reorderSongsSave,
     addTrack,
-    addAirBreak
+    addAirBreak,
+    reorderSongs
 } from '../../actions/playlistActions';
 import { generateBlankSongData } from '../../utils/helperFunctions';
 import {
@@ -21,15 +21,12 @@ import {
 import { setSongForm } from '../../actions/formActions';
 import { updateNowPlaying } from '../../actions/nowPlayingActions';
 
-const style = {
-    width: 500
-};
-
 class SongList extends Component {
     constructor (props) {
         super(props);
 
         this.moveSong = this.moveSong.bind(this);
+        this.findSong = this.findSong.bind(this);
         this.onSaveOrder = this.onSaveOrder.bind(this);
         this.addNewSong = this.addNewSong.bind(this);
         this.addAirBreak = this.addAirBreak.bind(this);
@@ -48,22 +45,23 @@ class SongList extends Component {
     }
 
     componentWillReceiveProps (nextProps) {
-        const previousSearch = this.props.currentSearch;
-        const { currentSearch, currentPlaylist } = nextProps;
+        const { currentPlaylist } = nextProps;
         const { songs } = currentPlaylist;
-
-        if (previousSearch.length !== currentSearch.length) {
-            return;
-        }
 
         this.props.dispatch(setSongForm(songs));
         this.state = { songs };
     }
 
-    onSaveOrder () {
-        const { songs, _id } = this.props.currentPlaylist;
+    componentWillUpdate (nextProps, nextState) {
+        const { songs } = nextState;
 
-        this.props.dispatch(reorderSongsSave(songs, _id));
+        this.props.dispatch(setSongForm(songs));
+    }
+
+    onSaveOrder () {
+        const { songs, playlistId } = this.props.currentPlaylist;
+
+        this.props.dispatch(reorderSongsSave(songs, playlistId));
     }
 
     setNowPlayingColor (currentSongId, song) {
@@ -79,14 +77,14 @@ class SongList extends Component {
     }
 
     addNewSong () {
-        const { _id } = this.props.currentPlaylist;
+        const { playlistId } = this.props.currentPlaylist;
         const blankSong = generateBlankSongData();
 
         this.setState(update(this.state, {
             songs: { $unshift: [blankSong] }
         }));
 
-        this.props.dispatch(addTrack(blankSong, _id));
+        this.props.dispatch(addTrack(blankSong, playlistId));
     }
 
     addToNowPlaying (song, playlistId) {
@@ -106,32 +104,49 @@ class SongList extends Component {
         this.props.dispatch(addAirBreak(airBreak));
     }
 
-    moveSong (dragIndex, hoverIndex) {
+    findSong (id) {
         const { songs } = this.state;
-        const dragSong = songs[dragIndex];
+        // TODO: This could return undefined
+        const song = songs.filter(c => c.id === id)[0];
+
+        return {
+            song,
+            index: songs.indexOf(song)
+        };
+    }
+
+    moveSong (direction, id) {
+        const songs = this.state.songs;
+        const { song, index } = this.findSong(id);
+        // don't shift up if song is first or down if song is last
+        if ((!index && direction === 'up') ||
+            (index === songs.length && direction === 'down')) {
+            return;
+        }
+
+        const newIndex = direction === 'up' ? index - 1 : index + 1;
 
         this.setState(update(this.state, {
             songs: {
                 $splice: [
-                    [dragIndex, 1],
-                    [hoverIndex, 0, dragSong]
+                    [index, 1],
+                    [newIndex, 0, song]
                 ]
             }
         }));
+
+        this.props.dispatch(reorderSongs({ id, index: newIndex }));
     }
 
     render () {
         const { songs } = this.state;
         const { nowPlaying, currentPlaylist } = this.props;
         const currentlyPlayingSong = nowPlaying.song;
-        const { _id } = currentPlaylist;
+        const { playlistId } = currentPlaylist;
 
         return (
             <div className="col col-md-12">
-                <div
-                    className="col col-md-12 flex-horizontal-center"
-                    style={{}}
-                >
+                <div className="col col-md-12 flex-horizontal-center">
                     <RaisedButton
                         type="button"
                         label="Add New Track"
@@ -164,19 +179,37 @@ class SongList extends Component {
                         const nowPlayingColor = this.setNowPlayingColor(
                             currentlyPlayingSong.songId, song
                         );
-                        // song: album, artist, track, releaseDate, id, images
+                        // song: album, artist, title, releaseDate, id, images
+                        const { id, airBreak } = song;
+                        const nowPlayingVisibility = { visibility: !airBreak ? 'visible' : 'hidden' };
+
                         return (
                             <div
                                 className="song-wrapper"
-                                key={song.id || cuid()}
+                                key={id || cuid()}
                             >
+                                <ArrowButton
+                                    direction="up"
+                                    clickHandler={this.moveSong}
+                                    id={id}
+                                />
+                                <ArrowButton
+                                    direction="down"
+                                    clickHandler={this.moveSong}
+                                    id={id}
+                                />
+
                                 <SongFormWrapper
                                     index={i}
-                                    moveSong={this.moveSong}
-                                    playlistId={_id}
+                                    findSong={this.findSong}
+                                    playlistId={playlistId}
                                     {...song}
                                 />
-                                <IconButton onClick={() => this.addToNowPlaying(song, _id)}>
+                                <IconButton
+                                    style={nowPlayingVisibility}
+                                    tooltip="Click to set as Now Playing"
+                                    onClick={() => this.addToNowPlaying(song, playlistId)}
+                                >
                                     <AvPlayCircleFilled color={nowPlayingColor} />
                                 </IconButton>
                             </div>
@@ -188,4 +221,11 @@ class SongList extends Component {
         );
     }
 }
-export default DragDropContext(HTML5Backend)(SongList);
+
+SongList.propTypes = {
+    nowPlaying: PropTypes.object,
+    currentPlaylist: PropTypes.object,
+    dispatch: PropTypes.func
+};
+
+export default SongList;

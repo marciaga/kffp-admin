@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import {
     Table,
@@ -8,9 +8,13 @@ import {
     TableRow,
     TableRowColumn
 } from 'material-ui/Table';
+import TextField from 'material-ui/TextField';
 import TableConfig from './tableConfig';
 import { setUpdateFormData } from '../../actions/formActions';
+import { filterResults } from '../../actions/modelActions';
 import { showOrHideModal } from '../../actions/modalActions';
+import { debounce, humanReadableTime } from '../../utils/helperFunctions';
+import { UPDATE_FILTER_RESULTS } from '../../constants';
 
 const mapStateToProps = state => ({
     tableConfig: TableConfig,
@@ -26,6 +30,24 @@ class MainTable extends Component {
         this.renderTableRowCell = this.renderTableRowCell.bind(this);
         this.handleRowSelection = this.handleRowSelection.bind(this);
         this.sortDisplayData = this.sortDisplayData.bind(this);
+        this.debouncedHandler = this.debouncedHandler.bind(this);
+        this.debounceTextField = this.debounceTextField.bind(this);
+        this.debouncer = debounce(this.debouncedHandler, 1000);
+    }
+
+    componentWillUnmount () {
+        this.props.dispatch({
+            type: UPDATE_FILTER_RESULTS,
+            data: []
+        });
+    }
+
+    debouncedHandler (val) {
+        this.props.dispatch(filterResults(val));
+    }
+
+    debounceTextField (e, value) {
+        this.debouncer(value);
     }
 
     sortDisplayData (data) {
@@ -48,7 +70,7 @@ class MainTable extends Component {
         if (selectedRows.length) {
             const modelName = this.props.model.name;
             const rowIndex = selectedRows[0];
-            const rowData = this.props.model.data[rowIndex];
+            const rowData = this.props.model.filteredResults[rowIndex];
 
             this.props.dispatch(setUpdateFormData('edit', modelName, rowData));
             this.props.dispatch(showOrHideModal(true));
@@ -74,7 +96,7 @@ class MainTable extends Component {
 
     renderTableBody () {
         const { model } = this.props;
-        const tableData = this.sortDisplayData(model.data);
+        const tableData = this.sortDisplayData(model.filteredResults);
 
         return tableData.map((item, index) => (
             <TableRow
@@ -88,11 +110,20 @@ class MainTable extends Component {
 
     renderTableRowCell (item) {
         return Object.keys(item).map((r, i) => {
-            const value = item[r];
+            let value = item[r];
+            // TODO @ma: if value is an array and contains objects, we need to return a string here
+            // this is so far only true of show.users, but we'll need a better solution
+            if (Array.isArray(value)) {
+                value = value.map(v => v.displayName).join(', ');
+            }
+
+            if (r === 'startTime' || r === 'endTime') {
+                value = humanReadableTime(value);
+            }
 
             return (
                 <TableRowColumn key={i}>
-                    <span>{value}</span>
+                    <span>{String(value)}</span>
                 </TableRowColumn>
             );
         });
@@ -118,7 +149,16 @@ class MainTable extends Component {
                 >
                     <TableRow>
                         <TableHeaderColumn colSpan={colSpan} style={{ textAlign: 'center' }}>
-                            <h1 className="">{model.name}</h1>
+                            <h1
+                                style={{ textTransform: 'capitalize' }}
+                                className="table-heading"
+                            >
+                                {model.name}
+                            </h1>
+                            <TextField
+                                hintText="Start typing to filter..."
+                                onChange={this.debounceTextField}
+                            />
                         </TableHeaderColumn>
                     </TableRow>
                     <TableRow>
@@ -131,11 +171,17 @@ class MainTable extends Component {
                     showRowHover={tableConfig.showRowHover}
                     stripedRows={tableConfig.stripedRows}
                 >
-                    {model.data && this.renderTableBody()}
+                    {model.filteredResults.length && this.renderTableBody()}
                 </TableBody>
             </Table>
         );
     }
 }
+
+MainTable.propTypes = {
+    model: PropTypes.object,
+    tableConfig: PropTypes.object,
+    dispatch: PropTypes.func
+};
 
 export default connect(mapStateToProps)(MainTable);
