@@ -263,9 +263,12 @@ const updatePlaylistField = async (request, reply) => {
         const data = request.payload;
         const field = data ? Object.keys(data).shift() : '';
         const { playlistId } = request.params;
+        const dataToUpdate = field === 'playlistDate' ?
+            { [field]: new Date(data[field]) } :
+            { [field]: data[field] };
         const result = await db.collection('playlists').update(
             { playlistId },
-            { $set: { [field]: data[field] } }
+            { $set: dataToUpdate }
         );
 
         const response = result.toJSON();
