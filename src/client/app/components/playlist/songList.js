@@ -206,7 +206,7 @@ class SongList extends Component {
                                     {...song}
                                 />
                                 <IconButton
-                                    style={nowPlayingVisibility}
+                                    style={{ ...nowPlayingVisibility, visibility: 'hidden' }}
                                     tooltip="Click to set as Now Playing"
                                     onClick={() => this.addToNowPlaying(song, playlistId)}
                                 >
