@@ -74,15 +74,11 @@ const getPlaylistsByShow = async (request, reply) => {
         case 'asc':
             mergedData.playlists = playlists.map(o => ({
                 ...o,
-                songs: dateSortAsc(o.songs)
+                songs: o.songs.slice().reverse()
             }));
-
             break;
         default:
-            mergedData.playlists = playlists.map(o => ({
-                ...o,
-                songs: dateSortDesc(o.songs)
-            }));
+            mergedData.playlists = playlists;
         }
 
         return reply(mergedData);
