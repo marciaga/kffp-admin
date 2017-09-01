@@ -123,6 +123,20 @@ $ git checkout -b feature/my-feature
 
 Pull requests should always be from your feature branch to the develop branch.
 
+## DB Backup from Prod
+
+You'll need the `.kffp_config` file.
+
+Run mongo locally:
+```
+$ mongod
+```
+
+From the repo root, run
+```
+$ bash bin/local-backup.sh
+```
+
 ## Public API Endpoints
 get all shows
 ```
