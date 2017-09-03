@@ -2,15 +2,12 @@
 
 var config = require('dotenv');
 var MongoClient = require('mongodb');
-
-var _require = require('util'),
-    promisify = _require.promisify;
-
+var Promise = require('bluebird');
 var fs = require('fs');
 
 config.load();
 
-var readFileAsync = promisify(fs.readFile);
+var readFileAsync = Promise.promisify(fs.readFile);
 var _process$env = process.env,
     DB_CONNECTION = _process$env.DB_CONNECTION,
     DB_NAME = _process$env.DB_NAME;
