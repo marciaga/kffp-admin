@@ -1,11 +1,11 @@
 const config = require('dotenv');
 const MongoClient = require('mongodb');
-const { promisify } = require('util');
+const Promise = require('bluebird');
 const fs = require('fs');
 
 config.load();
 
-const readFileAsync = promisify(fs.readFile);
+const readFileAsync = Promise.promisify(fs.readFile);
 const { DB_CONNECTION, DB_NAME } = process.env;
 const DB_URL = `${DB_CONNECTION}/${DB_NAME}`;
 
