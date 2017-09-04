@@ -1,3 +1,5 @@
+import 'babel-polyfill';
+
 const config = require('dotenv');
 const MongoClient = require('mongodb');
 const Promise = require('bluebird');
