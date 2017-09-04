@@ -1,5 +1,7 @@
 'use strict';
 
+require('babel-polyfill');
+
 var config = require('dotenv');
 var MongoClient = require('mongodb');
 var Promise = require('bluebird');
