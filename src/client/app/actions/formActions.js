@@ -168,6 +168,10 @@ const prepareFormSubmit = (type, modelName) => {
             ...formData,
             users: formData.users.map(user => user._id)
         } : formData;
+        // another transform is needed: lowercase email fields:
+        if (dataToSend.email) {
+            dataToSend.email = dataToSend.email.toLowerCase();
+        }
 
         const validationErrors = validateModelForm(modelName, type, dataToSend);
 
