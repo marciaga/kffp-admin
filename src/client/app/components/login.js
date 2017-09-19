@@ -34,9 +34,10 @@ class Login extends Component {
         }
 
         const credentials = {
-            email: email.trim(),
+            email: email.trim().toLowerCase(),
             password: password.trim()
         };
+
 
         this.props.onLoginClick(credentials);
     }
