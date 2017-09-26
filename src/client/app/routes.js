@@ -6,6 +6,7 @@ import Playlist from './components/playlist';
 import Shows from './components/shows';
 import Main from './components/main';
 import Settings from './components/settings';
+import Reports from './components/reports';
 import NotFound from './components/error/404';
 
 export default (
@@ -17,6 +18,7 @@ export default (
             <Route component={Playlist} path="/playlists/:slug/:playlistId" />
             <Route component={Shows} path="/shows" />
             <Route component={Settings} path="/settings" />
+            <Route component={Reports} path="/reports" />
             <Route component={NotFound} path="*" />
         </Route>
     </Route>
