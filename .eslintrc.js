@@ -24,7 +24,6 @@ module.exports = {
         'react/forbid-prop-types': [1, { 'forbid': [] }],
         'react/jsx-indent-props': [2, 4],
         'react/no-multi-comp':[0],
-        'react/jsx-boolean-value': [2, 'always'],
         'react/no-string-refs': 1,
         'react/no-children-prop': ['warn'],
         'react/no-find-dom-node': ['warn'],
