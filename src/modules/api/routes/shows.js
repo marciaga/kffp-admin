@@ -22,7 +22,7 @@ const showRoutes = [
             },
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj'],
+                scope: ['admin', 'dj', 'reports'],
                 mode: 'optional'
             },
             handler: getShows

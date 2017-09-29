@@ -67,7 +67,7 @@ exports.register = (server, options, next) => {
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj']
+                scope: ['admin', 'dj', 'reports']
             },
             handler: getSpotifyToken
         }
@@ -79,7 +79,7 @@ exports.register = (server, options, next) => {
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin']
+                scope: ['admin', 'reports']
             },
             handler: getReport,
             validate: {

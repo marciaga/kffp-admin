@@ -118,6 +118,28 @@ const playlistUpdateMessage = (messageKey) => {
     return userMessage;
 };
 
+const permissions = {
+    reports: ['reports'],
+    admin: [],
+    dj: []
+};
+
+const scopeValidator = (user, key) => {
+    const { scope } = user;
+
+    if (!scope) {
+        return false;
+    }
+
+    if (scope === 'admin') {
+        return true;
+    }
+
+    const p = permissions[key];
+
+    return p.some(f => f === scope);
+};
+
 export {
     debounce,
     dateSortAsc,
@@ -130,5 +152,6 @@ export {
     pathHasPlaylistId,
     removePlaylistIdFromPath,
     humanReadableTime,
-    playlistUpdateMessage
+    playlistUpdateMessage,
+    scopeValidator
 };

@@ -21,7 +21,7 @@ const playlistRoutes = [
             },
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj'],
+                scope: ['admin', 'dj', 'reports'],
                 mode: 'optional'
             },
             handler: getPlaylistsByShow
@@ -33,7 +33,7 @@ const playlistRoutes = [
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj']
+                scope: ['admin', 'dj', 'reports']
             },
             handler: createPlaylist
         }
@@ -44,7 +44,7 @@ const playlistRoutes = [
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj']
+                scope: ['admin', 'dj', 'reports']
             },
             handler: addTrack
         }
@@ -55,7 +55,7 @@ const playlistRoutes = [
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj']
+                scope: ['admin', 'dj', 'reports']
             },
             handler: updatePlaylistField
         }
@@ -77,7 +77,7 @@ const playlistRoutes = [
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj']
+                scope: ['admin', 'dj', 'reports']
             },
             handler: updateTracks
         }
@@ -88,7 +88,7 @@ const playlistRoutes = [
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj']
+                scope: ['admin', 'dj', 'reports']
             },
             handler: updateTrackOrder
         }
@@ -99,7 +99,7 @@ const playlistRoutes = [
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj']
+                scope: ['admin', 'dj', 'reports']
             },
             handler: deleteTrackFromPlaylist
         }

@@ -78,7 +78,7 @@ const UserSettingsForm = ({ fields, user, dispatch }) => {
                             <RaisedButton
                                 label="Update Password"
                                 type="submit"
-                                secondary={true}
+                                secondary
                             />
                         </CardActions>
                     </form>

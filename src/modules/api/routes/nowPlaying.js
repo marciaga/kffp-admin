@@ -8,7 +8,7 @@ const nowPlayingRoutes = [
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj']
+                scope: ['admin', 'dj', 'reports']
             },
             handler: updateNowPlaying
         }
@@ -19,7 +19,7 @@ const nowPlayingRoutes = [
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj'],
+                scope: ['admin', 'dj', 'reports'],
                 mode: 'optional'
             },
             handler: getNowPlaying
