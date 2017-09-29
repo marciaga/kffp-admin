@@ -8,6 +8,7 @@ import showReducer from './showReducer';
 import feedbackReducer from './feedbackReducer';
 import nowPlayingReducer from './nowPlayingReducer';
 import uiReducer from './uiReducer';
+import reportsReducer from './reportsReducer';
 
 export default {
     search: searchReducer,
@@ -17,6 +18,7 @@ export default {
     model: modelReducer,
     form: formReducer,
     show: showReducer,
+    reports: reportsReducer,
     feedback: feedbackReducer,
     nowPlaying: nowPlayingReducer,
     ui: uiReducer

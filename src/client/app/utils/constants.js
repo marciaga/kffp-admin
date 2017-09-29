@@ -7,7 +7,7 @@ export const FORM_FIELD_DEBOUNCE_TIME = 300;
 export const API_ENDPOINT = '/api/v1';
 
 export const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-export const userRoles = ['admin', 'dj'];
+export const userRoles = ['admin', 'dj', 'reports'];
 
 export const formTypesToHttpVerbs = {
     new: 'post',

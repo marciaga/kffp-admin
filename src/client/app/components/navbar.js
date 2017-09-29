@@ -5,12 +5,14 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconButton from 'material-ui/IconButton';
-
 import Login from './login';
 import { loginUser, logoutUser } from '../actions/authActions';
+import { scopeValidator } from '../utils/helperFunctions';
 
-const renderAdminMenuItem = (scope, text, location, dispatch) => {
-    if (scope === 'admin') {
+const renderScopedMenuItem = (user, level, text, location, dispatch) => {
+    const isValid = scopeValidator(user, level);
+
+    if (isValid) {
         const path = `/${location}`;
 
         return (
@@ -19,30 +21,27 @@ const renderAdminMenuItem = (scope, text, location, dispatch) => {
     }
 };
 
-const Menu = ({ dispatch, user }) => {
-    const { scope } = user;
-
-    return (
-        <IconMenu
-            iconButtonElement={
-                <IconButton><MoreVertIcon color={'white'} /></IconButton>
-            }
-            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-        >
-            {renderAdminMenuItem(scope, 'Shows', 'shows', dispatch)}
-            {renderAdminMenuItem(scope, 'Users', 'users', dispatch)}
-            <MenuItem
-                primaryText={'Settings'}
-                onTouchTap={() => dispatch(push('settings'))}
-            />
-            <MenuItem
-                primaryText={'Sign out'}
-                onTouchTap={() => dispatch(logoutUser())}
-            />
-        </IconMenu>
-    );
-};
+const Menu = ({ dispatch, user }) => (
+    <IconMenu
+        iconButtonElement={
+            <IconButton><MoreVertIcon color={'white'} /></IconButton>
+        }
+        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+    >
+        {renderScopedMenuItem(user, 'admin', 'Shows', 'shows', dispatch)}
+        {renderScopedMenuItem(user, 'admin', 'Users', 'users', dispatch)}
+        {renderScopedMenuItem(user, 'reports', 'Reports', 'reports', dispatch)}
+        <MenuItem
+            primaryText={'Settings'}
+            onTouchTap={() => dispatch(push('settings'))}
+        />
+        <MenuItem
+            primaryText={'Sign out'}
+            onTouchTap={() => dispatch(logoutUser())}
+        />
+    </IconMenu>
+);
 
 const renderLoginElement = (errorMessage, isAuthenticated, user, dispatch) => {
     if (!isAuthenticated) {

@@ -56,7 +56,7 @@ const userRoutes = [
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin', 'dj']
+                scope: ['admin', 'dj', 'reports']
             },
             pre: [
                 { method: verifyPassword, assign: 'result' }
