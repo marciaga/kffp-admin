@@ -1,5 +1,6 @@
 import webpackConfig from '../../webpack.config';
 
+const ES_HOST = 'http://localhost:9200';
 const DB_URL = `${process.env.DB_CONNECTION}/${process.env.DB_NAME}`;
 const webpackHotMiddleware = {
     plugin: {
@@ -85,6 +86,17 @@ const manifest = {
                             numberOfRetries: 30,
                             retryMiliSeconds: 1000
                         }
+                    }
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './modules/elasticsearch',
+                options: {
+                    config: {
+                        host: ES_HOST,
+                        log: 'error'
                     }
                 }
             }

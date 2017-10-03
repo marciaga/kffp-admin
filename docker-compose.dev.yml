@@ -1,0 +1,20 @@
+version: "3"
+services:
+  mongo:
+    volumes:
+        - /data/db:/data/db
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  elasticsearch:
+    volumes:
+        - /data/es_data:/usr/share/elasticsearch/data
+    image: elasticsearch
+    ports:
+        - 9200:9200
+    networks:
+        - es
+networks:
+    es:
+        driver: bridge
