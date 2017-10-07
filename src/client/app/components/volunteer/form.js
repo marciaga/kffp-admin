@@ -5,164 +5,77 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Radio from '../form/fields/radio';
 import Select from '../form/fields/select';
 import TextArea from '../form/fields/textArea';
-
-/*
-Monthly All-Station Meeting
-Substitute DJ (provide DJ or show and date/time in Comments)
-Events Committee
-Music Library Committee
-Operations Committee
-Social Media Committee
-Underwriting Committee
-Volunteer Committee
-Web Committee
-Zine Committee
-Freeform Portland Blog
-Station Beautification
-On-Call Sub Team (OCS)
-Other (provide details in Comments):
-*/
-const volunteerTypeFields = [
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    }
-
-];
-const volunteerCategoryFields = [
-    {
-        label: 'A KFFP DJ with a weekly/bi-weekly time slot',
-        value: 'dj'
-    },
-    {
-        label: 'A KFFP Trained Substitute DJ',
-        value: 'sub'
-    },
-    {
-        label: 'An Awesome Volunteer at Large',
-        value: 'volunteer'
-    }
-];
-
-const hours = Array(100)
-    .fill(0)
-    .map((o, i) => ({
-        label: i + 1,
-        value: i + 1
-    }));
+import {
+    selectableHours,
+    volunteerCategoryFields,
+    volunteerTypeFields
+} from './static-fields';
+import {
+    updateField,
+    volunteerFormSubmit
+} from '../../actions/volunteerActions';
 
 const mapStateToProps = state => ({
-
+    volunteer: state.volunteer,
+    user: state.auth.user
 });
 
 class VolunteerForm extends Component {
     static propTypes = {
-        dispatch: PropTypes.func
+        dispatch: PropTypes.func,
+        volunteer: PropTypes.object
     }
 
     handleSubmit = () => {
-
+        const { dispatch } = this.props;
+        // if all values are present...
+        dispatch(volunteerFormSubmit());
     }
 
     render () {
-        const { dispatch } = this.props;
+        const { dispatch, volunteer } = this.props;
+        const {
+            type,
+            hours,
+            comments
+        } = volunteer;
 
         return (
             <div>
-                <h1>VolunteerForm</h1>
+                <h1>Volunteer Hours Tracking Form</h1>
                 <Radio
-                    name="volunteer-category"
+                    name="category"
                     fields={volunteerCategoryFields}
-                    dispatch={dispatch}
+                    handleChange={(n, v) => dispatch(updateField(n, v))}
                 />
                 <DatePicker
                     hintText="I volunteered on..."
+                    onChange={(n, v) => dispatch(updateField('date', v))}
                 />
                 <Select
                     label="I'm tracking hours for..."
                     items={volunteerTypeFields}
-                    dispatch={dispatch}
+                    value={type}
+                    handleChange={(n, v) => dispatch(updateField('type', v))}
                 />
                 <Select
                     label="Hours spent..."
-                    items={hours}
-                    dispatch={dispatch}
+                    items={selectableHours}
+                    value={hours}
+                    handleChange={(n, v) => dispatch(updateField('hours', v))}
                 />
                 <TextArea
                     name="optionalcomments"
                     id="optional-comments"
                     label="Comments"
                     hintText="I also did..."
-                    dispatch={dispatch}
+                    value={comments}
+                    handleChange={(n, v) => dispatch(updateField('comments', v))}
                 />
                 <RaisedButton
                     primary
                     label="Submit"
-                    onClick={() => console.log('submit')}
+                    onClick={this.handleSubmit}
                 />
             </div>
         );
