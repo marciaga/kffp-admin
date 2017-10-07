@@ -1,4 +1,4 @@
-import { UPDATE_VOLUNTEER_FIELD } from '../constants';
+import { UPDATE_VOLUNTEER_FIELD, CLEAR_VOLUNTEER_FIELDS } from '../constants';
 
 const initialState = {};
 
@@ -9,6 +9,9 @@ export default (state = initialState, action) => {
             ...state,
             [action.data.fieldName]: action.data.value
         };
+
+    case CLEAR_VOLUNTEER_FIELDS:
+        return initialState;
     default:
         return state;
     }

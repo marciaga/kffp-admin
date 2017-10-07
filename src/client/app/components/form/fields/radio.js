@@ -3,6 +3,7 @@ import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 
 class Radio extends Component {
     static propTypes = {
+        category: PropTypes.string,
         fields: PropTypes.array,
         handleChange: PropTypes.func,
         name: PropTypes.string
@@ -15,12 +16,13 @@ class Radio extends Component {
     }
 
     render () {
-        const { name, fields } = this.props;
+        const { name, fields, category } = this.props;
 
         return (
             <RadioButtonGroup
                 onChange={this.handleSelection}
                 name={name}
+                valueSelected={category}
             >
                 {fields.length && fields.map((field, i) => (
                     <RadioButton
