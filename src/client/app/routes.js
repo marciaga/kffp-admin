@@ -7,6 +7,7 @@ import Shows from './components/shows';
 import Main from './components/main';
 import Settings from './components/settings';
 import Reports from './components/reports';
+import VolunteerForm from './components/volunteer/form';
 import NotFound from './components/error/404';
 
 export default (
@@ -19,6 +20,7 @@ export default (
             <Route component={Shows} path="/shows" />
             <Route component={Settings} path="/settings" />
             <Route component={Reports} path="/reports" />
+            <Route component={VolunteerForm} path="/volunteers/entry" />
             <Route component={NotFound} path="*" />
         </Route>
     </Route>

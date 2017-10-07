@@ -19,9 +19,9 @@ export default class TextArea extends Component {
 
         return (
             <TextField
+                multiLine
                 id={id}
                 name={name}
-                multiLine={true}
                 floatingLabelText={label}
                 value={value || ''}
                 hintText={hintText}
