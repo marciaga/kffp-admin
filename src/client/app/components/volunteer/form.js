@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import R from 'ramda';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+import { Card, CardText, CardActions } from 'material-ui/Card';
 import DatePicker from 'material-ui/DatePicker';
 import RaisedButton from 'material-ui/RaisedButton';
 import Radio from '../form/fields/radio';
@@ -24,12 +26,7 @@ const mapStateToProps = state => ({
 
 class VolunteerForm extends Component {
     static propTypes = {
-        category: PropTypes.string,
-        comments: PropTypes.string,
-        date: PropTypes.string,
         dispatch: PropTypes.func,
-        hours: PropTypes.number,
-        type: PropTypes.string,
         user: PropTypes.object,
         volunteer: PropTypes.object
     }
@@ -74,43 +71,61 @@ class VolunteerForm extends Component {
         } = volunteer;
 
         return (
-            <div>
-                <h1>Volunteer Hours Tracking Form</h1>
-                <Radio
-                    name="category"
-                    fields={volunteerCategoryFields}
-                    handleChange={(n, v) => dispatch(updateField(n, v))}
-                    category={category}
-                />
-                <DatePicker
-                    hintText="I volunteered on..."
-                    onChange={(n, v) => dispatch(updateField('date', v))}
-                />
-                <Select
-                    label="I'm tracking hours for..."
-                    items={volunteerTypeFields}
-                    value={type}
-                    handleChange={(n, v) => dispatch(updateField('type', v))}
-                />
-                <Select
-                    label="Hours spent..."
-                    items={selectableHours}
-                    value={hours}
-                    handleChange={(n, v) => dispatch(updateField('hours', v))}
-                />
-                <TextArea
-                    name="optionalcomments"
-                    id="optional-comments"
-                    label="Comments"
-                    hintText="I also did..."
-                    value={comments}
-                    handleChange={(n, v) => dispatch(updateField('comments', v))}
-                />
-                <RaisedButton
-                    primary
-                    label="Submit"
-                    onClick={this.handleSubmit}
-                />
+            <div className="row">
+                <h1 className="page-heading">Volunteer Hours Tracking Form</h1>
+                <div className="col col-md-12 flex-horizontal-center">
+                    <Card
+                        style={{ minWidth: 600 }}
+                        containerStyle={{ minWidth: 600 }}
+                    >
+                        <CardText>
+                            <span>I am a... (select one)</span>
+                            <Radio
+                                name="category"
+                                fields={volunteerCategoryFields}
+                                handleChange={(n, v) => dispatch(updateField(n, v))}
+                                category={category}
+                            />
+                            <DatePicker
+                                hintText="I volunteered on..."
+                                onChange={(n, v) => dispatch(updateField('date', v))}
+                            />
+                            <div>
+                                <Select
+                                    label="I'm tracking hours for..."
+                                    items={volunteerTypeFields}
+                                    value={type}
+                                    handleChange={(n, v) => dispatch(updateField('type', v))}
+                                    autoWidth
+                                />
+                            </div>
+                            <div>
+                                <Select
+                                    label="Hours spent..."
+                                    items={selectableHours}
+                                    value={hours}
+                                    handleChange={(n, v) => dispatch(updateField('hours', v))}
+                                    autoWidth
+                                />
+                            </div>
+                            <TextArea
+                                name="optionalcomments"
+                                id="optional-comments"
+                                label="Comments"
+                                hintText="I also did..."
+                                value={comments}
+                                handleChange={(n, v) => dispatch(updateField('comments', v))}
+                            />
+                        </CardText>
+                        <CardActions>
+                            <RaisedButton
+                                primary
+                                label="Submit"
+                                onClick={this.handleSubmit}
+                            />
+                        </CardActions>
+                    </Card>
+                </div>
             </div>
         );
     }

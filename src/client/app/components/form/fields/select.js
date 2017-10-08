@@ -4,7 +4,7 @@ import SelectField from 'material-ui/SelectField';
 
 import { updateFormField } from '../../../actions/formActions';
 
-const Select = ({ dispatch, fieldName, label, value, items, handleChange }) => {
+const Select = ({ dispatch, fieldName, label, value, items, handleChange, autoWidth }) => {
     const renderItems = (list) => {
         if (list) {
             return list.map((item, i) => (
@@ -22,6 +22,7 @@ const Select = ({ dispatch, fieldName, label, value, items, handleChange }) => {
             floatingLabelText={label}
             value={value}
             onChange={selectChangeHandler}
+            autoWidth={autoWidth}
         >
             { renderItems(items) }
         </SelectField>
@@ -29,6 +30,7 @@ const Select = ({ dispatch, fieldName, label, value, items, handleChange }) => {
 };
 
 Select.propTypes = {
+    autoWidth: PropTypes.bool,
     dispatch: PropTypes.func,
     fieldName: PropTypes.string,
     handleChange: PropTypes.func,
