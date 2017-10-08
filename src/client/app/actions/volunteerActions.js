@@ -1,4 +1,5 @@
 import axios from 'axios';
+import moment from 'moment';
 import {
     API_ENDPOINT,
     GENERIC_ERROR_MESSAGE
@@ -14,6 +15,36 @@ export const updateField = (fieldName, value) => ({
         value
     }
 });
+
+export const submitReport = (startDate, endDate) => async (dispatch) => {
+    const idToken = getTokenFromLocalStorage();
+
+    const s = moment(startDate).format('YYYY-MM-DD');
+    const e = moment(endDate).format('YYYY-MM-DD');
+
+    // TODO add userId if selected
+
+    const url = `${API_ENDPOINT}/volunteer/report?startDate=${s}&endDate=${e}`;
+
+    try {
+        const { data } = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        console.log(data);
+        // TODO dispatch something with data
+
+    } catch (err) {
+        const errorMessage = 'Fetching reports failed. Please try again.';
+
+        dispatch(handleErrorModal({
+            message: errorMessage,
+            open: true
+        }));
+    }
+};
 
 export const volunteerFormSubmit = (formData) => {
     // validate formData

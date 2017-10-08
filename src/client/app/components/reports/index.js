@@ -1,23 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import { CSVLink } from 'react-csv';
-import DatePicker from 'material-ui/DatePicker';
-import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton';
 import { updateDateField, submitReport } from '../../actions/reportActions';
 import { scopeValidator } from '../../utils/helperFunctions';
+import SongReport from './song-report';
+import VolunteerReports from './volunteer-reports';
 
 const mapStateToProps = state => ({
     auth: state.auth,
-    reports: state.reports
+    reports: state.reports,
+    volunteer: state.volunteer
 });
 
 class Reports extends Component {
     static propTypes = {
         auth: PropTypes.object,
         dispatch: PropTypes.func,
-        reports: PropTypes.object
+        reports: PropTypes.object,
+        volunteer: PropTypes.object
     }
 
     componentWillReceiveProps (nextProps) {
@@ -47,49 +47,27 @@ class Reports extends Component {
 
 
     render () {
-        const { results } = this.props.reports;
+        const { dispatch, reports, volunteer } = this.props;
+        const { results } = reports;
+        const { startDate, endDate, results: volunteerResults } = volunteer;
 
         return (
             <div className="row">
                 <h1 className="page-heading">Reports</h1>
                 <div className="col col-md-12 flex-horizontal-center">
-                    <Card
-                        style={{ minWidth: 600 }}
-                        containerStyle={{ minWidth: 600 }}
-                    >
-                        <CardHeader title="Song Reporting" />
-                        <CardText>
-                            <DatePicker
-                                hintText="Start Date"
-                                onChange={
-                                    (n, date) => this.handleDateChange('startDate', date)
-                                }
-                            />
-                            <DatePicker
-                                hintText="End Date"
-                                onChange={
-                                    (n, date) => this.handleDateChange('endDate', date)
-                                }
-                            />
-                        </CardText>
-                        <CardActions>
-                            <RaisedButton
-                                label="Submit"
-                                onClick={this.handleSubmit}
-                            />
-                            {results.length > 0 &&
-                                <CSVLink
-                                    data={results}
-                                    filename="song-report.csv"
-                                >
-                                    <RaisedButton
-                                        label="Click here to download CSV file"
-                                        primary
-                                    />
-                                </CSVLink>
-                            }
-                        </CardActions>
-                    </Card>
+                    <SongReport
+                        results={results}
+                        handleDateChange={this.handleDateChange}
+                        handleSubmit={this.handleSubmit}
+                    />
+                </div>
+                <div className="col col-md-12 flex-horizontal-center">
+                    <VolunteerReports
+                        dispatch={dispatch}
+                        results={volunteerResults}
+                        startDate={startDate}
+                        endDate={endDate}
+                    />
                 </div>
             </div>
         );

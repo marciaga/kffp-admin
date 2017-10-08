@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import R from 'ramda';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 import { Card, CardText, CardActions } from 'material-ui/Card';
 import DatePicker from 'material-ui/DatePicker';
 import RaisedButton from 'material-ui/RaisedButton';

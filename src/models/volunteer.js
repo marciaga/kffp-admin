@@ -44,3 +44,38 @@ export const postVolunteerForm = (request, reply) => {
 
     validation(error);
 };
+
+export const getVolunteerReport = async (request, reply) => {
+    const { credentials } = request.auth;
+    const { db } = request.server.plugins.mongodb;
+    const { startDate, endDate, userId } = request.query;
+
+    const dates = startDate && endDate ? {
+        date: {
+            $gte: new Date(startDate),
+            $lte: new Date(endDate)
+        } } :
+        false;
+
+    const includeUserId = credentials.scope === 'dj' ? credentials.id : userId;
+    /* eslint-disable no-nested-ternary */
+    const criteria = dates && includeUserId ? {
+        ...dates,
+        userId: includeUserId
+    } : includeUserId ? {
+        userId: includeUserId
+    } : dates ? { ...dates } : {};
+    /* eslint-enable no-nested-ternary */
+
+    try {
+        const result = await db.collection('volunteerhours')
+        .find(criteria)
+        .sort({ date: 1 })
+        .toArray();
+
+        reply(result);
+    } catch (err) {
+        console.log(err);
+        return reply(Boom.internal('Failed to generate volunteer report.'));
+    }
+};
