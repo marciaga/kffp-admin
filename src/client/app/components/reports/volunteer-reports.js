@@ -36,8 +36,15 @@ const VolunteerReports = ({ scope, startDate, endDate, dispatch, results = [] })
                         (n, date) => dispatch(updateField('endDate', date))
                     }
                 />
-                {/* TODO flesh out AutoComplete */}
-                {scope !== 'dj' && <AutoComplete />}
+                <AutoComplete
+                    hintText="lux interior"
+                    dataSource={['cat', 'dog']}
+                    filter={AutoComplete.noFilter}
+                    onNewRequest={() => console.log('new requrest')}
+                    onUpdateInput={() => console.log('update input')}
+                    floatingLabelText="DJ (optional)"
+                    fullWidth
+                />
             </CardText>
             <CardActions>
                 <RaisedButton

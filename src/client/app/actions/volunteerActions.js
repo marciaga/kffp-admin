@@ -5,7 +5,11 @@ import {
     GENERIC_ERROR_MESSAGE
 } from '../utils/constants';
 import { getTokenFromLocalStorage } from '../utils/helperFunctions';
-import { UPDATE_VOLUNTEER_FIELD, CLEAR_VOLUNTEER_FIELDS } from '../constants';
+import {
+    UPDATE_VOLUNTEER_FIELD,
+    CLEAR_VOLUNTEER_FIELDS,
+    UPDATE_VOLUNTEER_RESULTS
+} from '../constants';
 import { snackbarMessage, handleErrorModal } from './feedbackActions';
 
 export const updateField = (fieldName, value) => ({
@@ -36,8 +40,10 @@ export const submitReport = (startDate, endDate, userId) => async (dispatch) => 
             }
         });
 
-        console.log(data);
-        // TODO dispatch something with data
+        dispatch({
+            type: UPDATE_VOLUNTEER_RESULTS,
+            data
+        });
     } catch (err) {
         const errorMessage = 'Fetching reports failed. Please try again.';
 
@@ -46,6 +52,22 @@ export const submitReport = (startDate, endDate, userId) => async (dispatch) => 
             open: true
         }));
     }
+};
+
+const determineCurrentMonthRange = () => {
+    const startDate = moment().startOf('month').format('YYYY-MM-DD');
+    const endDate = moment().endOf('month').format('YYYY-MM-DD');
+
+    return {
+        startDate,
+        endDate
+    };
+};
+
+export const getCurrentMonthVolunteer = (userId) => {
+    const { startDate, endDate } = determineCurrentMonthRange();
+
+    return submitReport(startDate, endDate, userId);
 };
 
 export const volunteerFormSubmit = (formData) => {

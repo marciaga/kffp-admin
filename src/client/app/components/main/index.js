@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { pathOr } from 'ramda';
 import { Card, CardHeader } from 'material-ui/Card';
 import { getUserShows, getAllShows } from '../../actions/showActions';
+import { getCurrentMonthVolunteer } from '../../actions/volunteerActions';
 import ShowSelect from './select';
 import ShowsAutoCompleteFilter from '../form/fields/showsAutocompleteFilter';
 import VolunteerWidget from './volunteer-widget';
@@ -25,6 +26,7 @@ class Main extends Component {
         if (id && this.props.auth.user !== user) {
             this.props.dispatch(getUserShows(id));
             this.props.dispatch(getAllShows());
+            this.props.dispatch(getCurrentMonthVolunteer(id));
         }
     }
 
