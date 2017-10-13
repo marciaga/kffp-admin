@@ -47,7 +47,7 @@ class Reports extends Component {
 
 
     render () {
-        const { dispatch, reports, volunteer } = this.props;
+        const { dispatch, reports, volunteer, auth } = this.props;
         const { results } = reports;
         const { startDate, endDate, results: volunteerResults } = volunteer;
 
@@ -67,6 +67,7 @@ class Reports extends Component {
                         results={volunteerResults}
                         startDate={startDate}
                         endDate={endDate}
+                        scope={auth.user.scope}
                     />
                 </div>
             </div>

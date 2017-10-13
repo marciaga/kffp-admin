@@ -3,11 +3,11 @@ import { CSVLink } from 'react-csv';
 import DatePicker from 'material-ui/DatePicker';
 import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
+import AutoComplete from 'material-ui/AutoComplete';
+import VolunteerCard from './volunteer-card';
 import { updateField, submitReport } from '../../actions/volunteerActions';
 
-// TODO add user select field if within correct scope
-
-const VolunteerReports = ({ startDate, endDate, dispatch, results = [] }) => {
+const VolunteerReports = ({ scope, startDate, endDate, dispatch, results = [] }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -20,6 +20,9 @@ const VolunteerReports = ({ startDate, endDate, dispatch, results = [] }) => {
             containerStyle={{ minWidth: 600 }}
         >
             <CardHeader title="Volunteer Reports" />
+            <VolunteerCard
+                handleSubmit={handleSubmit}
+            />
             <CardText>
                 <DatePicker
                     hintText="Start Date"
@@ -33,6 +36,8 @@ const VolunteerReports = ({ startDate, endDate, dispatch, results = [] }) => {
                         (n, date) => dispatch(updateField('endDate', date))
                     }
                 />
+                {/* TODO flesh out AutoComplete */}
+                {scope !== 'dj' && <AutoComplete />}
             </CardText>
             <CardActions>
                 <RaisedButton
@@ -59,6 +64,7 @@ VolunteerReports.propTypes = {
     dispatch: PropTypes.func,
     endDate: PropTypes.instanceOf(Date),
     results: PropTypes.array,
+    scope: PropTypes.string,
     startDate: PropTypes.instanceOf(Date)
 };
 

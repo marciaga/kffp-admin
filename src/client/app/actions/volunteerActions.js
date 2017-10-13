@@ -16,18 +16,21 @@ export const updateField = (fieldName, value) => ({
     }
 });
 
-export const submitReport = (startDate, endDate) => async (dispatch) => {
+export const submitReport = (startDate, endDate, userId) => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
 
     const s = moment(startDate).format('YYYY-MM-DD');
     const e = moment(endDate).format('YYYY-MM-DD');
 
-    // TODO add userId if selected
+    const url = `${API_ENDPOINT}/volunteer/report`;
+    const params = userId ? { userId } : {};
 
-    const url = `${API_ENDPOINT}/volunteer/report?startDate=${s}&endDate=${e}`;
+    params.startDate = s;
+    params.endDate = e;
 
     try {
         const { data } = await axios.get(url, {
+            params,
             headers: {
                 Authorization: `Bearer ${idToken}`
             }
@@ -35,7 +38,6 @@ export const submitReport = (startDate, endDate) => async (dispatch) => {
 
         console.log(data);
         // TODO dispatch something with data
-
     } catch (err) {
         const errorMessage = 'Fetching reports failed. Please try again.';
 

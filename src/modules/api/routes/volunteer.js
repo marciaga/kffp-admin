@@ -24,7 +24,8 @@ const volunteerRoutes = [
             validate: {
                 query: {
                     startDate: Joi.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-                    endDate: Joi.string().regex(/^\d{4}-\d{2}-\d{2}$/)
+                    endDate: Joi.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+                    userId: Joi.string()
                 }
             }
         }

@@ -52,8 +52,8 @@ export const getVolunteerReport = async (request, reply) => {
 
     const dates = startDate && endDate ? {
         date: {
-            $gte: new Date(startDate),
-            $lte: new Date(endDate)
+            $gte: new Date(startDate).toISOString(),
+            $lte: new Date(endDate).toISOString()
         } } :
         false;
 
