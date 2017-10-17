@@ -8,7 +8,9 @@ import { getTokenFromLocalStorage } from '../utils/helperFunctions';
 import {
     UPDATE_VOLUNTEER_FIELD,
     CLEAR_VOLUNTEER_FIELDS,
-    UPDATE_VOLUNTEER_RESULTS
+    UPDATE_VOLUNTEER_RESULTS,
+    CLEAR_OWN_VOULUNTEER_HOURS,
+    SET_VOLUNTEER_ID
 } from '../constants';
 import { snackbarMessage, handleErrorModal } from './feedbackActions';
 
@@ -53,6 +55,8 @@ export const submitReport = (startDate, endDate, userId) => async (dispatch) => 
         }));
     }
 };
+
+export const clearOwnVolunteerHours = () => ({ type: CLEAR_OWN_VOULUNTEER_HOURS });
 
 const determineCurrentMonthRange = () => {
     const startDate = moment().startOf('month').format('YYYY-MM-DD');
@@ -102,3 +106,8 @@ export const volunteerFormSubmit = (formData) => {
         }
     };
 };
+
+export const setVolunteerId = data => ({
+    type: SET_VOLUNTEER_ID,
+    data
+});

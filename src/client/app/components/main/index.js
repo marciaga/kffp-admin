@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import { pathOr } from 'ramda';
 import { Card, CardHeader } from 'material-ui/Card';
 import { getUserShows, getAllShows } from '../../actions/showActions';
-import { getCurrentMonthVolunteer } from '../../actions/volunteerActions';
+import {
+    getCurrentMonthVolunteer,
+    clearOwnVolunteerHours
+} from '../../actions/volunteerActions';
 import ShowSelect from './select';
 import ShowsAutoCompleteFilter from '../form/fields/showsAutocompleteFilter';
 import VolunteerWidget from './volunteer-widget';
@@ -30,6 +33,10 @@ class Main extends Component {
         }
     }
 
+    componentWillUnmount () {
+        this.props.dispatch(clearOwnVolunteerHours());
+    }
+
     render () {
         const { show, dispatch, volunteer, auth } = this.props;
         const { shows, userShows } = show;
@@ -46,7 +53,7 @@ class Main extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="flex-horizontal-center user-shows col col-md-6">
+                    <div className="flex-horizontal-center user-shows col col-md-12">
                         <Card
                             style={{ minWidth: 600 }}
                             containerStyle={{ minWidth: 600 }}

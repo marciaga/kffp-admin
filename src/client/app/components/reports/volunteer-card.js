@@ -4,7 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import DatePicker from 'material-ui/DatePicker';
 import { updateField } from '../../actions/volunteerActions';
 
-const VolunteerCard = ({ submitAction, userId, startDate, endDate, dispatch }) => {
+const VolunteerCard = ({ children, submitAction, userId, startDate, endDate, dispatch }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -27,6 +27,7 @@ const VolunteerCard = ({ submitAction, userId, startDate, endDate, dispatch }) =
                         (n, date) => dispatch(updateField('endDate', date))
                     }
                 />
+                {children}
             </CardText>
             <CardActions>
                 <RaisedButton
@@ -39,6 +40,7 @@ const VolunteerCard = ({ submitAction, userId, startDate, endDate, dispatch }) =
 };
 
 VolunteerCard.propTypes = {
+    children: PropTypes.object,
     dispatch: PropTypes.func,
     endDate: PropTypes.instanceOf(Date),
     startDate: PropTypes.instanceOf(Date),

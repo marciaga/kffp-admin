@@ -1,18 +1,34 @@
 import React, { PropTypes } from 'react';
 import { CSVLink } from 'react-csv';
-import DatePicker from 'material-ui/DatePicker';
-import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card';
+import { Card, CardHeader } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import AutoComplete from 'material-ui/AutoComplete';
+import { pathOr, compose } from 'ramda';
 import VolunteerCard from './volunteer-card';
-import { updateField, submitReport } from '../../actions/volunteerActions';
+import { submitReport, setVolunteerId } from '../../actions/volunteerActions';
+import { getUserAutoComplete } from '../../actions/formActions';
 
-const VolunteerReports = ({ scope, startDate, endDate, dispatch, results = [] }) => {
-    const handleSubmit = (e) => {
-        e.preventDefault();
+const createOptions = a => a.map(r => ({
+    label: `${r.firstName} ${r.lastName}`,
+    value: r._id
+}));
+const getSearchResults = compose(
+    createOptions,
+    pathOr([], ['users', 'searchResults'])
+);
 
-        return startDate && endDate && dispatch(submitReport({ startDate, endDate }));
-    };
+const VolunteerReports = ({
+    startDate,
+    endDate,
+    selectedUser,
+    dispatch,
+    results = [],
+    users
+}) => {
+    const handleUserSearch = v => dispatch(getUserAutoComplete(v));
+
+    const userSearchResults = getSearchResults(users);
+    const handleUserSelect = selected => dispatch(setVolunteerId(selected));
 
     return (
         <Card
@@ -21,48 +37,38 @@ const VolunteerReports = ({ scope, startDate, endDate, dispatch, results = [] })
         >
             <CardHeader title="Volunteer Reports" />
             <VolunteerCard
-                handleSubmit={handleSubmit}
-            />
-            <CardText>
-                <DatePicker
-                    hintText="Start Date"
-                    onChange={
-                        (n, date) => dispatch(updateField('startDate', date))
-                    }
-                />
-                <DatePicker
-                    hintText="End Date"
-                    onChange={
-                        (n, date) => dispatch(updateField('endDate', date))
-                    }
-                />
+                startDate={startDate}
+                endDate={endDate}
+                userId={selectedUser}
+                dispatch={dispatch}
+                submitAction={submitReport}
+            >
                 <AutoComplete
                     hintText="lux interior"
-                    dataSource={['cat', 'dog']}
+                    dataSource={userSearchResults}
+                    dataSourceConfig={{
+                        text: 'label',
+                        value: 'value'
+                    }}
                     filter={AutoComplete.noFilter}
-                    onNewRequest={() => console.log('new requrest')}
-                    onUpdateInput={() => console.log('update input')}
+                    onNewRequest={handleUserSelect}
+                    onUpdateInput={handleUserSearch}
                     floatingLabelText="DJ (optional)"
                     fullWidth
                 />
-            </CardText>
-            <CardActions>
-                <RaisedButton
-                    label="Submit"
-                    onClick={handleSubmit}
-                />
-                {results.length > 0 &&
-                    <CSVLink
-                        data={results}
-                        filename="volunteer-report.csv"
-                    >
-                        <RaisedButton
-                            label="Click here to download CSV file"
-                            primary
-                        />
-                    </CSVLink>
-                }
-            </CardActions>
+            </VolunteerCard>
+            {results.length > 0 &&
+                <CSVLink
+                    data={results}
+                    filename="volunteer-report.csv"
+                >
+                    <RaisedButton
+                        style={{ margin: '8px', display: 'inline-block' }}
+                        label="Click here to download CSV file"
+                        primary
+                    />
+                </CSVLink>
+            }
         </Card>
     );
 };
@@ -71,8 +77,9 @@ VolunteerReports.propTypes = {
     dispatch: PropTypes.func,
     endDate: PropTypes.instanceOf(Date),
     results: PropTypes.array,
-    scope: PropTypes.string,
-    startDate: PropTypes.instanceOf(Date)
+    selectedUser: PropTypes.string,
+    startDate: PropTypes.instanceOf(Date),
+    users: PropTypes.object
 };
 
 export default VolunteerReports;

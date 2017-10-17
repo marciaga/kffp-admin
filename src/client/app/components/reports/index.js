@@ -8,6 +8,7 @@ import VolunteerReports from './volunteer-reports';
 
 const mapStateToProps = state => ({
     auth: state.auth,
+    users: state.form.fields,
     reports: state.reports,
     volunteer: state.volunteer
 });
@@ -17,6 +18,7 @@ class Reports extends Component {
         auth: PropTypes.object,
         dispatch: PropTypes.func,
         reports: PropTypes.object,
+        users: PropTypes.object,
         volunteer: PropTypes.object
     }
 
@@ -47,9 +49,9 @@ class Reports extends Component {
 
 
     render () {
-        const { dispatch, reports, volunteer, auth } = this.props;
+        const { dispatch, reports, volunteer, auth, users } = this.props;
         const { results } = reports;
-        const { startDate, endDate, results: volunteerResults } = volunteer;
+        const { userId, startDate, endDate, results: volunteerResults } = volunteer;
 
         return (
             <div className="row">
@@ -68,6 +70,8 @@ class Reports extends Component {
                         startDate={startDate}
                         endDate={endDate}
                         scope={auth.user.scope}
+                        selectedUser={userId}
+                        users={users}
                     />
                 </div>
             </div>
