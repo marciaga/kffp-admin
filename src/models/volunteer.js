@@ -47,7 +47,7 @@ export const postVolunteerForm = (request, reply) => {
 
 export const getVolunteerReport = async (request, reply) => {
     const { credentials } = request.auth;
-    const { db } = request.server.plugins.mongodb;
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const { startDate, endDate, userId } = request.query;
 
     const dates = startDate && endDate ? {
@@ -73,7 +73,23 @@ export const getVolunteerReport = async (request, reply) => {
         .sort({ date: 1 })
         .toArray();
 
-        reply(result);
+        if (includeUserId) {
+            return reply(result);
+        }
+
+        // query to join user first and last name
+        const r = await db.collection('users')
+            .find({
+                _id: {
+                    $in: result.map(u => new ObjectID(u.userId))
+                }
+            }, {
+                    firstName: 1,
+                    lastName: 1
+            })
+            .toArray();
+
+        // map userIds and return a full name in the result array
     } catch (err) {
         console.log(err);
         return reply(Boom.internal('Failed to generate volunteer report.'));

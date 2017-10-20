@@ -10,7 +10,8 @@ import {
     CLEAR_VOLUNTEER_FIELDS,
     UPDATE_VOLUNTEER_RESULTS,
     CLEAR_OWN_VOULUNTEER_HOURS,
-    SET_VOLUNTEER_ID
+    SET_VOLUNTEER_ID,
+    SET_CURRENT_HOURS
 } from '../constants';
 import { snackbarMessage, handleErrorModal } from './feedbackActions';
 
@@ -22,7 +23,7 @@ export const updateField = (fieldName, value) => ({
     }
 });
 
-export const submitReport = (startDate, endDate, userId) => async (dispatch) => {
+export const submitReport = (startDate, endDate, userId, action) => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
 
     const s = moment(startDate).format('YYYY-MM-DD');
@@ -42,10 +43,9 @@ export const submitReport = (startDate, endDate, userId) => async (dispatch) => 
             }
         });
 
-        dispatch({
-            type: UPDATE_VOLUNTEER_RESULTS,
-            data
-        });
+        const fn = action || handleUpdateVolunteerResults;
+
+        return dispatch(fn(data));
     } catch (err) {
         const errorMessage = 'Fetching reports failed. Please try again.';
 
@@ -55,6 +55,21 @@ export const submitReport = (startDate, endDate, userId) => async (dispatch) => 
         }));
     }
 };
+
+const hoursThisMonth = (results = []) => results.reduce((acc, o) => (acc + o.hours), 0);
+
+const setCurrentHours = d => {
+    const data = hoursThisMonth(d);
+    return ({
+        type: SET_CURRENT_HOURS,
+        data
+    });
+};
+
+const handleUpdateVolunteerResults = data => ({
+    type: UPDATE_VOLUNTEER_RESULTS,
+    data
+});
 
 export const clearOwnVolunteerHours = () => ({ type: CLEAR_OWN_VOULUNTEER_HOURS });
 
@@ -71,7 +86,7 @@ const determineCurrentMonthRange = () => {
 export const getCurrentMonthVolunteer = (userId) => {
     const { startDate, endDate } = determineCurrentMonthRange();
 
-    return submitReport(startDate, endDate, userId);
+    return submitReport(startDate, endDate, userId, setCurrentHours);
 };
 
 export const volunteerFormSubmit = (formData) => {

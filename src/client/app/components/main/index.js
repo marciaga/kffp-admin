@@ -58,13 +58,13 @@ class Main extends Component {
                             style={{ minWidth: 600 }}
                             containerStyle={{ minWidth: 600 }}
                         >
-                            <CardHeader title="My Volunteer Hours" />
                             <VolunteerWidget
                                 dispatch={dispatch}
                                 startDate={volunteer.startDate}
                                 endDate={volunteer.endDate}
                                 results={volunteer.results}
                                 userId={getUserId(auth)}
+                                currentHours={volunteer.currentHours}
                             />
                         </Card>
                     </div>
