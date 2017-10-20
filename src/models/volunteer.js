@@ -57,7 +57,8 @@ export const getVolunteerReport = async (request, reply) => {
         } } :
         false;
 
-    const includeUserId = credentials.scope === 'dj' ? credentials.id : userId;
+    const requestedByDj = credentials.scope === 'dj';
+    const includeUserId = requestedByDj ? credentials.id : userId;
     /* eslint-disable no-nested-ternary */
     const criteria = dates && includeUserId ? {
         ...dates,
@@ -73,12 +74,12 @@ export const getVolunteerReport = async (request, reply) => {
         .sort({ date: 1 })
         .toArray();
 
-        if (includeUserId) {
+        if (requestedByDj) {
             return reply(result);
         }
 
         // query to join user first and last name
-        const r = await db.collection('users')
+        const users = await db.collection('users')
             .find({
                 _id: {
                     $in: result.map(u => new ObjectID(u.userId))
@@ -89,7 +90,22 @@ export const getVolunteerReport = async (request, reply) => {
             })
             .toArray();
 
+        const u = users.reduce((memo, key) => {
+          memo[key._id] = `${key.firstName} ${key.lastName}`
+
+          return memo;
+        }, {});
         // map userIds and return a full name in the result array
+        const transformed = result.map((r)=> {
+            const { _id, userId, ...rest } = r;
+
+            return {
+                name: u[r.userId],
+                ...rest
+            };
+        });
+
+        return reply(transformed);
     } catch (err) {
         console.log(err);
         return reply(Boom.internal('Failed to generate volunteer report.'));
