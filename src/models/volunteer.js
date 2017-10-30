@@ -48,7 +48,7 @@ export const postVolunteerForm = (request, reply) => {
 export const getVolunteerReport = async (request, reply) => {
     const { credentials } = request.auth;
     const { db, ObjectID } = request.server.plugins.mongodb;
-    const { startDate, endDate, userId } = request.query;
+    const { startDate, endDate, userId, type } = request.query;
 
     const dates = startDate && endDate ? {
         date: {
@@ -67,6 +67,10 @@ export const getVolunteerReport = async (request, reply) => {
         userId: includeUserId
     } : dates ? { ...dates } : {};
     /* eslint-enable no-nested-ternary */
+
+    if (type) {
+        criteria.type = type;
+    }
 
     try {
         const result = await db.collection('volunteerhours')

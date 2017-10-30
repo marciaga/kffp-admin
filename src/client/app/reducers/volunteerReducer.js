@@ -4,7 +4,9 @@ import {
     UPDATE_VOLUNTEER_RESULTS,
     CLEAR_OWN_VOULUNTEER_HOURS,
     SET_VOLUNTEER_ID,
-    SET_CURRENT_HOURS
+    SET_CURRENT_HOURS,
+    CLEAR_STALE_RESULTS,
+    SET_TYPE
 } from '../constants';
 
 const initialState = {};
@@ -26,6 +28,11 @@ export default (state = initialState, action) => {
             ...state,
             userId: action.data.value
         };
+    case SET_TYPE:
+        return {
+            ...state,
+            type: action.data
+        };
     case UPDATE_VOLUNTEER_RESULTS:
         return {
             ...state,
@@ -35,7 +42,12 @@ export default (state = initialState, action) => {
         return {
             ...state,
             currentHours: action.data
-        }
+        };
+    case CLEAR_STALE_RESULTS:
+        return {
+            ...state,
+            results: []
+        };
     default:
         return state;
     }

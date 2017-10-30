@@ -17,17 +17,29 @@ import {
     volunteerFormSubmit
 } from '../../actions/volunteerActions';
 
-const requiredFields = ['date', 'type', 'category', 'hours', 'userId'];
+const requiredFields = ['date', 'type', 'category', 'hours', 'comments', 'userId'];
 const mapStateToProps = state => ({
     volunteer: state.volunteer,
     user: state.auth.user
 });
 
 class VolunteerForm extends Component {
+    constructor (props) {
+        super(props);
+
+        this.state = {
+            showError: false,
+            message: 'All Fields Are Required...'
+        }
+    }
     static propTypes = {
         dispatch: PropTypes.func,
         user: PropTypes.object,
         volunteer: PropTypes.object
+    }
+
+    handleValidationFail = () => {
+        this.setState({ showError: true });
     }
 
     handleSubmit = () => {
@@ -53,14 +65,18 @@ class VolunteerForm extends Component {
 
         const submitForm = R.ifElse(
             R.equals,
-            () => dispatch(volunteerFormSubmit(formData)),
-            () => null
+            () => {
+                this.setState({ showError: false });
+                dispatch(volunteerFormSubmit(formData));
+            },
+            () => this.handleValidationFail()
         );
 
         submitForm(fields.length, requiredFields.length);
     }
 
     render () {
+        const { showError, message } = this.state;
         const { dispatch, volunteer } = this.props;
         const {
             category,
@@ -110,8 +126,8 @@ class VolunteerForm extends Component {
                             <TextArea
                                 name="optionalcomments"
                                 id="optional-comments"
-                                label="Comments"
-                                hintText="I also did..."
+                                label="Describe what you did"
+                                hintText="I did..."
                                 value={comments}
                                 handleChange={(n, v) => dispatch(updateField('comments', v))}
                             />
@@ -122,6 +138,7 @@ class VolunteerForm extends Component {
                                 label="Submit"
                                 onClick={this.handleSubmit}
                             />
+                        {showError && <h2 style={{ color: 'red' }}>{message}</h2>}
                         </CardActions>
                     </Card>
                 </div>

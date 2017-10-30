@@ -57,7 +57,7 @@ exports.register = (server, options, next) => {
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin']
+                scope: ['admin', 'reports']
             },
             handler: userSearchHandler
         }

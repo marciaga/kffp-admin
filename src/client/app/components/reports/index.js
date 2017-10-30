@@ -51,7 +51,7 @@ class Reports extends Component {
     render () {
         const { dispatch, reports, volunteer, auth, users } = this.props;
         const { results } = reports;
-        const { userId, startDate, endDate, results: volunteerResults } = volunteer;
+        const { type, userId, startDate, endDate, results: volunteerResults } = volunteer;
 
         return (
             <div className="row">
@@ -71,6 +71,7 @@ class Reports extends Component {
                         endDate={endDate}
                         scope={auth.user.scope}
                         selectedUser={userId}
+                        type={type}
                         users={users}
                     />
                 </div>

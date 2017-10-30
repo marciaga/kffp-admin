@@ -24,7 +24,7 @@ const Select = ({ dispatch, fieldName, label, value, items, handleChange, autoWi
             onChange={selectChangeHandler}
             autoWidth={autoWidth}
         >
-            { renderItems(items) }
+            {renderItems(items)}
         </SelectField>
     );
 };

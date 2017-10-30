@@ -11,7 +11,9 @@ import {
     UPDATE_VOLUNTEER_RESULTS,
     CLEAR_OWN_VOULUNTEER_HOURS,
     SET_VOLUNTEER_ID,
-    SET_CURRENT_HOURS
+    SET_CURRENT_HOURS,
+    CLEAR_STALE_RESULTS,
+    SET_TYPE
 } from '../constants';
 import { snackbarMessage, handleErrorModal } from './feedbackActions';
 
@@ -23,7 +25,7 @@ export const updateField = (fieldName, value) => ({
     }
 });
 
-export const submitReport = (startDate, endDate, userId, action) => async (dispatch) => {
+export const submitReport = (startDate, endDate, userId, type, action) => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
 
     const s = moment(startDate).format('YYYY-MM-DD');
@@ -31,6 +33,10 @@ export const submitReport = (startDate, endDate, userId, action) => async (dispa
 
     const url = `${API_ENDPOINT}/volunteer/report`;
     const params = userId ? { userId } : {};
+
+    if (type) {
+        params.type = type;
+    }
 
     params.startDate = s;
     params.endDate = e;
@@ -125,4 +131,13 @@ export const volunteerFormSubmit = (formData) => {
 export const setVolunteerId = data => ({
     type: SET_VOLUNTEER_ID,
     data
+});
+
+export const setType = data => ({
+    type: SET_TYPE,
+    data
+});
+
+export const clearStaleResults = () => ({
+    type: CLEAR_STALE_RESULTS
 });

@@ -11,7 +11,7 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 import VolunteerCard from '../reports/volunteer-card';
-import { submitReport } from '../../actions/volunteerActions';
+import { clearStaleResults, submitReport } from '../../actions/volunteerActions';
 
 const hoursThisMonth = (results = []) => results.reduce((acc, o) => (acc + o.hours), 0);
 const currentMonth = moment().format('MMMM');
@@ -33,11 +33,14 @@ class VolunteerWidget extends Component {
         };
     }
 
-    handleClick = () => this.setState({ toggleForm: !this.state.toggleForm });
+    handleClick = () => {
+        this.props.dispatch(clearStaleResults());
+        this.setState({ toggleForm: !this.state.toggleForm });
+    }
 
     renderTableRows = (results) =>
         results.map(({ date, type, hours }) => (
-            <TableRow>
+            <TableRow key={`${type}_${hours}`}>
                 <TableRowColumn>{moment(date).format('MM/DD/YYYY')}</TableRowColumn>
                 <TableRowColumn>{hours}</TableRowColumn>
                 <TableRowColumn>{type}</TableRowColumn>
