@@ -9,7 +9,7 @@ const VolunteerCard = ({ children, submitAction, userId, type, startDate, endDat
         e.preventDefault();
 
         return startDate && endDate &&
-            dispatch(submitAction(startDate, endDate, userId, type));
+            dispatch(submitAction(startDate, endDate, userId, null, type));
     };
 
     return (

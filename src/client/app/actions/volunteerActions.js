@@ -25,7 +25,7 @@ export const updateField = (fieldName, value) => ({
     }
 });
 
-export const submitReport = (startDate, endDate, userId, type, action) => async (dispatch) => {
+export const submitReport = (startDate, endDate, userId, action, type) => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();
 
     const s = moment(startDate).format('YYYY-MM-DD');
