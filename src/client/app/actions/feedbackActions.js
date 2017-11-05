@@ -25,9 +25,15 @@ const handleErrorModal = data => ({
     data
 });
 
+const handlePasswordModal = data => ({
+    type: TOGGLE_ERROR_MODAL,
+    data
+});
+
 export {
     snackbarMessage,
     closeSnackbar,
     confirmOpen,
-    handleErrorModal
+    handleErrorModal,
+    handlePasswordModal
 };

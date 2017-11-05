@@ -11,7 +11,7 @@ import {
     CLEAR_LOGIN_FORM
 } from '../constants';
 import { getUserShows, getAllShows } from './showActions';
-import { handleErrorModal } from './feedbackActions';
+import { handleErrorModal, handlePasswordModal } from './feedbackActions';
 import { API_ENDPOINT, GENERIC_ERROR_MESSAGE } from '../utils/constants';
 
 const loginInputChange = data => ({
@@ -71,9 +71,10 @@ const loginUser = (creds) => {
             });
 
             if (data.code === 401) {
-                return dispatch(handleErrorModal({
+                return dispatch(handlePasswordModal({
                     message: 'Login failed. Please try again.',
-                    open: true
+                    open: true,
+                    passwordReset: true
                 }));
             }
 
@@ -85,7 +86,7 @@ const loginUser = (creds) => {
             dispatch(getAllShows());
             dispatch(getUserShows(id));
             dispatch(receiveLogin(data));
-            dispatch(push('/'));
+            dispatch(push('/dashboard'));
         } catch (err) {
             const error = { ...err };
             const message = error.response.data.message;

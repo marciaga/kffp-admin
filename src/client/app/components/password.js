@@ -1,6 +1,13 @@
 import React, { Component, PropTypes } from 'react';
+import { allPass, isEmpty } from 'ramda';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import { isValidEmail } from '../utils/helperFunctions';
+
+const isSubmittable = allPass([
+    t => !isEmpty(t),
+    isValidEmail
+]);
 
 class PasswordReset extends Component {
     state = {
@@ -8,12 +15,15 @@ class PasswordReset extends Component {
         value: ''
     }
 
-    handleInputChange = (e) => this.setState(e.target.value);
+    handleInputChange = (e) => this.setState({ value: e.target.value });
 
     handleSubmit = () => {
-        console.log(this.state.value)
-        this.setState({ formSubmitted: true });
-        // actuall submit the form
+        const { value } = this.state;
+
+        if (isSubmittable(value)) {
+            this.setState({ formSubmitted: true });
+            // actually submit the form
+        }
     }
 
     render () {
@@ -21,24 +31,26 @@ class PasswordReset extends Component {
 
         return (
             <div>
-                <div className="row">
-                    <h1 className="flex-horizontal-center col col-md-12">Reset Password</h1>
+                {!formSubmitted &&
+                <div>
                     <TextField
                         hintText="joan@theblackhearts.com"
                         value={value}
                         onChange={this.handleInputChange}
                     />
                     <RaisedButton
+                        style={{ marginLeft: '10px' }}
                         primary
                         label="Send"
                         onClick={this.handleSubmit}
                     />
-                    {formSubmitted &&
-                        <div>
-                            <p>Check your inbox!</p>
-                        </div>
-                    }
                 </div>
+                }
+                {formSubmitted &&
+                    <div>
+                        <p>Check your inbox!</p>
+                    </div>
+                }
             </div>
         );
     }

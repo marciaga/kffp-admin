@@ -6,6 +6,7 @@ import SnackbarMessage from './feedback/snackbar';
 import Navbar from './navbar';
 import Modal from './modal';
 import ErrorModal from './feedback/errorModal';
+import PasswordResetModal from './feedback/passwordResetModal';
 
 const mapStateToProps = state => ({
     auth: state.auth,
@@ -13,14 +14,6 @@ const mapStateToProps = state => ({
     error: state.feedback.error
 });
 
-const styles = {
-    forgotPassword: {
-        fontSize: '12px',
-        cursor: 'pointer',
-        textAlign: 'right',
-        marginRight: '10px'
-    }
-}
 const App = (props) => {
     const { dispatch, auth, modal, error } = props;
     const { isAuthenticated, errorMessage, user } = auth;
@@ -34,20 +27,15 @@ const App = (props) => {
                     errorMessage={errorMessage}
                     dispatch={dispatch}
                 />
-            <p
-                onClick={() => console.log('s')}
-                style={styles.forgotPassword}
-            >
-                Forgot password?
-            </p>
-
-                {isAuthenticated &&
-                    <div className="main-container">
-                        {props.children}
-                        <Modal showModal={modal.showModal} dispatch={dispatch} />
-                    </div>
-                }
+                <div className="main-container">
+                    {props.children}
+                    <Modal showModal={modal.showModal} dispatch={dispatch} />
+                </div>
                 <ErrorModal
+                    error={error}
+                    dispatch={dispatch}
+                />
+                <PasswordResetModal
                     error={error}
                     dispatch={dispatch}
                 />

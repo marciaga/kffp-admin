@@ -31,19 +31,23 @@ class ErrorModal extends Component {
     }
 
     render () {
-        const { open, message } = this.props.error;
+        const { open, message, passwordReset } = this.props.error;
 
-        return (
-            <Dialog
-                modal={false}
-                title="Error"
-                titleStyle={{ color: 'red' }}
-                open={open}
-                actions={[this.renderActionButton()]}
-            >
-                {message}
-            </Dialog>
-        );
+        if (!passwordReset) {
+            return (
+                <Dialog
+                    modal={false}
+                    title="Error"
+                    titleStyle={{ color: 'red' }}
+                    open={open}
+                    actions={[this.renderActionButton()]}
+                >
+                    {message}
+                </Dialog>
+            );
+        }
+
+        return <span />;
     }
 }
 
