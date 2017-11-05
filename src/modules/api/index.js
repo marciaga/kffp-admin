@@ -6,6 +6,7 @@ import showRoutes from './routes/shows';
 import userRoutes from './routes/users';
 import playlistRoutes from './routes/playlists';
 import nowPlayingRoutes from './routes/nowPlaying';
+import authRoutes from './routes/auth';
 import getReport from './routes/report';
 import { API_BASE_URL } from './constants';
 
@@ -15,6 +16,7 @@ exports.register = (server, options, next) => {
     userRoutes.map(r => server.route(r));
     playlistRoutes.map(r => server.route(r));
     nowPlayingRoutes.map(r => server.route(r));
+    authRoutes.map(r => server.route(r));
 
     server.route({
         path: `${API_BASE_URL}/health`,

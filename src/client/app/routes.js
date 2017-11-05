@@ -8,6 +8,7 @@ import Main from './components/main';
 import Settings from './components/settings';
 import Reports from './components/reports';
 import NotFound from './components/error/404';
+import PasswordReset from './components/password';
 
 export default (
     <Route>
