@@ -64,10 +64,11 @@ export default function authReducer (state = initialState, action) {
         };
 
     case AUTH_VERIFICATION:
-        return Object.assign({}, state, {
+        return {
+            ...state,
             isAuthenticated: action.data.verified,
             user: action.data
-        });
+        };
 
     case UPDATE_LOGIN_FORM:
         const { fieldName, text } = action.data;

@@ -31,9 +31,9 @@ class ErrorModal extends Component {
     }
 
     render () {
-        const { open, message, passwordReset } = this.props.error;
+        const { open, message, passwordReset, isLogin } = this.props.error;
 
-        if (!passwordReset) {
+        if (!passwordReset && !isLogin) {
             return (
                 <Dialog
                     modal={false}

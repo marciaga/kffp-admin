@@ -1,9 +1,7 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
-const Main = () => {
-    return (
-        <div />
-    );
-};
+const Main = props => (
+    <div />
+);
 
 export default Main;

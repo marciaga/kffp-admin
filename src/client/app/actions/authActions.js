@@ -159,15 +159,47 @@ const verifyLogin = (isAuthenticated) => {
                 data
             });
         } catch (err) {
-            dispatch(handleErrorModal({
+            dispatch(handlePasswordModal({
                 message: 'Token Expired. Please Log In Again.',
-                open: true
+                open: true,
+                isLogin: true
             }));
 
             dispatch(logoutUser());
         }
     };
 };
+
+const sendPasswordReset = email => async (dispatch) => {
+    const url = `${API_ENDPOINT}/auth/forgot-password`;
+
+    try {
+        await axios.post(url, { email });
+    }
+    catch (e) {
+        // no-op
+    }
+};
+
+const handleResetPassword = ({ password, token }) =>
+    async (dispatch) => {
+        try {
+            const url = `${API_ENDPOINT}/auth/reset-password`;
+            const { data } = await axios.post(url, { password }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!data.sucess) {
+                // it didn't work
+            }
+
+            // send success action
+        } catch (e) {
+            // handle error
+        }
+    };
 
 export {
     verifyLogin,
@@ -176,5 +208,7 @@ export {
     receiveLogin,
     requestLogin,
     logoutUser,
-    loginInputChange
+    loginInputChange,
+    sendPasswordReset,
+    handleResetPassword
 };

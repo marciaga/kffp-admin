@@ -29,32 +29,47 @@ class PasswordResetModal extends Component {
         this.props.dispatch(handleErrorModal(data));
     }
 
-    renderActionButton () {
-        return (
-            <FlatButton
-                label="Try Again"
-                primary
-                onTouchTap={this.handleClose}
-            />
-        );
-    }
+    renderActionButton = () => (
+        <FlatButton
+            label="Try Again"
+            primary
+            onTouchTap={this.handleClose}
+        />
+    );
 
-    messageContent = () => {
+    renderGenericButton = () => (
+        <FlatButton
+            label="Got It"
+            primary={true}
+            onTouchTap={this.handleClose}
+        />
+    );
+
+    messageContent = ({ passwordReset, message }) => {
+        if (passwordReset) {
+            return (
+                <div>
+                    The password you entered didn't match our records.
+                    {this.renderActionButton()}
+                    <FlatButton
+                        label="Do you need to reset your password?"
+                        secondary
+                        onTouchTap={this.toggleForm}
+                    />
+                </div>
+            );
+        }
+
         return (
             <div>
-                The password you entered didn't match our records.
-                {this.renderActionButton()}
-                <FlatButton
-                    label="Do you need to reset your password?"
-                    secondary
-                    onTouchTap={this.toggleForm}
-                />
+                <div>{message}</div>
+                <div>{this.renderGenericButton()}</div>
             </div>
         );
     }
 
     render () {
-        const { open } = this.props.error;
+        const { open, passwordReset, message, isLogin } = this.props.error;
         const { showForm } = this.state;
 
         return (
@@ -64,9 +79,9 @@ class PasswordResetModal extends Component {
                 titleStyle={{ color: 'red' }}
                 open={open}
             >
-                {this.messageContent()}
+                {this.messageContent({ passwordReset, message, isLogin })}
                 {showForm &&
-                    <PasswordReset />
+                    <PasswordReset dispatch={this.props.dispatch} />
                 }
             </Dialog>
         );

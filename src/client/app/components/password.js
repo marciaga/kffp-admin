@@ -3,6 +3,7 @@ import { allPass, isEmpty } from 'ramda';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { isValidEmail } from '../utils/helperFunctions';
+import { sendPasswordReset } from '../actions/authActions';
 
 const isSubmittable = allPass([
     t => !isEmpty(t),
@@ -23,6 +24,7 @@ class PasswordReset extends Component {
         if (isSubmittable(value)) {
             this.setState({ formSubmitted: true });
             // actually submit the form
+            this.props.dispatch(sendPasswordReset(value));
         }
     }
 
