@@ -7,7 +7,9 @@ import {
     LOGOUT_FAILURE,
     AUTH_VERIFICATION,
     UPDATE_LOGIN_FORM,
-    CLEAR_LOGIN_FORM
+    CLEAR_LOGIN_FORM,
+    PASSWORD_RESET_SUCCESS,
+    PASSWORD_RESET_FAIL
 } from '../constants';
 
 const initialState = {
@@ -86,6 +88,12 @@ export default function authReducer (state = initialState, action) {
             loginForm: {}
         };
 
+    case PASSWORD_RESET_SUCCESS:
+    case PASSWORD_RESET_FAIL:
+        return {
+            ...state,
+            passwordUpdated: action.data.passwordUpdated
+        };
     default:
         return state;
     }

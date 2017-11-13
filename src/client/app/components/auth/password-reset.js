@@ -4,11 +4,12 @@ import { push } from 'react-router-redux';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardText, CardHeader } from 'material-ui/Card';
-import { difference } from 'ramda';
+import { where, isEmpty } from 'ramda';
 import { handleResetPassword } from '../../actions/authActions';
 
 const mapStateToProps = state => ({
-    location: state.routing.locationBeforeTransitions
+    location: state.routing.locationBeforeTransitions,
+    passwordUpdated: state.auth.passwordUpdated
 });
 
 const validFields = ['password', 'passwordRepeated', 'token'];
@@ -35,19 +36,21 @@ class PasswordResetForm extends Component {
 
     submitForm = () => {
         const { password, passwordRepeated, token } = this.state;
-        const keys = Object.keys(this.state);
-        // this validity check doesnt work
-        const isValid = difference(keys, validFields).length === 0;
 
-        if (!isValid || password !== passwordRepeated) {
+        const hasEmptyValues = where({
+            password: isEmpty,
+            passwordRepeated: isEmpty,
+        });
+
+        if (hasEmptyValues(this.state) || password !== passwordRepeated) {
             return;
         }
-        // submit the form
+
         this.props.dispatch(handleResetPassword({ password, token }));
-        // show success message and direct them to log in with the new creds
     }
 
     render () {
+        const { passwordUpdated } = this.props;
         const { password, passwordRepeated } = this.state;
 
         return (
@@ -59,26 +62,35 @@ class PasswordResetForm extends Component {
                     >
                         <CardHeader title="Reset Your Password" />
                         <CardText>
-                            <TextField
-                                style={{ display: 'block' }}
-                                value={password}
-                                hintText="Enter New Password"
-                                type="password"
-                                name="password"
-                                onChange={this.handleInputChange}
-                            />
-                            <TextField
-                                style={{ display: 'block' }}
-                                value={passwordRepeated}
-                                hintText="Enter New Password Again"
-                                type="password"
-                                name="passwordRepeated"
-                                onChange={this.handleInputChange}
-                            />
-                            <RaisedButton
-                                label="Submit"
-                                onTouchTap={this.submitForm}
-                            />
+                            {!passwordUpdated &&
+                                <div>
+                                    <TextField
+                                        style={{ display: 'block' }}
+                                        value={password}
+                                        hintText="Enter New Password"
+                                        type="password"
+                                        name="password"
+                                        onChange={this.handleInputChange}
+                                    />
+                                    <TextField
+                                        style={{ display: 'block' }}
+                                        value={passwordRepeated}
+                                        hintText="Enter New Password Again"
+                                        type="password"
+                                        name="passwordRepeated"
+                                        onChange={this.handleInputChange}
+                                    />
+                                    <RaisedButton
+                                        label="Submit"
+                                        onTouchTap={this.submitForm}
+                                    />
+                                </div>
+                            }
+                            {passwordUpdated &&
+                                <div>
+                                    Password updated successfully. Please log in with your new credentials.
+                                </div>
+                            }
                         </CardText>
                     </Card>
                 </div>

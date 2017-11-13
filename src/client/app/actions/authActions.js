@@ -8,7 +8,9 @@ import {
     LOGOUT_REQUEST,
     AUTH_VERIFICATION,
     UPDATE_LOGIN_FORM,
-    CLEAR_LOGIN_FORM
+    CLEAR_LOGIN_FORM,
+    PASSWORD_RESET_SUCCESS,
+    PASSWORD_RESET_FAIL
 } from '../constants';
 import { getUserShows, getAllShows } from './showActions';
 import { handleErrorModal, handlePasswordModal } from './feedbackActions';
@@ -191,13 +193,29 @@ const handleResetPassword = ({ password, token }) =>
                 }
             });
 
-            if (!data.sucess) {
-                // it didn't work
+            if (!data.success) {
+                dispatch({
+                    type: PASSWORD_RESET_FAIL,
+                    data: {
+                        passwordUpdated: false
+                    }
+                });
             }
-
             // send success action
+            dispatch({
+                type: PASSWORD_RESET_SUCCESS,
+                data: {
+                    passwordUpdated: true
+                }
+            });
+
         } catch (e) {
-            // handle error
+            dispatch({
+                type: PASSWORD_RESET_FAIL,
+                data: {
+                    passwordUpdated: false
+                }
+            });
         }
     };
 
