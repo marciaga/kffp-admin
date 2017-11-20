@@ -23,8 +23,8 @@ class ErrorModal extends Component {
     renderActionButton () {
         return (
             <FlatButton
+                primary
                 label="Got It"
-                primary={true}
                 onTouchTap={this.handleClose}
             />
         );

@@ -169,6 +169,18 @@ const users = {
                 label: 'DJ Name',
                 validation: ['required', 'string']
             },
+            firstName: {
+                fieldType: 'Text',
+                name: 'text',
+                hintText: 'e.g. Laura',
+                label: 'First Name'
+            },
+            lastName: {
+                fieldType: 'Text',
+                name: 'text',
+                hintText: 'e.g. Palmer',
+                label: 'Last Name'
+            },
             email: {
                 fieldType: 'Text',
                 name: 'text',
@@ -197,6 +209,12 @@ const users = {
     },
     show: {
         fields: {
+            firstName: {
+                label: 'First Name'
+            },
+            lastName: {
+                label: 'Last Name'
+            },
             displayName: {
                 label: 'Display Name'
             },
@@ -219,6 +237,18 @@ const users = {
                 hintText: 'Enter name as it should be displayed',
                 label: 'DJ Name',
                 validation: ['required', 'string']
+            },
+            firstName: {
+                fieldType: 'Text',
+                name: 'text',
+                hintText: 'e.g. Laura',
+                label: 'First Name'
+            },
+            lastName: {
+                fieldType: 'Text',
+                name: 'text',
+                hintText: 'e.g. Palmer',
+                label: 'Last Name'
             },
             email: {
                 fieldType: 'Text',

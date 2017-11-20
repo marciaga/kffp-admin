@@ -10,8 +10,11 @@ export default class TextArea extends Component {
     }
 
     handleTextFieldChange (e) {
-        const textFieldName = this.props.fieldName;
-        this.props.dispatch(updateFormField(textFieldName, e.target.value));
+        const { value } = e.target;
+        const { fieldName, handleChange } = this.props;
+
+        handleChange ? handleChange(fieldName, value) : // eslint-disable-line
+        this.props.dispatch(updateFormField(fieldName, value));
     }
 
     render () {
@@ -19,9 +22,9 @@ export default class TextArea extends Component {
 
         return (
             <TextField
+                multiLine
                 id={id}
                 name={name}
-                multiLine={true}
                 floatingLabelText={label}
                 value={value || ''}
                 hintText={hintText}
@@ -35,6 +38,7 @@ export default class TextArea extends Component {
 
 TextArea.propTypes = {
     dispatch: PropTypes.func,
+    handleChange: PropTypes.func,
     id: PropTypes.string,
     name: PropTypes.string,
     label: PropTypes.string,

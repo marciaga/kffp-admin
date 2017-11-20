@@ -101,7 +101,7 @@ export default class AutoCompleteField extends Component {
                         onNewRequest={this.handleSelection}
                         onUpdateInput={this.handleInputUpdate}
                         floatingLabelText={label}
-                        fullWidth={true}
+                        fullWidth
                     />
                 </div>
                 <div>
