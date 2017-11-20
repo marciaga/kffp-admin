@@ -12,6 +12,8 @@ import ShowsAutoCompleteFilter from '../form/fields/showsAutocompleteFilter';
 import VolunteerWidget from './volunteer-widget';
 
 const getUserId = pathOr('', ['user', 'id']);
+// TODO - remove before release
+const newFeature = false;
 
 const mapStateToProps = state => ({
     auth: state.auth,
@@ -52,7 +54,7 @@ class Main extends Component {
                         <ShowsAutoCompleteFilter dispatch={dispatch} shows={shows} />
                     </div>
                 </div>
-                <div className="row">
+                {newFeature && <div className="row">
                     <div className="flex-horizontal-center user-shows col col-md-12">
                         <Card
                             style={{ minWidth: 600 }}
@@ -68,7 +70,7 @@ class Main extends Component {
                             />
                         </Card>
                     </div>
-                </div>
+                </div>}
             </div>
         );
     }
