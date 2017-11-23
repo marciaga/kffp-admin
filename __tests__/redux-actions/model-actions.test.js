@@ -7,7 +7,7 @@ import { setModel } from '../../src/client/app/actions/modelActions';
 import { API_ENDPOINT } from '../../src/client/app/utils/constants';
 
 const fuse = new Fuse(undefined, {
-    keys: ['displayName', 'email', 'role']
+    keys: ['firstName', 'lastName', 'displayName', 'email', 'role']
 });
 const mock = new MockAdapter(axios);
 const middlewares = [thunk];
@@ -17,6 +17,12 @@ const returnValue = {
     model: {
         data: undefined,
         fields: {
+            firstName: {
+                label: 'First Name'
+            },
+            lastName: {
+                label: 'Last Name'
+            },
             displayName: {
                 label: 'Display Name'
             },
