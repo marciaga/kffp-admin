@@ -123,7 +123,14 @@ const createUser = (request, reply) => {
         });
     }
 
-    const { email, password, role, displayName } = request.payload;
+    const {
+        firstName,
+        lastName,
+        email,
+        password,
+        role,
+        displayName
+    } = request.payload;
 
     hashPassword(password, (error, hash) => {
         if (error) {
@@ -135,6 +142,8 @@ const createUser = (request, reply) => {
             displayName,
             email,
             password: hash,
+            firstName,
+            lastName,
             role
         }, (mongoErr, user) => {
             if (mongoErr) {

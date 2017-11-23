@@ -4,7 +4,7 @@ import SelectField from 'material-ui/SelectField';
 
 import { updateFormField } from '../../../actions/formActions';
 
-const Select = ({ dispatch, fieldName, label, value, items }) => {
+const Select = ({ dispatch, fieldName, label, value, items, handleChange, autoWidth }) => {
     const renderItems = (list) => {
         if (list) {
             return list.map((item, i) => (
@@ -13,26 +13,32 @@ const Select = ({ dispatch, fieldName, label, value, items }) => {
         }
     };
 
-    const selectChangeHandler = (event, index, val) => {
+    const selectChangeHandler = (event, index, val) => handleChange ? // eslint-disable-line
+        handleChange(fieldName, val) :
         dispatch(updateFormField(fieldName, val));
-    };
 
     return (
         <SelectField
             floatingLabelText={label}
             value={value}
             onChange={selectChangeHandler}
+            autoWidth={autoWidth}
         >
-            { renderItems(items) }
+            {renderItems(items)}
         </SelectField>
     );
 };
 
 Select.propTypes = {
+    autoWidth: PropTypes.bool,
     dispatch: PropTypes.func,
     fieldName: PropTypes.string,
+    handleChange: PropTypes.func,
     label: PropTypes.string,
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]),
     items: PropTypes.array
 };
 
