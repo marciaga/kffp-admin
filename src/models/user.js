@@ -24,7 +24,8 @@ const getUserById = async (id, db) => {
     }
 };
 
-const createToken = (user) => {
+
+const createToken = (user, expiration = '7d') => {
     const { _id, email, role, displayName } = user;
     const secret = process.env.JWT_SECRET_KEY;
 
@@ -38,7 +39,7 @@ const createToken = (user) => {
         secret,
         {
             algorithm: 'HS256',
-            expiresIn: '7d'
+            expiresIn: expiration
         }
     );
 };
@@ -163,6 +164,7 @@ const verifyToken = (request, reply) => {
 
         jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
             if (err) {
+                console.log('err', err)
                 // return error message to client
                 /*
                 err = {
@@ -435,6 +437,7 @@ const resetPassword = async (request, reply) => {
 
 export {
     getUsers,
+    createToken,
     verifyToken,
     createUser,
     updateUser,
@@ -444,5 +447,7 @@ export {
     verifyCredentials,
     verifyUniqueUser,
     verifyPassword,
-    updateUserField
+    updateUserField,
+    updateField,
+    hashPassword
 };

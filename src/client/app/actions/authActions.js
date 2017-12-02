@@ -8,10 +8,12 @@ import {
     LOGOUT_REQUEST,
     AUTH_VERIFICATION,
     UPDATE_LOGIN_FORM,
-    CLEAR_LOGIN_FORM
+    CLEAR_LOGIN_FORM,
+    PASSWORD_RESET_SUCCESS,
+    PASSWORD_RESET_FAIL
 } from '../constants';
 import { getUserShows, getAllShows } from './showActions';
-import { handleErrorModal } from './feedbackActions';
+import { handleErrorModal, handlePasswordModal } from './feedbackActions';
 import { API_ENDPOINT, GENERIC_ERROR_MESSAGE } from '../utils/constants';
 
 const loginInputChange = data => ({
@@ -71,9 +73,10 @@ const loginUser = (creds) => {
             });
 
             if (data.code === 401) {
-                return dispatch(handleErrorModal({
+                return dispatch(handlePasswordModal({
                     message: 'Login failed. Please try again.',
-                    open: true
+                    open: true,
+                    passwordReset: true
                 }));
             }
 
@@ -85,7 +88,7 @@ const loginUser = (creds) => {
             dispatch(getAllShows());
             dispatch(getUserShows(id));
             dispatch(receiveLogin(data));
-            dispatch(push('/'));
+            dispatch(push('/dashboard'));
         } catch (err) {
             const error = { ...err };
             const message = error.response.data.message;
@@ -158,15 +161,63 @@ const verifyLogin = (isAuthenticated) => {
                 data
             });
         } catch (err) {
-            dispatch(handleErrorModal({
+            dispatch(handlePasswordModal({
                 message: 'Token Expired. Please Log In Again.',
-                open: true
+                open: true,
+                isLogin: true
             }));
 
             dispatch(logoutUser());
         }
     };
 };
+
+const sendPasswordReset = email => async (dispatch) => {
+    const url = `${API_ENDPOINT}/auth/forgot-password`;
+
+    try {
+        await axios.post(url, { email });
+    }
+    catch (e) {
+        // no-op
+    }
+};
+
+const handleResetPassword = ({ password, token }) =>
+    async (dispatch) => {
+        try {
+            const url = `${API_ENDPOINT}/auth/reset-password`;
+            const { data } = await axios.post(url, { password }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!data.success) {
+                dispatch({
+                    type: PASSWORD_RESET_FAIL,
+                    data: {
+                        passwordUpdated: false
+                    }
+                });
+            }
+            // send success action
+            dispatch({
+                type: PASSWORD_RESET_SUCCESS,
+                data: {
+                    passwordUpdated: true
+                }
+            });
+
+        } catch (e) {
+            dispatch({
+                type: PASSWORD_RESET_FAIL,
+                data: {
+                    passwordUpdated: false
+                }
+            });
+        }
+    };
 
 export {
     verifyLogin,
@@ -175,5 +226,7 @@ export {
     receiveLogin,
     requestLogin,
     logoutUser,
-    loginInputChange
+    loginInputChange,
+    sendPasswordReset,
+    handleResetPassword
 };
