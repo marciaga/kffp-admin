@@ -9,6 +9,10 @@ const authMiddleware = store => next => (action) => {
         const hasToken = getTokenFromLocalStorage() !== null;
         const { pathname } = action.payload;
 
+        if (pathname === '/reset-password') {
+            return next(action);
+        }
+
         if (!hasToken && pathname !== '/') {
             return browserHistory.push('/');
         }

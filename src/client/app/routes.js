@@ -5,15 +5,19 @@ import Users from './components/users';
 import Playlist from './components/playlist';
 import Shows from './components/shows';
 import Main from './components/main';
+import Dashboard from './components/main/dashboard';
 import Settings from './components/settings';
 import Reports from './components/reports';
 import VolunteerForm from './components/volunteer/form';
 import NotFound from './components/error/404';
+import PasswordResetForm from './components/auth/password-reset';
 
 export default (
     <Route>
         <Route component={App} path="/">
             <IndexRoute component={Main} />
+            <Route component={PasswordResetForm} path="/reset-password" />
+            <Route component={Dashboard} path="/dashboard" />
             <Route component={Users} path="/users" />
             <Route component={Playlist} path="/playlists/:slug" />
             <Route component={Playlist} path="/playlists/:slug/:playlistId" />

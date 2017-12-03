@@ -54,13 +54,15 @@ export default function feedbackReducer (state = initialState, action) {
         };
 
     case TOGGLE_ERROR_MODAL:
-        const { open: modalOpen, message } = action.data;
+        const { open: modalOpen, message, passwordReset, isLogin } = action.data;
 
         return {
             ...state,
             error: {
                 open: modalOpen,
-                message
+                message,
+                passwordReset,
+                isLogin
             }
         };
 

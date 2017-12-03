@@ -140,6 +140,10 @@ const scopeValidator = (user, key) => {
     return p.some(f => f === scope);
 };
 
+const isValidEmail = s =>
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    .test(s);
+
 export {
     debounce,
     dateSortAsc,
@@ -153,5 +157,6 @@ export {
     removePlaylistIdFromPath,
     humanReadableTime,
     playlistUpdateMessage,
-    scopeValidator
+    scopeValidator,
+    isValidEmail
 };
