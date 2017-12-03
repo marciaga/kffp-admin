@@ -44,6 +44,8 @@ const resetPassword = (request, reply) => {
     });
 };
 
+const setHost = str => str.includes('localhost') ? `http://${str}` : str;
+
 const handlePasswordReset = async (request, reply) => {
     const { email } = request.payload;
     const { db } = request.server.plugins.mongodb;
@@ -55,7 +57,7 @@ const handlePasswordReset = async (request, reply) => {
         if (result) {
             const { host } = request.info;
             const token = createToken(result, '1h');
-            const link = `${host}/reset-password?token=${token}`
+            const link = `${setHost(host)}/reset-password?token=${token}`
             const rendered = await request.render('password-email',
                 { link }
             );
