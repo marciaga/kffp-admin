@@ -15,7 +15,7 @@ const imageUpload = (request, reply) => {
     }
 
     if (file) {
-        const name = file.hapi.filename;
+        const name = `${Date.now()}-${file.hapi.filename}`;
         const contentType = file.hapi.headers['content-type'];
 
         s3.upload({
