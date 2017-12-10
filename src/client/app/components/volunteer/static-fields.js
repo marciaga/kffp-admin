@@ -71,10 +71,20 @@ export const volunteerCategoryFields = [
         value: 'volunteer'
     }
 ];
-
-export const selectableHours = Array(200)
+const wholeHours = Array(100)
     .fill(0)
-    .map((o, i) => ({
-        label: i + .5,
-        value: i + .5 
-    }));
+    .map((o, i) => i + 1);
+
+const halfHours = Array(100)
+    .fill(0)
+    .map((o, i) => i + .5);
+
+const sortedHours = [
+  ...wholeHours,
+  ...halfHours
+].sort((a, b) => a - b);
+
+export const selectableHours = sortedHours.map(n => ({
+  label: n,
+  value: n
+}));
