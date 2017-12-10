@@ -72,9 +72,9 @@ export const volunteerCategoryFields = [
     }
 ];
 
-export const selectableHours = Array(100)
+export const selectableHours = Array(200)
     .fill(0)
     .map((o, i) => ({
-        label: i + 1,
-        value: i + 1
+        label: i + .5,
+        value: i + .5 
     }));

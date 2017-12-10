@@ -90,12 +90,16 @@ export const getVolunteerReport = async (request, reply) => {
                 }
             }, {
                     firstName: 1,
-                    lastName: 1
+                    lastName: 1,
+                    email: 1
             })
             .toArray();
 
         const u = users.reduce((memo, key) => {
-          memo[key._id] = `${key.firstName} ${key.lastName}`
+          memo[key._id] = {
+            name: `${key.firstName} ${key.lastName}`,
+            email: key.email
+          }
 
           return memo;
         }, {});
@@ -104,7 +108,8 @@ export const getVolunteerReport = async (request, reply) => {
             const { _id, userId, ...rest } = r;
 
             return {
-                name: u[r.userId],
+                name: u[r.userId].name,
+                email: u[r.userId].email,
                 ...rest
             };
         });
