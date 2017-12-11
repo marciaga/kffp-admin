@@ -19,7 +19,7 @@
     "start": "pm2 start --no-daemon ecosystem.config.js --env production",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "watch:css": "./node_modules/.bin/node-sass -w src/client/css -o public/css --include-path=node_modules/react-draft-wysiwyg/dist & ./node_modules/.bin/postcss -w ./public/css/main.css -o ./public/css/main.css"
+    "watch:css": "./node_modules/.bin/node-sass -w src/client/css -o public/css --include-path=node_modules/react-draft-wysiwyg/dist"
   },
   "repository": {
     "url": "git+https://github.com/marciaga/playlist-v2.git",

@@ -41,7 +41,6 @@ const manifest = {
     connections: [
         {
             port: process.env.PORT || 3000,
-            host: '127.0.0.1', // this sucks wtf
             labels: ['web']
         }
     ],
@@ -105,6 +104,8 @@ const { NODE_ENV } = process.env;
 
 if (NODE_ENV === 'development') {
     manifest.registrations.push(webpackDevMiddleware, webpackHotMiddleware);
+    // cloud9 needs localhost set explicitly
+    manifest.connections[0].host = '127.0.0.1';
 }
 
 if (NODE_ENV === 'production' || NODE_ENV === 'staging') {
