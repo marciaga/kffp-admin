@@ -7,7 +7,7 @@
     "build:js": "NODE_ENV=production webpack --env=production --progress --profile --colors",
     "build:css": "yarn build:sass && yarn build:postcss",
     "build:sass": "./node_modules/.bin/node-sass src/client/css -o public/css --include-path=node_modules/react-draft-wysiwyg/dist",
-    "build:postcss": "./node_modules/.bin/postcss -c ./postcss.config.js",
+    "build:postcss": "./node_modules/.bin/postcss ./public/css/main.css -o ./public/css/main.css",
     "build:production": "yarn build:css && yarn build:js",
     "build:import": "./node_modules/.bin/babel ./bin/import.js -o ./bin/import-script.js",
     "dev": "yarn watch:css & yarn dev:js",
@@ -19,7 +19,7 @@
     "start": "pm2 start --no-daemon ecosystem.config.js --env production",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "watch:css": "./node_modules/.bin/node-sass -w src/client/css -o public/css --include-path=node_modules/react-draft-wysiwyg/dist & postcss -w -c ./postcss.config.js"
+    "watch:css": "./node_modules/.bin/node-sass -w src/client/css -o public/css --include-path=node_modules/react-draft-wysiwyg/dist"
   },
   "repository": {
     "url": "git+https://github.com/marciaga/playlist-v2.git",
@@ -30,8 +30,8 @@
     "react",
     "redux"
   ],
-  "author": "Arciaga, other folks tbd",
-  "license": "ISC",
+  "author": "Mark Arciaga, other folks",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/marciaga/playlist-v2/issues"
   },
@@ -82,7 +82,7 @@
     "nodemailer": "^4.4.0",
     "nodemailer-ses-transport": "^1.5.1",
     "normalize-scss": "^6.0.0",
-    "postcss-cli": "^2.6.0",
+    "postcss-cli": "^4.1.1",
     "ramda": "^0.24.1",
     "react": "^15.3.0",
     "react-csv": "^1.0.8",
