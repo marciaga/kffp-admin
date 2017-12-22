@@ -19,6 +19,7 @@ const playlistSchema = Joi.object().keys({
     showId: Joi.string().required(),
     playlistDate: Joi.date().iso().required(),
     playlistId: Joi.string().required(),
+    playlistTitle: Joi.string(),
     songs: Joi.array().items(Joi.object(songSchema)),
     isSub: Joi.boolean()
 });

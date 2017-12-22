@@ -142,10 +142,36 @@ const receivePlaylistFieldUpdate = data => ({
     data
 });
 
-const updatePlaylistTitleField = data => ({
-    type: UPDATE_PLAYLIST_TITLE_FIELD,
-    data
-});
+const updatePlaylistTitleField = ({ playlistTitle, playlistId }) => async (dispatch) => {
+    const idToken = getTokenFromLocalStorage();
+    const url = `${API_ENDPOINT}/playlists/${playlistId}`;
+
+    try {
+        const { data } = await axios.patch(url, { playlistTitle }, {
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
+        });
+
+        const { success, message } = data;
+
+        if (success) {
+            dispatch(snackbarMessage(message));
+
+            return dispatch(receivePlaylistFieldUpdate({
+                playlistId,
+                playlistTitle
+            }));
+        }
+
+        dispatch(snackbarMessage(message));
+    } catch (err) {
+        dispatch(handleErrorModal({
+            message: GENERIC_ERROR_MESSAGE,
+            open: true
+        }));
+    }
+};
 
 const updatePlaylistDate = (date, playlistId) => async (dispatch) => {
     const idToken = getTokenFromLocalStorage();

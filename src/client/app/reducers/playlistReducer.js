@@ -94,15 +94,6 @@ export default function playlistReducer (state = initialState, action) {
             })
         };
 
-    case UPDATE_PLAYLIST_TITLE_FIELD:
-        return {
-            ...state,
-            currentPlaylist: {
-                ...state.currentPlaylist,
-                playlistTitle: action.data
-            }
-        };
-
     case DELETE_PLAYLIST:
         const { playlistId: pid } = action.data;
 

@@ -38,7 +38,7 @@ const PlaylistForm = (props) => {
     const { scope } = auth.user;
 
     if (shouldShowCurrentPlaylist(currentPlaylist)) {
-        const { playlistDate, playlistId } = currentPlaylist;
+        const { playlistDate, playlistId, playlistTitle } = currentPlaylist;
         const dateObj = moment(playlistDate);
         const formattedDate = dateObj.format('MMMM Do, YYYY');
 
@@ -55,6 +55,8 @@ const PlaylistForm = (props) => {
                 <div className="col col-md-12 flex-horizontal-center">
                     <PlaylistTitleForm
                         dispatch={dispatch}
+                        playlistId={playlistId}
+                        playlistTitle={playlistTitle}
                     />
                 </div>
                 <Search />

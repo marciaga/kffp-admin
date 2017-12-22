@@ -9,10 +9,22 @@ class PlaylistTitleForm extends Component {
 
         this.state = {
             playlistTitle: props.playlistTitle || '',
-            characterCount: 0,
+            characterCount: this.setCharCount(props.playlistTitle),
             errorColor: 'lightBlue'
         };
     }
+
+    componentWillReceiveProps (nextProps) {
+        const currentTitle = this.props.playlistTitle;
+        const newTitle = nextProps.playlistTitle;
+
+        if (currentTitle !== newTitle) {
+            this.setState({
+                playlistTitle: newTitle || '',
+                characterCount: this.setCharCount(newTitle)
+            });
+        }
+    };
 
     handleChange = (e, val) => {
         this.setState({
@@ -26,8 +38,14 @@ class PlaylistTitleForm extends Component {
         if (this.state.characterCount > 200) {
             return;
         }
-        // dispatch the save action
+
+        this.props.dispatch(updatePlaylistTitleField({
+            playlistTitle: this.state.playlistTitle,
+            playlistId: this.props.playlistId
+        }));
     }
+
+    setCharCount = str => str && str.length ? str.length : 0;
 
     checkCharCount = count => count > 200 ? 'red' : 'lightBlue';
 
@@ -35,7 +53,7 @@ class PlaylistTitleForm extends Component {
         const { characterCount } = this.state;
 
         return (
-            <div>
+            <div style={{ display: 'flex' }}>
                 <TextField
                     hintText="Playlist Title (optional)"
                     floatingLabelText="Playlist Title (optional)"
@@ -47,10 +65,17 @@ class PlaylistTitleForm extends Component {
                     value={this.state.playlistTitle}
                     onChange={this.handleChange}
                />
-                <FlatButton
-                    label="Save"
-                    onClick={this.handleSave}
-                />
+           <div
+               style={{
+                   display: 'flex',
+                   alignItems: 'center'
+                }}>
+                    <FlatButton
+                        label="Save"
+                        onClick={this.handleSave}
+                    />
+
+               </div>
             </div>
         );
     }
