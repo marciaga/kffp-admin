@@ -247,7 +247,8 @@ const addNewPlaylist = props => async (dispatch) => {
     const url = `${API_ENDPOINT}/playlists`;
     const showData = {
         showId,
-        isSub
+        isSub,
+        djName: currentUserName
     };
 
     try {
