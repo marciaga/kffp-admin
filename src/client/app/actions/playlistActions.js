@@ -25,7 +25,8 @@ import {
     UPDATE_PLAYLIST_SONGS,
     UPDATE_PLAYLIST_FIELD,
     RESET_CURRENT_PLAYLIST,
-    DELETE_PLAYLIST
+    DELETE_PLAYLIST,
+    UPDATE_PLAYLIST_TITLE_FIELD
 } from '../constants';
 
 const receiveTrack = data => ({
@@ -138,6 +139,11 @@ const receiveSongs = data => ({
 
 const receivePlaylistFieldUpdate = data => ({
     type: UPDATE_PLAYLIST_FIELD,
+    data
+});
+
+const updatePlaylistTitleField = data => ({
+    type: UPDATE_PLAYLIST_TITLE_FIELD,
     data
 });
 
@@ -369,5 +375,6 @@ export {
     resetCurrentPlaylist,
     updatePlaylistDate,
     deletePlaylist,
-    clearSearchResults
+    clearSearchResults,
+    updatePlaylistTitleField
 };

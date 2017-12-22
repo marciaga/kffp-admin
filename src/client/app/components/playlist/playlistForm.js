@@ -7,6 +7,7 @@ import ConfirmationDialog from '../feedback/confirm';
 import Search from '../search';
 import SearchResults from '../search/searchResults';
 import SongList from './songList';
+import PlaylistTitleForm from './playlistTitle';
 import {
     updatePlaylistDate,
     deletePlaylist
@@ -51,6 +52,11 @@ const PlaylistForm = (props) => {
                     onChange={(u, date) => handleDateChange(u, { date, playlistId }, dispatch)}
                 />
 
+                <div className="col col-md-12 flex-horizontal-center">
+                    <PlaylistTitleForm
+                        dispatch={dispatch}
+                    />
+                </div>
                 <Search />
 
                 {!!searchResults.length &&
