@@ -8,7 +8,8 @@ import {
     REORDER_SONGS,
     RESET_CURRENT_PLAYLIST,
     UPDATE_PLAYLIST_FIELD,
-    DELETE_PLAYLIST
+    DELETE_PLAYLIST,
+    UPDATE_PLAYLIST_TITLE_FIELD
 } from '../constants';
 
 const initialState = {
