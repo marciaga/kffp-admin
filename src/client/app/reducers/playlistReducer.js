@@ -76,17 +76,20 @@ export default function playlistReducer (state = initialState, action) {
         };
 
     case UPDATE_PLAYLIST_FIELD:
-        const { playlistDate, playlistId } = action.data;
+        const { playlistId } = action.data;
+        const key = Object.keys(action.data)
+            .filter(k => k !== 'playlistId')
+            .reduce(f => f);
 
         return {
             ...state,
             currentPlaylist: {
                 ...state.currentPlaylist,
-                playlistDate
+                [key]: action.data[key]
             },
             playlists: state.playlists.map((p) => {
                 if (p.playlistId === playlistId) {
-                    p.playlistDate = playlistDate;
+                    p[key] = action.data[key];
                 }
 
                 return p;

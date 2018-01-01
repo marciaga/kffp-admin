@@ -7,6 +7,7 @@ import ConfirmationDialog from '../feedback/confirm';
 import Search from '../search';
 import SearchResults from '../search/searchResults';
 import SongList from './songList';
+import PlaylistTitleForm from './playlistTitle';
 import {
     updatePlaylistDate,
     deletePlaylist
@@ -37,7 +38,7 @@ const PlaylistForm = (props) => {
     const { scope } = auth.user;
 
     if (shouldShowCurrentPlaylist(currentPlaylist)) {
-        const { playlistDate, playlistId } = currentPlaylist;
+        const { playlistDate, playlistId, playlistTitle } = currentPlaylist;
         const dateObj = moment(playlistDate);
         const formattedDate = dateObj.format('MMMM Do, YYYY');
 
@@ -51,6 +52,13 @@ const PlaylistForm = (props) => {
                     onChange={(u, date) => handleDateChange(u, { date, playlistId }, dispatch)}
                 />
 
+                <div className="col col-md-12 flex-horizontal-center">
+                    <PlaylistTitleForm
+                        dispatch={dispatch}
+                        playlistId={playlistId}
+                        playlistTitle={playlistTitle}
+                    />
+                </div>
                 <Search />
 
                 {!!searchResults.length &&

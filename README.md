@@ -202,6 +202,8 @@ Response: 200 SUCCESS
             "showId": "3j32kdlkj23vsc312",
             "playlistDate": "2017-03-20T00:48:14.187Z",
             "playlistId":"S1U0Ushsl",
+            "isSub": false,
+            "djName": "Cat Meowington",
             "songs": [
                 {
                     "artist": "This Mortal Coil",
