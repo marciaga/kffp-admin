@@ -25,8 +25,7 @@ import {
     UPDATE_PLAYLIST_SONGS,
     UPDATE_PLAYLIST_FIELD,
     RESET_CURRENT_PLAYLIST,
-    DELETE_PLAYLIST,
-    UPDATE_PLAYLIST_TITLE_FIELD
+    DELETE_PLAYLIST
 } from '../constants';
 
 const receiveTrack = data => ({
