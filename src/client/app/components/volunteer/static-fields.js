@@ -20,6 +20,10 @@ export const volunteerTypeFields = [
         value: 'operations-committee'
     },
     {
+        label: 'Programming Committee',
+        value: 'programming-committee'
+    },
+    {
         label: 'Social Media Committee',
         value: 'social-media-committee'
     },
