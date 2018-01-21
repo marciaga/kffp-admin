@@ -1,6 +1,6 @@
 import webpackConfig from '../../webpack.config';
 
-const DB_URL = `${process.env.DB_CONNECTION}/${process.env.DB_NAME}`;
+const DB_URL = `${process.env.DB_CONNECTION}`;
 const webpackHotMiddleware = {
     plugin: {
         register: 'hapi-webpack-hot-middleware'
