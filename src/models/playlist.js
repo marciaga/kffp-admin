@@ -8,8 +8,8 @@ const songSchema = {
     id: Joi.string(),
     title: Joi.string().required(),
     artist: Joi.string().required(),
-    album: Joi.string(),
-    label: Joi.string(),
+    album: Joi.string().required(),
+    label: Joi.string().required(),
     releaseDate: Joi.string(),
     playedAt: Joi.date().iso()
 };
