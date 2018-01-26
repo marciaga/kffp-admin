@@ -14,10 +14,23 @@ const NODE_ENV = process.env.NODE_ENV;
 console.log('__NODE_ENV__', NODE_ENV);
 
 const storeFactory = (initialState) => {
-    const rootReducer = combineReducers({
+    const appReducer = combineReducers({
         ...reducers,
         routing: routerReducer
     });
+
+    const rootReducer = (state, action) => {
+        if (action.type === 'LOGOUT_SUCCESS') {
+            state = undefined;
+            // TODO: uncomment if routing is not working properly
+            // const { routing } = state
+            //
+            // state = { routing }
+        }
+
+        return appReducer(state, action);
+    };
+
     const middleware = [thunk, authMiddleware, routerMiddleware(browserHistory)];
 
     const devToolComposition = compose(

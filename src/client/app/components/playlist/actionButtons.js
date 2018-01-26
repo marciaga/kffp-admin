@@ -8,6 +8,7 @@ import { togglePlaylistDrawer } from '../../actions/uiActions';
 const ActionButtons = ({ dispatch, ...props }) => (
     <div className="flex-horizontal-center col col-md-12 col-sm-12">
         <RaisedButton
+            disabled={!props.showId}
             onClick={() => dispatch(addNewPlaylist(props))}
             label="Make Playlist"
             secondary={true}
