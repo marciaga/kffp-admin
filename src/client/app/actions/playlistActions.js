@@ -257,6 +257,10 @@ const addNewPlaylist = props => async (dispatch) => {
             }
         });
 
+        if (!data.success) {
+            return dispatch(snackbarMessage(data.message));
+        }
+
         const { playlistId } = data;
 
         dispatch(receivePlaylist(data));
