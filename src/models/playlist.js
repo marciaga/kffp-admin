@@ -8,8 +8,8 @@ const songSchema = {
     id: Joi.string(),
     title: Joi.string().required(),
     artist: Joi.string().required(),
-    album: Joi.string(),
-    label: Joi.string(),
+    album: Joi.string().required(),
+    label: Joi.string().required(),
     releaseDate: Joi.string(),
     playedAt: Joi.date().iso()
 };
@@ -90,9 +90,14 @@ const getPlaylistsByShow = async (request, reply) => {
     }
 };
 
+const playlistLimitValidation = () => {
+
+};
+
 const createPlaylist = async (request, reply) => {
     const { db, ObjectID } = request.server.plugins.mongodb;
     const now = moment();
+
     const playlistDate = now.toISOString(); // this is set to UTC 0
     const playlistId = shortid.generate();
     const { showId, isSub, djName } = request.payload;
@@ -107,15 +112,25 @@ const createPlaylist = async (request, reply) => {
     };
 
     try {
-        const result = await db.collection('playlists').find({
-            playlistId,
-            showId: new ObjectID(showId)
+        const result = await db.collection('playlists').find({ $or: [
+            {
+                showId: new ObjectID(showId),
+                playlistId
+            },
+            {
+                showId: new ObjectID(showId),
+                playlistDate: {
+                    $gte: new Date(now.startOf('day').toISOString()),
+                    $lte: new Date(now.endOf('day').toISOString())
+                }
+            }
+        ]
         }).toArray();
 
         if (result.length) {
             const msg = playlistUpdateMessage('playlistAlreadyExists');
 
-            return reply(Boom.unauthorized(msg));
+            return reply({ success: false, message: msg });
         }
 
         try {

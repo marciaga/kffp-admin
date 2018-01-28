@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
+import ActionInfo from 'material-ui/svg-icons/action/info';
+import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
@@ -20,6 +22,23 @@ const mapStateToProps = state => ({
     feedback: state.feedback
 });
 
+const requiredSongFields = ['album', 'artist', 'title', 'label'];
+
+const SongErrorMessage = ({ missingFields }) => (
+    <List>
+        {missingFields.map((field, i) => {
+            return (
+                <ListItem
+                    key={`${field}_${i}`}
+                    disabled
+                    primaryText={`Missing field: ${field}`}
+                    leftIcon={<ActionInfo color="red" />}
+                />
+            )
+        })}
+    </List>
+);
+
 class SongForm extends Component {
     constructor (props) {
         super(props);
@@ -28,6 +47,27 @@ class SongForm extends Component {
         this.submitHandler = this.submitHandler.bind(this);
         this.changeHandler = this.changeHandler.bind(this);
         this.debouncer = debounce(this.debouncedHandler, FORM_FIELD_DEBOUNCE_TIME);
+    }
+
+    state = {
+        missingFields: [],
+        isValid: true
+    }
+
+    songValidator = (song) => {
+        const keys = Object.keys(song);
+        const values = Object.values(song);
+
+        const result = keys.filter((k, i) => {
+            const v = values[i];
+
+            return requiredSongFields.includes(k) && !!v;
+        });
+
+        return {
+            isValid: result.length === requiredSongFields.length,
+            missingFields: requiredSongFields.filter(f => result.indexOf(f) < 0)
+        };
     }
 
     changeHandler (e, field) {
@@ -48,8 +88,22 @@ class SongForm extends Component {
         e.preventDefault();
         const songToUpdate = this.props.currentSong;
         const { playlistId } = this.props;
-        // TODO perform validation, incl. check to make sure any fields have actually changes
+
+        const { isValid, missingFields } = this.songValidator(songToUpdate);
+
+        if (!isValid) {
+            return this.setState({
+                missingFields,
+                isValid: false
+            });
+        }
+
         this.props.dispatch(updatePlaylistSong(songToUpdate, playlistId));
+
+        return this.setState({
+            isValid: true,
+            missingFields: []
+        });
     }
 
     renderFormFields (fields) {
@@ -90,6 +144,11 @@ class SongForm extends Component {
                         <RaisedButton type="submit" label="Submit Track Info" />
                     </div>
                 </form>
+                {!this.state.isValid &&
+                    <SongErrorMessage
+                        missingFields={this.state.missingFields}
+                    />
+                }
                 <IconButton
                     onClick={() => this.openConfirmDialog()}
                 >
