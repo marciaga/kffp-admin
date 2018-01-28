@@ -21,11 +21,9 @@ const storeFactory = (initialState) => {
 
     const rootReducer = (state, action) => {
         if (action.type === 'LOGOUT_SUCCESS') {
-            state = undefined;
-            // TODO: uncomment if routing is not working properly
-            // const { routing } = state
-            //
-            // state = { routing }
+            const { routing } = state
+
+            state = { routing }
         }
 
         return appReducer(state, action);
