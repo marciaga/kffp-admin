@@ -162,7 +162,7 @@ const createPlaylist = async (request, reply) => {
                 i === 0
             ));
 
-            return reply(newDoc).code(201);
+            return reply({ doc: newDoc, success: true }).code(201);
         });
     } catch (err) {
         console.log(err);

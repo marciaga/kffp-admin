@@ -261,13 +261,14 @@ const addNewPlaylist = props => async (dispatch) => {
             return dispatch(snackbarMessage(data.message));
         }
 
-        const { playlistId } = data;
+        const { doc = {} } = data;
+        const { playlistId } = doc;
 
-        dispatch(receivePlaylist(data));
+        dispatch(receivePlaylist(doc));
 
         dispatch(push(`/playlists/${slug}/${playlistId}`));
 
-        dispatch(addNewPlaylistToSidebar(data));
+        dispatch(addNewPlaylistToSidebar(doc));
     } catch (err) {
         dispatch(handleErrorModal({
             message: GENERIC_ERROR_MESSAGE,
