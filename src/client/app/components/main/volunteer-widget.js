@@ -39,8 +39,8 @@ class VolunteerWidget extends Component {
     }
 
     renderTableRows = (results) =>
-        results.map(({ date, type, hours }) => (
-            <TableRow key={`${type}_${hours}`}>
+        results.map(({ date, type, hours }, index) => (
+            <TableRow key={`${type}_${hours}_${index}`}>
                 <TableRowColumn>{moment(date).format('MM/DD/YYYY')}</TableRowColumn>
                 <TableRowColumn>{hours}</TableRowColumn>
                 <TableRowColumn>{type}</TableRowColumn>
