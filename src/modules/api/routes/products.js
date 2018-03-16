@@ -2,7 +2,8 @@ import { API_BASE_URL } from '../constants';
 import {
     getProducts,
     createProduct,
-    updateProduct
+    updateProduct,
+    deleteProduct
 } from '../../../models/products';
 
 const productRoutes = [
@@ -40,6 +41,17 @@ const productRoutes = [
             handler: updateProduct
         }
     },
+    {
+        path: `${API_BASE_URL}/products`,
+        method: 'DELETE',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: deleteProduct
+        }
+    }
 ];
 
 export default productRoutes;

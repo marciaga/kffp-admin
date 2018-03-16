@@ -107,4 +107,28 @@ const updateProduct = async (request, reply) => {
     }
 };
 
-export { createProduct, getProducts, updateProduct };
+const deleteProduct = async (request, reply) => {
+    const { db } = request.server.plugins.mongodb;
+    // id comes in as a query string
+    const { id } = request.query;
+    try {
+        const result = await db.collection('products').remove(
+            { _id: parseInt(id) },
+            { justOne: true }
+        );
+        // result, e.g. { ok: 1, n: 0 }
+        const response = await result.toJSON();
+        const { ok, n } = response;
+
+        if (ok && n) {
+            return reply({ success: true });
+        }
+
+        return reply({ success: false, message: 'Update was not successful' });
+    } catch (e) {
+        console.log(e);
+        return reply(Boom.serverUnavailable());
+    }
+};
+
+export { createProduct, getProducts, updateProduct, deleteProduct };
