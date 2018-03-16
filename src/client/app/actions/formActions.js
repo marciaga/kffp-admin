@@ -331,7 +331,7 @@ const setSongForm = songs => ({
     data: songs
 });
 
-const fileUpload = (formData) => {
+const fileUpload = (formData, fieldName) => {
     const url = `${API_ENDPOINT}/upload`;
     const idToken = getTokenFromLocalStorage();
 
@@ -344,7 +344,7 @@ const fileUpload = (formData) => {
             });
 
             const newData = {
-                fieldName: 'primaryImage',
+                fieldName,
                 value: data.filePath
             };
 

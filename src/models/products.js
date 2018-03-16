@@ -109,8 +109,8 @@ const updateProduct = async (request, reply) => {
 
 const deleteProduct = async (request, reply) => {
     const { db } = request.server.plugins.mongodb;
-    // id comes in as a query string
     const { id } = request.query;
+
     try {
         const result = await db.collection('products').remove(
             { _id: parseInt(id) },

@@ -4,13 +4,13 @@ import { fileUpload } from '../../../actions/formActions';
 import ThumbnailImage from './image';
 
 
-const FileInput = ({ label, value, dispatch }) => {
+const FileInput = ({ label, value, fieldName, dispatch }) => {
     const handleInputChange = (e) => {
         const formData = new FormData();
 
         formData.append('file', e.target.files[0]);
 
-        dispatch(fileUpload(formData));
+        dispatch(fileUpload(formData, fieldName));
     };
 
     return (
