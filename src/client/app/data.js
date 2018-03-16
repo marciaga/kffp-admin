@@ -294,6 +294,85 @@ const users = {
     }
 };
 
+export const products = {
+    new: {
+        fields: {
+            name: {
+                fieldType: 'Text',
+                name: 'product_name',
+                hintText: 'e.g. Freeform Portland Slipmat',
+                label: 'Product Name',
+                validation: ['string', 'required']
+            },
+            price: {
+                fieldType: 'Text',
+                name: 'price_field',
+                hintText: 'e.g. 5.99 (must include decimal)',
+                label: 'Price',
+                validation: ['price', 'required']
+            },
+            description: {
+                fieldType: 'TextArea',
+                name: 'product_description',
+                hintText: 'e.g. A totally rad slipmat.',
+                label: 'Product Description',
+                validation: ['string', 'required']
+            },
+            image: {
+                fieldType: 'FileInput',
+                name: 'file',
+                label: 'Product Image'
+            }
+        }
+    },
+    show: {
+        fields: {
+            name: {
+                label: 'Product Name'
+            },
+            price: {
+                label: 'Price'
+            },
+            description: {
+                label: 'Product Description'
+            }
+        }
+    },
+    edit: {
+        fields: {
+            _id: {
+                fieldType: 'Hidden'
+            },
+            name: {
+                fieldType: 'Text',
+                name: 'product_name',
+                hintText: 'e.g. Freeform Portland Slipmat',
+                label: 'Product Name',
+                validation: ['string', 'required']
+            },
+            price: {
+                fieldType: 'Text',
+                name: 'price_field',
+                hintText: 'e.g. 5.99 (must include decimal)',
+                label: 'Price',
+                validation: ['price', 'required']
+            },
+            description: {
+                fieldType: 'TextArea',
+                name: 'product_description',
+                hintText: 'e.g. A totally rad slipmat.',
+                label: 'Product Description',
+                validation: ['string', 'required']
+            },
+            image: {
+                fieldType: 'FileInput',
+                name: 'file',
+                label: 'Product Image'
+            }
+        }
+    }
+};
+
 export const playlistFields = {
     fields: {
         title: {
@@ -326,5 +405,6 @@ export const playlistFields = {
 
 export default {
     shows,
-    users
+    users,
+    products
 };
