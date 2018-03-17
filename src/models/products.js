@@ -27,11 +27,15 @@ const getNextSequenceValue = async (sequenceName, db) => {
 
 const getProducts = async (request, reply) => {
     const { db } = request.server.plugins.mongodb;
+    const { productId } = request.params;
 
+    const query = productId ? { _id: parseInt(productId, 10) } : {};
     try {
-        const results = await db.collection('products').find({}).toArray();
+        const results = await db.collection('products').find(query).toArray();
 
-        return reply(results);
+        const docs = results.map(doc => ({ ...doc, productId: doc._id }));
+
+        return reply(docs);
     } catch (e) {
         console.log(e);
 
