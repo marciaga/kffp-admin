@@ -1,6 +1,7 @@
 import AutoCompleteField from './autoCompleteField';
 import Hidden from './hidden';
 import Select from './select';
+import MultiSelect from './multiselect';
 import Text from './text';
 import TextArea from './textArea';
 import Time from './time';
@@ -14,6 +15,7 @@ export {
     TextArea,
     Hidden,
     Select,
+    MultiSelect,
     Time,
     ToggleField,
     FileInput,

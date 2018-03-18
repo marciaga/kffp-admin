@@ -6,16 +6,33 @@ const productSchema = Joi.object().keys({
     name: Joi.string().required(),
     price: Joi.string().required(),
     description: Joi.string().required(),
-    primaryImage: Joi.string().allow('')
+    primaryImage: Joi.string().allow(''),
+    isDJPremium: Joi.string(),
+    sortOrder: Joi.number().required(), // TODO this comes in as a string of a number,
+    disabled: Joi.boolean(),
+    sizes: Joi.array()
 });
+
+const addPropertyIfExists = (ary) => ary.reduce((o, v) => {
+    const val = Object.values(v).reduce(f => f);
+
+    if (typeof val === 'undefined') {
+        return o;
+    }
+
+    return {
+        ...o,
+        ...v
+    };
+}, {});
 
 const getNextSequenceValue = async (sequenceName, db) => {
     try {
         const { value } = await db.collection('counters').findAndModify(
             { _id: sequenceName },
             null,
-           { $inc: { sequence_value: 1 }},
-           { new: true }
+            { $inc: { sequence_value: 1 }},
+            { new: true }
         );
 
         return value.sequence_value;
@@ -27,11 +44,21 @@ const getNextSequenceValue = async (sequenceName, db) => {
 
 const getProducts = async (request, reply) => {
     const { db } = request.server.plugins.mongodb;
-    const { productId } = request.params;
+    const { params, query } = request;
 
-    const query = productId ? { _id: parseInt(productId, 10) } : {};
+    const _id = params.productId ? parseInt(params.productId, 10) : undefined;
+    // disabled is false by default: don't return products that are disabled
+    const disabled = query.admin
+        ? undefined
+        : query.disabled && parseInt(query.disabled, 10) > 0
+        ? true
+        : false;
+
+    const paramsToTest = [{ _id }, { disabled }];
+    const q = addPropertyIfExists(paramsToTest);
+
     try {
-        const results = await db.collection('products').find(query).toArray();
+        const results = await db.collection('products').find(q).toArray();
 
         const docs = results.map(doc => ({ ...doc, productId: doc._id }));
 
@@ -63,6 +90,7 @@ const createProduct = async (request, reply) => {
 
         const doc = {
             _id: id,
+            disabled: newProduct.disabled ? newProduct.disabled : false,
             ...newProduct
         };
 

@@ -31,7 +31,7 @@ class Products extends Component {
                 return browserHistory.push('/');
             }
 
-            this.props.dispatch(setModel(user, 'products', 'show'));
+            this.props.dispatch(setModel(user, 'products', 'show', { query: '?admin=1'}));
         }
     }
 

@@ -75,6 +75,7 @@ class Form extends Component {
 
     renderField (fieldData, fieldName, error) {
         const { dispatch } = this.props;
+
         const {
             fieldType,
             hintText,

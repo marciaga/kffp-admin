@@ -322,6 +322,41 @@ export const products = {
                 fieldType: 'FileInput',
                 name: 'file',
                 label: 'Product Image'
+            },
+            sortOrder: {
+                fieldType: 'Text',
+                name: 'sort_order',
+                hintText: 'e.g. 9',
+                label: 'Sort Order',
+                validation: ['string', 'required']
+            },
+            disabled: {
+                fieldType: 'ToggleField',
+                name: 'toggle_field',
+                label: 'Switch \'On\' to hide product'
+            },
+            isDJPremium: {
+                fieldType: 'ToggleField',
+                name: 'djpremium_toggle',
+                label: 'DJ Premium?'
+            },
+            sizes: {
+                fieldType: 'MultiSelect',
+                name: 'sizes_select',
+                label: 'Sizes',
+                items: [{
+                    label: 'Small',
+                    value: 'small'
+                },{
+                    label: 'Medium',
+                    value: 'medium'
+                },{
+                    label: 'Large',
+                    value: 'large'
+                },{
+                    label: 'X-Large',
+                    value: 'xlarge'
+                }]
             }
         }
     },
@@ -335,6 +370,15 @@ export const products = {
             },
             description: {
                 label: 'Product Description'
+            },
+            sortOrder: {
+                label: 'Sort Order'
+            },
+            disabled: {
+                label: 'Disabled'
+            },
+            isDjPremium: {
+                label: 'DJ Premium'
             }
         }
     },
@@ -368,6 +412,41 @@ export const products = {
                 fieldType: 'FileInput',
                 name: 'file',
                 label: 'Product Image'
+            },
+            sortOrder: {
+                fieldType: 'Text',
+                name: 'sort_order',
+                hintText: 'e.g. 9',
+                label: 'Sort Order',
+                validation: ['string', 'required']
+            },
+            disabled: {
+                fieldType: 'ToggleField',
+                name: 'toggle_field',
+                label: 'Switch \'On\' to hide product'
+            },
+            isDJPremium: {
+                fieldType: 'ToggleField',
+                name: 'djpremium_toggle',
+                label: 'DJ Premium?'
+            },
+            sizes: {
+                fieldType: 'MultiSelect',
+                name: 'sizes_select',
+                label: 'Sizes',
+                items: [{
+                    label: 'Small',
+                    value: 'small'
+                },{
+                    label: 'Medium',
+                    value: 'medium'
+                },{
+                    label: 'Large',
+                    value: 'large'
+                },{
+                    label: 'X-Large',
+                    value: 'xlarge'
+                }]
             }
         }
     }
