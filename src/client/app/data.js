@@ -318,6 +318,13 @@ export const products = {
                 label: 'Product Description',
                 validation: ['string', 'required']
             },
+            slug: {
+                fieldType: 'Text',
+                name: 'text',
+                label: 'Slug (can\'t be edited later)',
+                hintText: 'e.g. mountain-shirt or bottle-opener',
+                validation: ['required', 'string']
+            },
             image: {
                 fieldType: 'FileInput',
                 name: 'file',
@@ -374,6 +381,9 @@ export const products = {
             sortOrder: {
                 label: 'Sort Order'
             },
+            slug: {
+                label: 'slug'
+            },
             disabled: {
                 label: 'Disabled'
             },
@@ -407,6 +417,13 @@ export const products = {
                 hintText: 'e.g. A totally rad slipmat.',
                 label: 'Product Description',
                 validation: ['string', 'required']
+            },
+            slug: {
+                fieldType: 'Text',
+                name: 'text',
+                label: 'Slug',
+                disabled: true,
+                validation: ['required', 'string']
             },
             image: {
                 fieldType: 'FileInput',
