@@ -1,13 +1,19 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import { fileUpload } from '../../../actions/formActions';
 import ThumbnailImage from './image';
 
+const mapStateToProps = state => ({
+    modelName: state.model.name,
+    confirmDialog: state.feedback.confirmDialog
+});
 
 class FileInput extends Component {
     static propTypes = {
-        label: PropTypes.string,
         dispatch: PropTypes.func,
+        fieldName: PropTypes.string,
+        label: PropTypes.string,
         value: PropTypes.string
     };
 
@@ -28,14 +34,14 @@ class FileInput extends Component {
 
         this.setState({ error: '' });
 
-        dispatch(fileUpload(formData, fieldName));
+        this.props.dispatch(fileUpload(formData, this.props.fieldName));
     };
 
     render () {
-        const { label, value, fieldName, dispatch } = this.props;
+        const { label, value, dispatch, fieldName } = this.props;
         const { error } = this.state;
 
-       return (
+        return (
             <div>
                 <RaisedButton
                     containerElement="label"
@@ -48,10 +54,14 @@ class FileInput extends Component {
                     />
                 </RaisedButton>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <ThumbnailImage filePath={value} />
+                <ThumbnailImage
+                    filePath={value}
+                    dispatch={dispatch}
+                    fieldName={fieldName}
+                />
             </div>
         );
     }
 }
 
-export default FileInput;
+export default connect(mapStateToProps)(FileInput);

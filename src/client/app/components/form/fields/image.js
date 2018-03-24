@@ -1,18 +1,21 @@
 import React, { PropTypes } from 'react';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
+import { fileRemove } from '../../../actions/formActions';
 
 const iconStyles = {
     display: 'inlineBlock',
     cursor: 'pointer'
 };
 
-const handleClick = (path) => {
-    // use confirmation dialog to continue
-    // dispatch action to delete the image from S3
-    // dispatch action to remove from Redux store
+const handleClick = (path, dispatch, fieldName) => {
+    if (!window.confirm('Are you sure you want to delete this image?')) {
+        return;
+    }
+
+    return dispatch(fileRemove(path, fieldName));
 };
 
-const ThumbnailImage = ({ filePath }) => (
+const ThumbnailImage = ({ filePath, dispatch, fieldName }) => (
     <div>
         <img
             src={filePath}
@@ -23,13 +26,15 @@ const ThumbnailImage = ({ filePath }) => (
             <ActionDelete
                 style={iconStyles}
                 hoverColor="grey"
-                onClick={() => handleClick(filePath)}
+                onClick={() => handleClick(filePath, dispatch, fieldName)}
             />
         }
     </div>
 );
 
 ThumbnailImage.propTypes = {
+    dispatch: PropTypes.func,
+    fieldName: PropTypes.string,
     filePath: PropTypes.string
 };
 

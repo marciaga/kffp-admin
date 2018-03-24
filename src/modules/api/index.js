@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import imageUpload from '../../models';
+import { imageUpload, imageRemove } from '../../models';
 import userSearchHandler from '../../models/search';
 import getSpotifyToken from '../../models/spotify-token';
 import showRoutes from './routes/shows';
@@ -52,6 +52,18 @@ exports.register = (server, options, next) => {
                 scope: ['admin']
             },
             handler: imageUpload
+        }
+    });
+    // upload remove route
+    server.route({
+        path: `${API_BASE_URL}/upload/{fileName}`,
+        method: 'DELETE',
+        config: {
+            auth: {
+                strategy: 'jwt',
+                scope: ['admin']
+            },
+            handler: imageRemove
         }
     });
     // users search endpoint for autocomplete

@@ -13,7 +13,7 @@ const productSchema = Joi.object().keys({
     sizes: Joi.array()
 });
 
-const addPropertyIfExists = (ary) => ary.reduce((o, v) => {
+const addPropertyIfExists = ary => ary.reduce((o, v) => {
     const val = Object.values(v).reduce(f => f);
 
     if (typeof val === 'undefined') {
@@ -31,7 +31,7 @@ const getNextSequenceValue = async (sequenceName, db) => {
         const { value } = await db.collection('counters').findAndModify(
             { _id: sequenceName },
             null,
-            { $inc: { sequence_value: 1 }},
+            { $inc: { sequence_value: 1 } },
             { new: true }
         );
 
@@ -48,12 +48,13 @@ const getProducts = async (request, reply) => {
 
     const _id = params.productId ? parseInt(params.productId, 10) : undefined;
     // disabled is false by default: don't return products that are disabled
+    /* eslint-disable */
     const disabled = query.admin
         ? undefined
         : query.disabled && parseInt(query.disabled, 10) > 0
         ? true
         : false;
-
+    /* eslint-ensable */
     const paramsToTest = [{ _id }, { disabled }];
     const q = addPropertyIfExists(paramsToTest);
 

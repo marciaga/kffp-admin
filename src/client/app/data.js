@@ -354,13 +354,13 @@ export const products = {
                 items: [{
                     label: 'Small',
                     value: 'small'
-                },{
+                }, {
                     label: 'Medium',
                     value: 'medium'
-                },{
+                }, {
                     label: 'Large',
                     value: 'large'
-                },{
+                }, {
                     label: 'X-Large',
                     value: 'xlarge'
                 }]
@@ -454,13 +454,13 @@ export const products = {
                 items: [{
                     label: 'Small',
                     value: 'small'
-                },{
+                }, {
                     label: 'Medium',
                     value: 'medium'
-                },{
+                }, {
                     label: 'Large',
                     value: 'large'
-                },{
+                }, {
                     label: 'X-Large',
                     value: 'xlarge'
                 }]

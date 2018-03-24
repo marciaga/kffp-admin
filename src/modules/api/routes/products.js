@@ -25,7 +25,7 @@ const productRoutes = [
         config: {
             auth: {
                 strategy: 'jwt',
-                scope: ['admin'],
+                scope: ['admin']
             },
             handler: createProduct
         }

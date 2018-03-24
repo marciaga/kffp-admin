@@ -361,6 +361,37 @@ const fileUpload = (formData, fieldName) => {
     };
 };
 
+const fileRemove = (filePath, fieldName) => {
+    const fileName = filePath.split('/').pop();
+    const url = `${API_ENDPOINT}/upload/${fileName}`;
+    const idToken = getTokenFromLocalStorage();
+
+    return async (dispatch) => {
+        try {
+            await axios.delete(url, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+
+            const newData = {
+                fieldName,
+                value: '',
+            };
+
+            dispatch({
+                type: UPDATE_FORM_FIELD,
+                data: newData
+            });
+        } catch (err) {
+            dispatch(handleErrorModal({
+                message: GENERIC_ERROR_MESSAGE,
+                open: true
+            }));
+        }
+    };
+};
+
 const removeUserFromShow = val => (dispatch, getState) => {
     const { form } = getState();
     const { fields } = form;
@@ -385,6 +416,7 @@ export {
     updateUserSettingsInput,
     updateUserPassword,
     fileUpload,
+    fileRemove,
     removeUserFromShow,
     resetUserPassword
 };
