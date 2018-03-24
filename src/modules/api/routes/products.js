@@ -8,7 +8,7 @@ import {
 
 const productRoutes = [
     {
-        path: `${API_BASE_URL}/products/{productId?}`,
+        path: `${API_BASE_URL}/products/{slug?}`,
         method: 'GET',
         config: {
             auth: {

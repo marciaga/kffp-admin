@@ -46,7 +46,7 @@ const getProducts = async (request, reply) => {
     const { db } = request.server.plugins.mongodb;
     const { params, query } = request;
 
-    const _id = params.productId ? parseInt(params.productId, 10) : undefined;
+    const slug = params.slug ? params.slug : undefined;
     // disabled is false by default: don't return products that are disabled
     /* eslint-disable */
     const disabled = query.admin
@@ -55,13 +55,17 @@ const getProducts = async (request, reply) => {
         ? true
         : false;
     /* eslint-ensable */
-    const paramsToTest = [{ _id }, { disabled }];
+    const paramsToTest = [{ slug }, { disabled }];
     const q = addPropertyIfExists(paramsToTest);
 
     try {
         const results = await db.collection('products').find(q).toArray();
 
         const docs = results.map(doc => ({ ...doc, productId: doc._id }));
+
+        if (!docs.length) {
+            return reply(Boom.notFound('no products found'));
+        }
 
         return reply(docs);
     } catch (e) {
