@@ -376,7 +376,7 @@ const fileRemove = (filePath, fieldName) => {
 
             const newData = {
                 fieldName,
-                value: '',
+                value: ''
             };
 
             dispatch({
