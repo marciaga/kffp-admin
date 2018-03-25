@@ -5,7 +5,7 @@ const Hidden = ({ value }) => (
 );
 
 Hidden.propTypes = {
-    value: PropTypes.string
+    value: PropTypes.any
 };
 
 export default Hidden;
