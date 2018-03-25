@@ -16,7 +16,11 @@ export default class Text extends Component {
 
     render () {
         const { id, name, label, value, hintText, fieldName, disabled, error } = this.props;
-        const fieldType = fieldName === 'password' ? 'password' : 'text';
+        const fieldType = fieldName === 'password'
+        ? 'password'
+        : fieldName === 'sortOrder'
+        ? 'number'
+        : 'text';
 
         return (
             <TextField

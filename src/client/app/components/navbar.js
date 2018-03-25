@@ -31,6 +31,7 @@ const Menu = ({ dispatch, user }) => (
     >
         {renderScopedMenuItem(user, 'admin', 'Shows', 'shows', dispatch)}
         {renderScopedMenuItem(user, 'admin', 'Users', 'users', dispatch)}
+        {renderScopedMenuItem(user, 'admin', 'Products', 'products', dispatch)}
         {renderScopedMenuItem(user, 'reports', 'Reports', 'reports', dispatch)}
         <MenuItem
             primaryText={'Settings'}

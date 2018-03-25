@@ -75,6 +75,7 @@ class Form extends Component {
 
     renderField (fieldData, fieldName, error) {
         const { dispatch } = this.props;
+
         const {
             fieldType,
             hintText,
@@ -143,13 +144,13 @@ class Form extends Component {
                     <RaisedButton
                         label="delete"
                         type="button"
-                        secondary={true}
+                        secondary
                         disabled={formType === 'new'}
                         onClick={() => this.deleteHandler(fields._id.value)}
                     />
                     <RaisedButton
                         label="submit"
-                        primary={true}
+                        primary
                         type="submit"
                     />
                 </form>

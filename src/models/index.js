@@ -36,4 +36,19 @@ const imageUpload = (request, reply) => {
     }
 };
 
-export default imageUpload;
+const imageRemove = (request, reply) => {
+    const { fileName } = request.params;
+    s3.deleteObject({
+        Bucket: process.env.S3_IMAGE_BUCKET,
+        Key: fileName
+    }, (err) => {
+        if (err) {
+            console.log(err);
+            return reply(Boom.internal('S3 delete failed'));
+        }
+
+        return reply({ success: true }).code(201);
+    });
+};
+
+export { imageUpload, imageRemove };

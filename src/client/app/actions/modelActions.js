@@ -18,14 +18,16 @@ const receiveModelData = model => ({
     }
 });
 
-const setModel = (user, modelName, type) => {
+const setModel = (user, modelName, type, options = {}) => {
     const model = Models[modelName][type];
 
     if (user.role !== 'admin') {
         // redirect to root path
     }
 
-    const url = `${API_ENDPOINT}/${modelName}`;
+    const baseUrl = `${API_ENDPOINT}/${modelName}`;
+    const url = !options.query ? baseUrl : `${baseUrl}${options.query}`;
+
     const idToken = getTokenFromLocalStorage();
 
     return async (dispatch) => {
