@@ -63,7 +63,7 @@ const getProducts = async (request, reply) => {
 
         const docs = results.map(doc => ({ ...doc, productId: doc._id }));
 
-        if (!docs.length) {
+        if (slug && !docs.length) {
             return reply(Boom.notFound('no products found'));
         }
 
