@@ -33,9 +33,14 @@ const Wysiwyg = (props) => {
 
     const generateContentBlock = (value) => {
         const contentBlock = convertFromHTML(value);
-        const contentState = ContentState.createFromBlockArray(contentBlock);
 
-        return EditorState.createWithContent(contentState);
+        if (contentBlock.contentBlocks) {
+            const contentState = ContentState.createFromBlockArray(contentBlock);
+
+            return EditorState.createWithContent(contentState);
+        }
+
+        return EditorState.createEmpty();
     };
 
     const { label, value = '', hintText } = props;

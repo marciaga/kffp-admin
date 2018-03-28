@@ -10,6 +10,7 @@
     "build:postcss": "./node_modules/.bin/postcss ./public/css/main.css -o ./public/css/main.css",
     "build:production": "yarn build:css && yarn build:js",
     "build:import": "./node_modules/.bin/babel ./bin/import.js -o ./bin/import-script.js",
+    "build:migration": "./node_modules/.bin/babel ./bin/migrations/20180314.js -o ./bin/migrations/20180314-transpiled.js",
     "dev": "yarn watch:css & yarn dev:js",
     "dev:js": "./node_modules/.bin/nodemon -e js,hbs -w src --ignore src/client",
     "docker:production": "docker-compose -f docker-compose.prod.yml up --build -d",
