@@ -45,6 +45,7 @@ VolunteerCard.propTypes = {
     endDate: PropTypes.instanceOf(Date),
     startDate: PropTypes.instanceOf(Date),
     submitAction: PropTypes.func,
+    type: PropTypes.string,
     userId: PropTypes.string
 };
 
