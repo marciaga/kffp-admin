@@ -1,6 +1,9 @@
 import Joi from 'joi';
 import R from 'ramda';
 import Boom from 'boom';
+import moment from 'moment-timezone';
+
+moment.tz.setDefault('America/Los_Angeles');
 
 const volunteerFormSchema = Joi.object().keys({
     userId: Joi.string().required(),
@@ -52,8 +55,8 @@ export const getVolunteerReport = async (request, reply) => {
 
     const dates = startDate && endDate ? {
         date: {
-            $gte: new Date(startDate).toISOString(),
-            $lte: new Date(endDate).toISOString()
+            $gte: moment(startDate).toISOString(),
+            $lte: moment(endDate).toISOString()
         } } :
         false;
 
@@ -89,23 +92,23 @@ export const getVolunteerReport = async (request, reply) => {
                     $in: result.map(u => new ObjectID(u.userId))
                 }
             }, {
-                    firstName: 1,
-                    lastName: 1,
-                    email: 1
+                firstName: 1,
+                lastName: 1,
+                email: 1
             })
             .toArray();
 
         const u = users.reduce((memo, key) => {
-          memo[key._id] = {
-            name: `${key.firstName} ${key.lastName}`,
-            email: key.email
-          }
+            memo[key._id] = {
+                name: `${key.firstName} ${key.lastName}`,
+                email: key.email
+            };
 
-          return memo;
+            return memo;
         }, {});
         // map userIds and return a full name in the result array
-        const transformed = result.map((r)=> {
-            const { _id, userId, ...rest } = r;
+        const transformed = result.map((r) => {
+            const { _id, ...rest } = r;
 
             return {
                 name: u[r.userId].name,
