@@ -9,6 +9,7 @@ import {
     TableRowColumn
 } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
 import TableConfig from './tableConfig';
 import { setUpdateFormData } from '../../actions/formActions';
 import { filterResults } from '../../actions/modelActions';
@@ -48,6 +49,10 @@ class MainTable extends Component {
 
     debounceTextField (e, value) {
         this.debouncer(value);
+    }
+
+    handleShowAll = () => {
+        this.props.dispatch(filterResults(true));
     }
 
     sortDisplayData (data) {
@@ -96,6 +101,7 @@ class MainTable extends Component {
 
     renderTableBody () {
         const { model } = this.props;
+
         const tableData = this.sortDisplayData(model.filteredResults);
 
         return tableData.map((item, index) => (
@@ -158,6 +164,10 @@ class MainTable extends Component {
                             <TextField
                                 hintText="Start typing to filter..."
                                 onChange={this.debounceTextField}
+                            />
+                            <FlatButton
+                                label="Show All"
+                                onClick={this.handleShowAll}
                             />
                         </TableHeaderColumn>
                     </TableRow>

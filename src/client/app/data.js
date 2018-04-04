@@ -1,4 +1,4 @@
-import { daysOfWeek, userRoles } from './utils/constants';
+import { daysOfWeek, userRoles, sizes } from './utils/constants';
 // mapping of data model + form fields
 const shows = {
     new: {
@@ -351,19 +351,7 @@ export const products = {
                 fieldType: 'MultiSelect',
                 name: 'sizes_select',
                 label: 'Sizes',
-                items: [{
-                    label: 'Small',
-                    value: 'small'
-                }, {
-                    label: 'Medium',
-                    value: 'medium'
-                }, {
-                    label: 'Large',
-                    value: 'large'
-                }, {
-                    label: 'X-Large',
-                    value: 'xlarge'
-                }]
+                items: sizes
             }
         }
     },
@@ -451,19 +439,7 @@ export const products = {
                 fieldType: 'MultiSelect',
                 name: 'sizes_select',
                 label: 'Sizes',
-                items: [{
-                    label: 'Small',
-                    value: 'small'
-                }, {
-                    label: 'Medium',
-                    value: 'medium'
-                }, {
-                    label: 'Large',
-                    value: 'large'
-                }, {
-                    label: 'X-Large',
-                    value: 'xlarge'
-                }]
+                items: sizes
             }
         }
     }

@@ -37,10 +37,10 @@ const setModel = (user, modelName, type, options = {}) => {
                     Authorization: `Bearer ${idToken}`
                 }
             });
-            const options = {
+            const opts = {
                 keys: Object.keys(model.fields)
             };
-            const fuse = new Fuse(data, options);
+            const fuse = new Fuse(data, opts);
 
             model.data = data;
             model.name = modelName;
@@ -68,9 +68,11 @@ const addModelData = data => ({
 });
 
 const filterResults = data => (dispatch, getState) => {
-    const { model } = getState();
+    const showAll = typeof data === 'boolean';
+
+    const { model = [] } = getState();
     const fuse = model.fuse;
-    const result = fuse.search(data);
+    const result = showAll ? model.data : fuse.search(data);
 
     dispatch({
         type: UPDATE_FILTER_RESULTS,

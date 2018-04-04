@@ -31,7 +31,7 @@ class Products extends Component {
                 return browserHistory.push('/');
             }
 
-            this.props.dispatch(setModel(user, 'products', 'show', { query: '?admin=1'}));
+            this.props.dispatch(setModel(user, 'products', 'show', { query: '?admin=1' }));
         }
     }
 
@@ -50,7 +50,7 @@ class Products extends Component {
                 <h2>Add New Product</h2>
                 <FloatingActionButton
                     onClick={() => this.handleClick('new', 'products')}
-                    secondary={true}
+                    secondary
                     style={{}}
                 >
                     <ContentAdd />
