@@ -21,3 +21,35 @@ export const NOW_PLAYING_PLAYED = '#E0E0E0';
 export const SHOWS_AUTOCOMPLETE_FILTER_LIMIT = 5;
 
 export const GENERIC_ERROR_MESSAGE = 'Whoops, something went wrong. Please note the URL and let the web team know.';
+
+export const sizes = [{
+    label: 'Mens Small',
+    value: 'mens-small'
+}, {
+    label: 'Mens Medium',
+    value: 'mens-medium'
+}, {
+    label: 'Mens Large',
+    value: 'mens-large'
+}, {
+    label: 'Mens X-Large',
+    value: 'mens-xlarge'
+}, {
+    label: 'Mens XX-Large',
+    value: 'mens-xxlarge'
+}, {
+    label: 'Womens Small',
+    value: 'womens-small'
+}, {
+    label: 'Womens Medium',
+    value: 'womens-medium'
+}, {
+    label: 'Womens Large',
+    value: 'womens-large'
+}, {
+    label: 'Womens X-Large',
+    value: 'womens-xlarge'
+}, {
+    label: 'Womens XX-Large',
+    value: 'womens-xxlarge'
+}];
