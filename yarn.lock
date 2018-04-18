@@ -2044,7 +2044,7 @@ dotenv@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-2.0.0.tgz#bd759c357aaa70365e01c96b7b0bec08a6e0d949"
 
-draft-js@^0.10.1:
+draft-js@^0.10.5:
   version "0.10.5"
   resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.5.tgz#bfa9beb018fe0533dbb08d6675c371a6b08fa742"
   dependencies:
@@ -2052,9 +2052,9 @@ draft-js@^0.10.1:
     immutable "~3.7.4"
     object-assign "^4.1.0"
 
-draftjs-to-html@^0.7.4:
-  version "0.7.6"
-  resolved "https://registry.yarnpkg.com/draftjs-to-html/-/draftjs-to-html-0.7.6.tgz#95bc55aeeca6c6a7abc242c5616946704c6685c9"
+draftjs-to-html@^0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/draftjs-to-html/-/draftjs-to-html-0.8.3.tgz#0ca3c273e802ed3b3bbf12e3900ebb70fd95517f"
 
 draftjs-utils@^0.9.3:
   version "0.9.3"
@@ -5897,9 +5897,9 @@ react-dom@^15.3.0:
     object-assign "^4.1.0"
     prop-types "^15.5.10"
 
-react-draft-wysiwyg@^1.10.7:
-  version "1.12.11"
-  resolved "https://registry.yarnpkg.com/react-draft-wysiwyg/-/react-draft-wysiwyg-1.12.11.tgz#6d7b827ff4473410b037c8f9c90980fe2e839c97"
+react-draft-wysiwyg@^1.12.12:
+  version "1.12.12"
+  resolved "https://registry.yarnpkg.com/react-draft-wysiwyg/-/react-draft-wysiwyg-1.12.12.tgz#bfdfa26b0916832b38975eecccc3f31031eaf8bd"
   dependencies:
     classnames "^2.2.5"
     draftjs-utils "^0.9.3"
