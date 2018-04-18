@@ -52,7 +52,12 @@ const Wysiwyg = (props) => {
                 defaultEditorState={generateContentBlock(value)}
                 onChange={onEdChange}
                 placeholder={hintText}
-                toolbar={{ options: editorOptions }}
+                toolbar={{
+                    link: {
+                        defaultTargetOption: '_blank'
+                    },
+                    options: editorOptions
+                }}
             />
         </div>
     );

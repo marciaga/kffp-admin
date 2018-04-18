@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 6.9.1
+    version: 8.1.4
   environment:
     PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
 
@@ -8,7 +8,7 @@ dependencies:
   pre:
     - pip install awsebcli --upgrade
   override:
-    - yarn
+    - npm install
   cache_directories:
     - ~/.cache/yarn
 
