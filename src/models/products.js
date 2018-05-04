@@ -5,6 +5,7 @@ const productSchema = Joi.object().keys({
     _id: Joi.number(),
     name: Joi.string().required(),
     price: Joi.string().required(),
+    unitCost: Joi.string(),
     description: Joi.string().required(),
     primaryImage: Joi.string().allow(''),
     isDJPremium: Joi.string(),
