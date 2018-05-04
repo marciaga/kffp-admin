@@ -28,3 +28,7 @@ deployment:
   staging:
     branch: develop
     commands:
+      - openssl aes-256-cbc -d -in secrets -k $KEY -out .env
+      - yarn build:production
+      - zip -r kffpadmin.zip .
+      - eb deploy --timeout 20 --verbose
