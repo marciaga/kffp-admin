@@ -311,6 +311,13 @@ export const products = {
                 label: 'Price',
                 validation: ['price', 'required']
             },
+            unitCost: {
+                fieldType: 'Text',
+                name: 'unit_cost_field',
+                hintText: 'e.g. 5.99 (must include decimal)',
+                label: 'Unit Cost',
+                validation: ['price', 'required']
+            },
             description: {
                 fieldType: 'TextArea',
                 name: 'product_description',
@@ -363,6 +370,9 @@ export const products = {
             price: {
                 label: 'Price'
             },
+            unitCost: {
+                label: 'Unit Cost'
+            },
             description: {
                 label: 'Product Description'
             },
@@ -397,6 +407,13 @@ export const products = {
                 name: 'price_field',
                 hintText: 'e.g. 5.99 (must include decimal)',
                 label: 'Price',
+                validation: ['price', 'required']
+            },
+            unitCost: {
+                fieldType: 'Text',
+                name: 'unit_cost_field',
+                hintText: 'e.g. 5.99 (must include decimal)',
+                label: 'Unit Cost',
                 validation: ['price', 'required']
             },
             description: {
