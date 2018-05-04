@@ -8,7 +8,7 @@ dependencies:
   pre:
     - pip install awsebcli --upgrade
   override:
-    - yarn
+    - yarn --ignore-engines
   cache_directories:
     - ~/.cache/yarn
 
