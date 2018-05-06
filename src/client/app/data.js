@@ -349,6 +349,17 @@ export const products = {
                 name: 'toggle_field',
                 label: 'Switch \'On\' to hide product'
             },
+            shippable: {
+                fieldType: 'ToggleField',
+                name: 'toggle_field_shippable',
+                label: 'Switch \'Off\' for Not-shippable',
+                value: true // default toggled
+            },
+            weight: {
+                fieldType: 'Text',
+                name: 'weight_field',
+                label: 'Shipping weight'
+            },
             isDJPremium: {
                 fieldType: 'ToggleField',
                 name: 'djpremium_toggle',
@@ -446,6 +457,17 @@ export const products = {
                 fieldType: 'ToggleField',
                 name: 'toggle_field',
                 label: 'Switch \'On\' to hide product'
+            },
+            shippable: {
+                fieldType: 'ToggleField',
+                name: 'toggle_field_shippable',
+                label: 'Switch \'Off\' for Not-shippable',
+                value: true // default toggled
+            },
+            weight: {
+                fieldType: 'Text',
+                name: 'weight_field',
+                label: 'Shipping weight'
             },
             isDJPremium: {
                 fieldType: 'ToggleField',
