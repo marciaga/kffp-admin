@@ -66,7 +66,7 @@ jobs:
           command: zip -r kffpadmin.zip .
       - run:
           name: Deploy the application to Elastic Beanstalk
-          command: eb deploy --timeout 20 --verbose
+          command: eb deploy kffpadmin-prod --timeout 20 --verbose
 
 workflows:
   version: 2
