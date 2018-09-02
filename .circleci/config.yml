@@ -43,8 +43,10 @@ jobs:
     - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
     # This is based on your 1.0 configuration file or project settings
     - run:
-        working_directory: ~/freeform-portland/kffp-admin
-        command: nvm install 6.11.1 && nvm alias default 6.11.1
+        node --version
+    # - run:
+    #     working_directory: ~/freeform-portland/kffp-admin
+    #     command: nvm install 6.11.1 && nvm alias default 6.11.1
     # Dependencies
     #   This would typically go in either a build or a build-and-test job when using workflows
     # Restore the dependency cache
