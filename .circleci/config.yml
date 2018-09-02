@@ -60,14 +60,13 @@ jobs:
           command: openssl aes-256-cbc -md md5 -d -in secrets -k $KEY -out .env
       - run:
           name: Build application
-          command: cd yarn build:production
+          command: yarn build:production
       - run:
           name: Package the application for uploading to Elastic Beanstalk
           command: zip -r kffpadmin.zip .
       - run:
           name: Deploy the application to Elastic Beanstalk
-          command: ls -al ~/freeform-portland/kffp-admin
-      # - eb deploy --timeout 20 --verbose
+          command: eb deploy --timeout 20 --verbose
 
 workflows:
   version: 2
