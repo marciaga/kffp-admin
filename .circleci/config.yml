@@ -71,4 +71,5 @@ workflows:
             - build
           filters:
             branches:
-              only: master
+              # only: master
+              only: circle-v2
