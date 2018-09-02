@@ -44,8 +44,6 @@ jobs:
         path: /tmp/circleci-test-results
 
   deploy:
-    docker:
-      - image: circleci/python:2.7-jessie
     working_directory: ~/freeform-portland/kffp-admin
     steps:
       - run:
@@ -53,13 +51,13 @@ jobs:
           command: sudo pip install awsebcli
       - run:
           name: Generate .env file
-          command: openssl aes-256-cbc -d -in $CIRCLE_WORKING_DIRECTORY/secrets -k $KEY -out $CIRCLE_WORKING_DIRECTORY/.env
+          command: openssl aes-256-cbc -d -in secrets -k $KEY -out .env
       - run:
           name: Build application
-          command: cd $CIRCLE_WORKING_DIRECTORY && yarn build:production
+          command: cd yarn build:production
       - run:
           name: Package the application for uploading to Elastic Beanstalk
-          command: cd $CIRCLE_WORKING_DIRECTORY && zip -r kffpadmin.zip .
+          command: zip -r kffpadmin.zip .
       - run:
           name: Deploy the application to Elastic Beanstalk
           command: ls -al ~/freeform-portland/kffp-admin
