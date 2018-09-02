@@ -42,8 +42,6 @@ jobs:
     # 'See docs on artifact collection here https://circleci.com/docs/2.0/artifacts/'
     - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
     # This is based on your 1.0 configuration file or project settings
-    - run:
-        node --version
     # - run:
     #     working_directory: ~/freeform-portland/kffp-admin
     #     command: nvm install 6.11.1 && nvm alias default 6.11.1
@@ -58,6 +56,7 @@ jobs:
         - v1-dep-develop-
         # Any branch if there are none on the default branch - this should be unnecessary if you have your default branch configured correctly
         - v1-dep-
+    - run: sudo apt-get install python-pip
     # This is based on your 1.0 configuration file or project settings
     - run: pip install awsebcli --upgrade
     # This is based on your 1.0 configuration file or project settings
