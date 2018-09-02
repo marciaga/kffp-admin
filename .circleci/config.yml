@@ -56,14 +56,8 @@ jobs:
           name: Install dependencies
           command: yarn
       - run:
-          name: Echo openssl version
-          command: openssl version
-      - run:
-          name: Echo KEY
-          command: echo $KEY
-      - run:
           name: Generate .env file
-          command: openssl aes-256-cbc -d -in secrets -k $KEY -out .env
+          command: openssl aes-256-cbc -md md5 -d -in secrets -k $KEY -out .env
       - run:
           name: Build application
           command: cd yarn build:production
