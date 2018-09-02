@@ -50,7 +50,7 @@ jobs:
     steps:
       - run:
           name: Install AWS CLI
-          command: pip install awsebcli --upgrade
+          command: pip install awsebcli
       - run:
           name: Generate .env file
           command: openssl aes-256-cbc -d -in secrets -k $KEY -out .env
