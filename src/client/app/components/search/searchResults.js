@@ -28,7 +28,7 @@ const SearchResults = ({ searchResults, playlistId, dispatch }) => {
                 className="search-results__grid-wrapper"
             >
                 {searchResults && searchResults.map((tile, i) => {
-                    const { artist, title, album, images } = tile;
+                    const { artist, title, album, images, releaseDate } = tile;
                     const image = images.length && images[1] ?
                         images[1] : { url: 'http://placehold.it/300x300' };
 
@@ -36,7 +36,7 @@ const SearchResults = ({ searchResults, playlistId, dispatch }) => {
                         <GridTile
                             key={i}
                             title={title}
-                            subtitle={<span>by <b>{artist}</b></span>}
+                            subtitle={<div><p>by <b>{artist}</b></p><p>on <b>{album}</b> released {releaseDate}</p></div>}
                             className="search-results__grid-tile"
                             style={{ cursor: 'pointer' }}
                             onClick={() => handleClick(tile, playlistId)}
