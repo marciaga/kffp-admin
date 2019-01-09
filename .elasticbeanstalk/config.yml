@@ -2,7 +2,7 @@ branch-defaults:
   master:
     environment: kffpadmin-prod
   develop:
-    environment: kffpadmin-stage
+    environment: kffpadmin-staging
 
 global:
   application_name: kffp-admin

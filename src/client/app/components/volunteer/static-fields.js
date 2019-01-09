@@ -12,6 +12,14 @@ export const volunteerTypeFields = [
         value: 'events-committee'
     },
     {
+        label: 'Fundraising Committee',
+        value: 'fundraising-committee'
+    },
+    {
+        label: 'Merchandise Committee',
+        value: 'merchandise-committee'
+    },
+    {
         label: 'Music Library Committee',
         value: 'music-library-committee'
     },
@@ -22,6 +30,10 @@ export const volunteerTypeFields = [
     {
         label: 'Programming Committee',
         value: 'programming-committee'
+    },
+    {
+        label: 'Promos and Carts Committee',
+        value: 'promos-and-carts-committee'
     },
     {
         label: 'Social Media Committee',
