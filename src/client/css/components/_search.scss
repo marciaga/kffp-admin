@@ -9,5 +9,21 @@
 
     &__grid-tile {
         max-width: 200px;
+
+        // tile title bar
+        img + div {
+            height: unset !important;
+            min-height: 68px;
+
+            // title/subtitle container
+            & > div {
+                margin: 10px 5px 10px 16px !important;
+            }
+
+            // title text
+            div div {
+                white-space: unset !important;
+            }
+        }
     }
 }
