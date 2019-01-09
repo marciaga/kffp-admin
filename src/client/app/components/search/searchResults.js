@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { GridList, GridTile } from 'material-ui/GridList';
+import ResultDetail from './resultDetail';
 import RaisedButton from 'material-ui/RaisedButton';
 import { addTrack, clearSearchResults } from '../../actions/playlistActions';
 
@@ -32,11 +33,18 @@ const SearchResults = ({ searchResults, playlistId, dispatch }) => {
                     const image = images.length && images[1] ?
                         images[1] : { url: 'http://placehold.it/300x300' };
 
+                    let detail = <ResultDetail
+                        artist={artist}
+                        album={album}
+                        releaseDate={releaseDate}
+                    >
+                    </ResultDetail>;
+
                     return (
                         <GridTile
                             key={i}
                             title={title}
-                            subtitle={<div><p>by <b>{artist}</b></p><p>on <b>{album}</b> released {releaseDate}</p></div>}
+                            subtitle={detail}
                             className="search-results__grid-tile"
                             style={{ cursor: 'pointer' }}
                             onClick={() => handleClick(tile, playlistId)}
