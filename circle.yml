@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 8.1.4
+    version: 6.11.1
   environment:
     PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
 
@@ -8,13 +8,13 @@ dependencies:
   pre:
     - pip install awsebcli --upgrade
   override:
-    - yarn --ignore-engines
+    - yarn
   cache_directories:
     - ~/.cache/yarn
 
 test:
   override:
-    - yarn test
+    - "true"
 
 deployment:
   production:
@@ -28,3 +28,7 @@ deployment:
   staging:
     branch: develop
     commands:
+      - openssl aes-256-cbc -d -in secrets -k $KEY -out .env
+      - yarn build:production
+      - zip -r kffpadmin.zip .
+      - eb deploy --timeout 20 --verbose
