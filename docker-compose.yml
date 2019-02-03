@@ -1,6 +1,7 @@
 version: "3"
 services:
   web:
+    dockerfile: Dockerfile-dev
     build: .
     image: freeformpdx/kffpadmin
     volumes:
