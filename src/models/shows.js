@@ -173,7 +173,7 @@ const updateShow = (request, reply) => {
 };
 
 const upsertShow = (request, reply) => {
-    const { db } = request.server.plugins.mongodb;
+    const { db, ObjectID } = request.server.plugins.mongodb;
     const newShow = request.payload;
 
     db.collection('shows').find({ showName: newShow.showName },
@@ -200,6 +200,10 @@ const upsertShow = (request, reply) => {
                     message: 'Validation Failed'
                 });
             }
+            if (newShow.users.length) {
+                newShow.users = newShow.users.map(u => new ObjectID(u.trim()));
+            }
+
             // insert the record
             db.collection('shows').insert(newShow, (error, doc) => {
                 if (error) {
