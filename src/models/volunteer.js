@@ -109,10 +109,11 @@ export const getVolunteerReport = async (request, reply) => {
         // map userIds and return a full name in the result array
         const transformed = result.map((r) => {
             const { _id, ...rest } = r;
+            const { name, email } = u[r.userId] ? u[r.userId] : { name: 'USER DELETED', email: '' };
 
             return {
-                name: u[r.userId].name,
-                email: u[r.userId].email,
+                name,
+                email,
                 ...rest
             };
         });
