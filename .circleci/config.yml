@@ -51,7 +51,7 @@ jobs:
       - checkout
       - run:
           name: Install AWS CLI
-          command: sudo apt-get install python-pip && sudo pip install awsebcli
+          command: sudo apt-get update && sudo apt-get install python-pip && sudo pip install awsebcli
       - run:
           name: Install dependencies
           command: yarn
