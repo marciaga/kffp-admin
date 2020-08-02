@@ -1,4 +1,4 @@
-import { daysOfWeek, userRoles, sizes } from './utils/constants';
+import { daysOfWeek, userRoles, sizes, productTypes} from './utils/constants';
 // mapping of data model + form fields
 const shows = {
     new: {
@@ -370,6 +370,17 @@ export const products = {
                 name: 'sizes_select',
                 label: 'Sizes',
                 items: sizes
+            },
+            productType: {
+                fieldType: 'Select',
+                name: 'product_type',
+                label: 'Product Type',
+                items: productTypes
+            },
+            productGuid: {
+                fieldType: 'Text',
+                name: 'product_guid',
+                label: 'Digital Product GUID'
             }
         }
     },
@@ -398,6 +409,9 @@ export const products = {
             },
             isDjPremium: {
                 label: 'DJ Premium'
+            },
+            productType: {
+                label: 'Type'
             }
         }
     },
@@ -479,6 +493,17 @@ export const products = {
                 name: 'sizes_select',
                 label: 'Sizes',
                 items: sizes
+            },
+            productType: {
+                fieldType: 'Select',
+                name: 'product_type',
+                label: 'Product Type',
+                items: productTypes
+            },
+            productGuid: {
+                fieldType: 'Text',
+                name: 'product_guid',
+                label: 'Digital Product GUID'
             }
         }
     }

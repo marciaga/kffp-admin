@@ -22,6 +22,14 @@ export const SHOWS_AUTOCOMPLETE_FILTER_LIMIT = 5;
 
 export const GENERIC_ERROR_MESSAGE = 'Whoops, something went wrong. Please note the URL and let the web team know.';
 
+export const productTypes = [{
+    label: 'Physical',
+    value: 'physical'
+}, {
+    label: 'Digital',
+    value: 'digital'
+}];
+
 export const sizes = [{
     label: 'Mens Small',
     value: 'mens-small'
