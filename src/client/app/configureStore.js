@@ -29,7 +29,7 @@ const storeFactory = (initialState) => {
         return appReducer(state, action);
     };
 
-    const middleware = [thunk, authMiddleware, routerMiddleware(browserHistory)];
+    const middleware = [thunk.default, authMiddleware, routerMiddleware(browserHistory)];
 
     const devToolComposition = compose(
         applyMiddleware(...middleware),
