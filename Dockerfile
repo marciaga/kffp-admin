@@ -1,33 +1,14 @@
-FROM node:6.9.1
-
-# Install the latest version of Yarn
-
-RUN apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
-RUN echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install yarn && apt-get clean
-
-# Create app directory
-
-RUN mkdir -p /opt/app
-
-# Set working directory
-
-WORKDIR /opt/app
-
-# Copy dependency management files
-
-COPY package.json yarn.lock /opt/app/
-
-# Install dependencies
-
-RUN \
-  yarn global add pm2 &&\
-  yarn
-
-# Copy app source code
-
-COPY . /opt/app
-
-RUN yarn build:production
-
-CMD ["yarn", "start"]
+FROM node:12
+# Setting working directory. All the path will be relative to WORKDIR
+WORKDIR /usr/src/app
+# Installing dependencies
+COPY package*.json ./
+RUN npm install
+# Copying source files
+COPY . .
+# Building app
+RUN npm run build:production
+EXPOSE 8080
+ENV NODE_ENV=production
+# Running the app
+CMD [ "npm", "start" ]
