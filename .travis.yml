@@ -11,12 +11,13 @@ script:
 before_deploy:
  - cd $TRAVIS_BUILD_DIR
  - bash bin/env.sh
- - echo .env
+ - ls
+ - cat .env
 deploy:
     provider: elasticbeanstalk
     edge: true
-    access_key_id: ${AWS_ACCESS_KEY_ID}
-    secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+    access_key_id: ${AWS_ACCESS_KEY}
+    secret_access_key: ${AWS_SECRET_KEY}
     region: "us-west-2"
     app: "kffp-admin"
     env: "kffpadmin-prod"
