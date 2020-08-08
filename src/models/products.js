@@ -11,7 +11,9 @@ const productSchema = Joi.object().keys({
     isDJPremium: Joi.string(),
     sortOrder: Joi.number().required(), // TODO this comes in as a string of a number,
     disabled: Joi.boolean(),
-    sizes: Joi.array()
+    sizes: Joi.array(),
+    productType: Joi.string(),
+    productGuid: Joi.string()
 });
 
 const addPropertyIfExists = ary => ary.reduce((o, v) => {

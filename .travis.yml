@@ -1,0 +1,28 @@
+language: node_js
+node_js:
+  - "12"
+branches:
+  only:
+  - master
+before_script:
+ - npm install
+script:
+ - npm run build:production
+before_deploy:
+ - cd $TRAVIS_BUILD_DIR
+ - bash bin/env.sh
+ - echo .env
+deploy:
+    provider: elasticbeanstalk
+    edge: true
+    access_key_id: ${AWS_ACCESS_KEY_ID}
+    secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+    region: "us-west-2"
+    app: "kffp-admin"
+    env: "kffpadmin-prod"
+    bucket_name: ${ELASTIC_BEANSTALK_S3_BUCKET} 
+    on:
+      branch: "master"
+
+after_deploy:
+  - echo "Application deployed successfully"
