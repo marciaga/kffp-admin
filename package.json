@@ -17,7 +17,8 @@
     "docker:stop": "docker-compose down --remove-orphans",
     "lint": "./node_modules/.bin/eslint ./src",
     "import:legacy": "node bin/import-script.js",
-    "start": "pm2 start --no-daemon ecosystem.config.js --env production",
+    "start": "./node_modules/pm2/bin/pm2-runtime ecosystem.config.js --env production",
+    "poststart":  "node ./node_modules/pm2/bin/pm2 logs",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "watch:css": "./node_modules/.bin/node-sass -w src/client/css -o public/css --include-path=node_modules/react-draft-wysiwyg/dist"
@@ -83,6 +84,7 @@
     "nodemailer": "^4.4.0",
     "nodemailer-ses-transport": "^1.5.1",
     "normalize-scss": "^6.0.0",
+    "pm2": "^4.4.0",
     "postcss-cli": "^4.1.1",
     "ramda": "^0.24.1",
     "react": "^15.3.0",
