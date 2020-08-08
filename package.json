@@ -18,7 +18,7 @@
     "lint": "./node_modules/.bin/eslint ./src",
     "import:legacy": "node bin/import-script.js",
     "start": "./node_modules/pm2/bin/pm2-runtime ecosystem.config.js --env production",
-    "poststart":  "node ./node_modules/pm2/bin/pm2 logs",
+    "poststart": "node ./node_modules/pm2/bin/pm2 logs",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "watch:css": "./node_modules/.bin/node-sass -w src/client/css -o public/css --include-path=node_modules/react-draft-wysiwyg/dist"
