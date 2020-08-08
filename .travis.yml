@@ -11,7 +11,7 @@ script:
 before_deploy:
  - cd $TRAVIS_BUILD_DIR
  - bash bin/env.sh
- - sed -i '.env/d' .gitignore
+ - sed -i '/.env/d' .gitignore
  - git add . && git commit -m "latest build"
 deploy:
     provider: elasticbeanstalk
