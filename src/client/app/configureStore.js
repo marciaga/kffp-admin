@@ -4,7 +4,7 @@ import {
     compose,
     combineReducers
 } from 'redux';
-import thunk from 'redux-thunk';
+import * as thunk from 'redux-thunk';
 import { browserHistory } from 'react-router';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import reducers from './reducers';
