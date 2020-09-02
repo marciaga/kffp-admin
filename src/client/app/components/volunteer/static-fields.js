@@ -8,7 +8,7 @@ export const volunteerTypeFields = [
         value: 'sub-shift'
     },
     {
-        label: 'Diversity & Equity Committee',
+        label: 'Equity, Diversity, and Inclusion Committee',
         value: 'diversity-equity-committee'
     },
     {
