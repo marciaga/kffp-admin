@@ -2,7 +2,9 @@ import Joi from 'joi';
 import Boom from 'boom';
 import moment from 'moment';
 import shortid from 'shortid';
-import { dateSortAsc, dateSortDesc, playlistUpdateMessage } from '../client/app/utils/helperFunctions';
+// Use when we want to re-enable one-playlist-per-day rule
+// import { dateSortAsc, dateSortDesc, playlistUpdateMessage } from '../client/app/utils/helperFunctions';
+import { playlistUpdateMessage } from '../client/app/utils/helperFunctions';
 
 const songSchema = {
     id: Joi.string(),
@@ -90,10 +92,6 @@ const getPlaylistsByShow = async (request, reply) => {
     }
 };
 
-const playlistLimitValidation = () => {
-
-};
-
 const createPlaylist = async (request, reply) => {
     const { db, ObjectID } = request.server.plugins.mongodb;
     const now = moment();
@@ -112,6 +110,8 @@ const createPlaylist = async (request, reply) => {
     };
 
     try {
+    /*
+    ** Uncomment when we want to re-enable one-playlist-per-day validation
         const result = await db.collection('playlists').find({ $or: [
             {
                 showId: new ObjectID(showId),
@@ -132,7 +132,7 @@ const createPlaylist = async (request, reply) => {
 
             return reply({ success: false, message: msg });
         }
-
+    */
         try {
             Joi.validate(newPlaylist, playlistSchema, (err, value) => {
                 if (err) {
