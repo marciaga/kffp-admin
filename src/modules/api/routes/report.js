@@ -16,13 +16,14 @@ const getReport = async (request, reply) => {
         .toArray();
 
         const setProps = arr => arr.map((obj) => {
-            const { artist, title, album, label } = obj;
+            const { artist, title, album, label, releaseDate } = obj;
 
             return {
                 artist,
                 title,
                 album,
-                label
+                label,
+                releaseDate
             };
         });
 
