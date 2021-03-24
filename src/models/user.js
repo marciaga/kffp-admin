@@ -151,7 +151,10 @@ const createUser = (request, reply) => {
                 return reply(Boom.serverUnavailable());
             }
 
-            reply({ id_token: createToken(user) }).code(201);
+            const newUserDoc = (user.ops.length && user.ops[0]) || {};
+            const { password: pw, ...fieldsToReturn } = newUserDoc;
+
+            reply({ id_token: createToken(user), ...fieldsToReturn }).code(201);
         });
     });
 };
