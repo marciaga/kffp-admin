@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card';
+import { push } from 'react-router-redux';
 
 import {
     updateUserSettingsInput,
@@ -79,6 +80,12 @@ const UserSettingsForm = ({ fields, user, dispatch }) => {
                                 label="Update Password"
                                 type="submit"
                                 secondary
+                            />
+                            <RaisedButton
+                                backgroundColor="red"
+                                label="Cancel"
+                                labelColor="white"
+                                onClick={() => dispatch(push('/'))}
                             />
                         </CardActions>
                     </form>
