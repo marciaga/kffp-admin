@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/marciaga/playlist-v2#readme",
   "dependencies": {
-    "aws-sdk": "^2.41.0",
+    "aws-sdk": "^2.814.0",
     "axios": "^0.13.1",
     "babel-cli": "^6.24.0",
     "babel-core": "^6.13.2",
