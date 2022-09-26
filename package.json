@@ -84,7 +84,7 @@
     "nodemailer": "^4.4.0",
     "nodemailer-ses-transport": "^1.5.1",
     "normalize-scss": "^6.0.0",
-    "pm2": "^4.4.0",
+    "pm2": "^5.2.0",
     "postcss-cli": "^4.1.1",
     "ramda": "^0.24.1",
     "react": "^15.3.0",
